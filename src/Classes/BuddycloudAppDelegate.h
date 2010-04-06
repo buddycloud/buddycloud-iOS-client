@@ -16,8 +16,6 @@
  * with Buddycloud for iPhone. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 

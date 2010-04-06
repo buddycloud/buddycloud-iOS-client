@@ -38,6 +38,7 @@
 		4BE6F8930FB5A288001696C8 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE6F8920FB5A288001696C8 /* CFNetwork.framework */; };
 		4BE6F9400FB5A872001696C8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE6F93F0FB5A872001696C8 /* SystemConfiguration.framework */; };
 		4BE6FB5B0FB5ECC8001696C8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE6FB5A0FB5ECC8001696C8 /* CoreLocation.framework */; };
+		57E0706A116B89EE00FDB70C /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E07069116B89EE00FDB70C /* libidn.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +101,9 @@
 		4BE6F8920FB5A288001696C8 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4BE6F93F0FB5A872001696C8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4BE6FB5A0FB5ECC8001696C8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		57E07069116B89EE00FDB70C /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libidn.a; sourceTree = "<group>"; };
+		57E0706E116B8A6B00FDB70C /* idn-int.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "idn-int.h"; sourceTree = SOURCE_ROOT; };
+		57E0706F116B8A6B00FDB70C /* stringprep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringprep.h; sourceTree = SOURCE_ROOT; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,6 +118,7 @@
 				4BE6F8930FB5A288001696C8 /* CFNetwork.framework in Frameworks */,
 				4BE6F9400FB5A872001696C8 /* SystemConfiguration.framework in Frameworks */,
 				4BE6FB5B0FB5ECC8001696C8 /* CoreLocation.framework in Frameworks */,
+				57E0706A116B89EE00FDB70C /* libidn.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,6 +181,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				57E07069116B89EE00FDB70C /* libidn.a */,
 				4BE6FB5A0FB5ECC8001696C8 /* CoreLocation.framework */,
 				4BE6F93F0FB5A872001696C8 /* SystemConfiguration.framework */,
 				4BE6F8920FB5A288001696C8 /* CFNetwork.framework */,
@@ -189,6 +195,7 @@
 		4B2B7056100F97D500FBE3D8 /* XMPPframework */ = {
 			isa = PBXGroup;
 			children = (
+				57E0706B116B8A5600FDB70C /* libidn */,
 				4B2B705A100F989000FBE3D8 /* XMPP.h */,
 				4B2B707C100F98E600FBE3D8 /* LibIDN.h */,
 				4B2B707D100F98E600FBE3D8 /* LibIDN.m */,
@@ -241,6 +248,31 @@
 				4B2B70A4100F998B00FBE3D8 /* NSStringAdditions.m */,
 			);
 			name = KissXML;
+			sourceTree = "<group>";
+		};
+		57E0706B116B8A5600FDB70C /* libidn */ = {
+			isa = PBXGroup;
+			children = (
+				57E0706E116B8A6B00FDB70C /* idn-int.h */,
+				57E0706F116B8A6B00FDB70C /* stringprep.h */,
+				57E0706C116B8A5600FDB70C /* iphoneos */,
+				57E0706D116B8A5600FDB70C /* iphonesimulator */,
+			);
+			path = libidn;
+			sourceTree = "<group>";
+		};
+		57E0706C116B8A5600FDB70C /* iphoneos */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = iphoneos;
+			sourceTree = "<group>";
+		};
+		57E0706D116B8A5600FDB70C /* iphonesimulator */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = iphonesimulator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -336,6 +368,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Buddycloud_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = Buddycloud;
 			};
 			name = Debug;
@@ -348,6 +384,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Buddycloud_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = Buddycloud;
 			};
 			name = Release;
