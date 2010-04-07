@@ -17,12 +17,11 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <CoreLocation/CoreLocation.h>
 
-#import "XMPPJID.h"
-#import "XMPPIQ.h"
+@class XMPPEngine, RosterEngine, LocationEngine;
+@class FollowingViewController;
 
-@interface BuddycloudAppDelegate: NSObject <CLLocationManagerDelegate>
+@interface BuddycloudAppDelegate: NSObject
 {
 	UIWindow *window;
 	UITabBarController *tabBarController;
@@ -31,8 +30,12 @@
 	
 	NSArray *places, *nearby, *channels;
 	
-	BOOL wasAuthedBefore, gotInitialPosition;
-	CLLocationManager *locationManager;
+	XMPPEngine *xmpp;
+	RosterEngine *roster;
+	LocationEngine *location;
+	
+	FollowingViewController *vcFollowing;
+	UINavigationController *ncFollowing;
 }
 
 @property(nonatomic, retain) IBOutlet UIWindow *window;
@@ -42,14 +45,4 @@
 @property(nonatomic, retain) IBOutlet UITableView *placesTableView;
 @property(nonatomic, retain) IBOutlet UITableView *channelsTableView;
 
-- (IBAction)addFriend: (id)sender;
-- (void)send501ForIQ: (XMPPIQ*)iq;
-- (void)sendPingReplyTo: (XMPPJID*)from
-	  withElementID: (NSString*)elementId;
-- (void)sendVersionReplyTo: (XMPPJID*)from
-	     withElementID: (NSString*)elementId;
-- (void)answerDisco: (XMPPIQ*)iq;
-- (void)sendLocationFromLocationManager: (CLLocationManager*)manager;
-- (void)sendLocationFromLocationManager: (CLLocationManager*)manager
-			     renewTimer: (BOOL)renew;
 @end
