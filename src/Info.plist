@@ -28,5 +28,16 @@
 	<string>MainWindow</string>
 	<key>SignerIdentity</key>
 	<string>Apple iPhone OS Application Signing</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.buddycloud.channel</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>buddycloud</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

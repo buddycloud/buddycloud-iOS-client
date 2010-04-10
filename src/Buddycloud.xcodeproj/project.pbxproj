@@ -38,6 +38,13 @@
 		4BE6F8930FB5A288001696C8 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE6F8920FB5A288001696C8 /* CFNetwork.framework */; };
 		4BE6F9400FB5A872001696C8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE6F93F0FB5A872001696C8 /* SystemConfiguration.framework */; };
 		4BE6FB5B0FB5ECC8001696C8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE6FB5A0FB5ECC8001696C8 /* CoreLocation.framework */; };
+		5731AF311170BD2100F97613 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5731AF301170BD2100F97613 /* Settings.bundle */; };
+		5731AF9B1170E05800F97613 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5731AF9A1170E05800F97613 /* SettingsViewController.m */; };
+		5731AFCA1170E3A600F97613 /* EditSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5731AFC91170E3A600F97613 /* EditSettingsViewController.m */; };
+		5731B03A1170EB2600F97613 /* EditSettingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5731B0391170EB2600F97613 /* EditSettingCell.m */; };
+		5731B0741170EF5000F97613 /* FollowerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5731B0731170EF5000F97613 /* FollowerCell.xib */; };
+		5731B0781170F01D00F97613 /* FollowerCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5731B0771170F01D00F97613 /* FollowerCellController.m */; };
+		5731B0D01170F61000F97613 /* defaultImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 5731B0CF1170F61000F97613 /* defaultImage.png */; };
 		57368090116C84EF008DC56F /* XMPPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 5736808F116C84EF008DC56F /* XMPPEngine.m */; };
 		573680C1116C977C008DC56F /* RosterEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 573680C0116C977C008DC56F /* RosterEngine.m */; };
 		57368110116CA1D8008DC56F /* LocationEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 5736810F116CA1D8008DC56F /* LocationEngine.m */; };
@@ -107,6 +114,17 @@
 		4BE6F8920FB5A288001696C8 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4BE6F93F0FB5A872001696C8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4BE6FB5A0FB5ECC8001696C8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		5731AF301170BD2100F97613 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		5731AF991170E05800F97613 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		5731AF9A1170E05800F97613 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		5731AFC81170E3A600F97613 /* EditSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditSettingsViewController.h; sourceTree = "<group>"; };
+		5731AFC91170E3A600F97613 /* EditSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditSettingsViewController.m; sourceTree = "<group>"; };
+		5731B0381170EB2600F97613 /* EditSettingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditSettingCell.h; sourceTree = "<group>"; };
+		5731B0391170EB2600F97613 /* EditSettingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditSettingCell.m; sourceTree = "<group>"; };
+		5731B0731170EF5000F97613 /* FollowerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FollowerCell.xib; sourceTree = "<group>"; };
+		5731B0761170F01D00F97613 /* FollowerCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowerCellController.h; sourceTree = "<group>"; };
+		5731B0771170F01D00F97613 /* FollowerCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowerCellController.m; sourceTree = "<group>"; };
+		5731B0CF1170F61000F97613 /* defaultImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = defaultImage.png; sourceTree = "<group>"; };
 		5736808E116C84EF008DC56F /* XMPPEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPEngine.h; sourceTree = "<group>"; };
 		5736808F116C84EF008DC56F /* XMPPEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPEngine.m; sourceTree = "<group>"; };
 		573680BF116C977C008DC56F /* RosterEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RosterEngine.h; sourceTree = "<group>"; };
@@ -192,8 +210,11 @@
 			isa = PBXGroup;
 			children = (
 				573681E3116CB627008DC56F /* Icon.png */,
+				5731B0CF1170F61000F97613 /* defaultImage.png */,
 				28AD73870D9D96C1002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				5731AF301170BD2100F97613 /* Settings.bundle */,
+				5731B0731170EF5000F97613 /* FollowerCell.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -290,6 +311,14 @@
 			children = (
 				57368150116CA838008DC56F /* FollowingViewController.h */,
 				57368151116CA838008DC56F /* FollowingViewController.m */,
+				5731AF991170E05800F97613 /* SettingsViewController.h */,
+				5731AF9A1170E05800F97613 /* SettingsViewController.m */,
+				5731AFC81170E3A600F97613 /* EditSettingsViewController.h */,
+				5731AFC91170E3A600F97613 /* EditSettingsViewController.m */,
+				5731B0381170EB2600F97613 /* EditSettingCell.h */,
+				5731B0391170EB2600F97613 /* EditSettingCell.m */,
+				5731B0761170F01D00F97613 /* FollowerCellController.h */,
+				5731B0771170F01D00F97613 /* FollowerCellController.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -366,6 +395,9 @@
 			files = (
 				28AD73880D9D96C1002E5188 /* MainWindow.xib in Resources */,
 				573681E4116CB627008DC56F /* Icon.png in Resources */,
+				5731AF311170BD2100F97613 /* Settings.bundle in Resources */,
+				5731B0741170EF5000F97613 /* FollowerCell.xib in Resources */,
+				5731B0D01170F61000F97613 /* defaultImage.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,6 +437,10 @@
 				57368110116CA1D8008DC56F /* LocationEngine.m in Sources */,
 				57368152116CA838008DC56F /* FollowingViewController.m in Sources */,
 				5736819C116CABE6008DC56F /* Events.m in Sources */,
+				5731AF9B1170E05800F97613 /* SettingsViewController.m in Sources */,
+				5731AFCA1170E3A600F97613 /* EditSettingsViewController.m in Sources */,
+				5731B03A1170EB2600F97613 /* EditSettingCell.m in Sources */,
+				5731B0781170F01D00F97613 /* FollowerCellController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

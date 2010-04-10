@@ -32,24 +32,44 @@
 @synthesize followingTableView;
 @synthesize placesTableView;
 @synthesize channelsTableView;
+@synthesize settingsController;
+@synthesize vcFollowing;
 
-- (void)applicationDidFinishLaunching: (UIApplication*)application
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+	if ([[url host] isEqualToString:@"channel"])
+	{
+		// Jump to page of chanel
+		NSLog(@"channel");
+	}
+						
+		return YES;
+}
+
+- (BOOL)application: (UIApplication*)application didFinishLaunchingWithOptions: (NSDictionary*)launchOptions
 {
 	// View controllers
-	vcFollowing = [[FollowingViewController alloc] initWithStyle:UITableViewStylePlain];
-	ncFollowing = [[UINavigationController alloc] initWithRootViewController:vcFollowing];
-	ncFollowing.tabBarItem.title = @"Following";
-	[vcFollowing release];
+	self.vcFollowing = [[[FollowingViewController alloc] initWithStyle:UITableViewStylePlain] autorelease];
+	UINavigationController *ncFollowing = [[[UINavigationController alloc] initWithRootViewController:vcFollowing] autorelease];
+	
+	self.settingsController = [[[SettingsViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
+	UINavigationController *settingsNavigationController = [[[UINavigationController alloc] initWithRootViewController:self.settingsController] autorelease];
 	
 	// Set up tab bar
-	tabBarController = [[UITabBarController alloc] init];
-	[tabBarController setViewControllers:[NSArray arrayWithObjects:ncFollowing, nil]];
+	self.tabBarController = [[UITabBarController alloc] init];
+	[self.tabBarController setViewControllers:[NSArray arrayWithObjects:ncFollowing, settingsNavigationController, nil]];
 	[window addSubview:tabBarController.view];
-
+	
 	// Engines
 	xmpp = [[XMPPEngine alloc] init];
 	location = (LocationEngine*)[[LocationEngine alloc] initWithXMPP:[xmpp client]];
 	roster = [[RosterEngine alloc] initWithXMPP:[xmpp client]];
+	
+	if (launchOptions != nil) {
+//		NSString* launchUrl = [launchOptions objectForKey:@""]
+	}
+	
+	return YES;
 }
 
 - (void)dealloc

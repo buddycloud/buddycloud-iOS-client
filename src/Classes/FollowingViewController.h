@@ -10,6 +10,8 @@
 
 @interface FollowingViewController : UITableViewController {
 	NSMutableArray *following;
+	UITableViewCell *followerCell;
 }
+@property (nonatomic, assign) IBOutlet UITableViewCell *followerCell;
 
 @end

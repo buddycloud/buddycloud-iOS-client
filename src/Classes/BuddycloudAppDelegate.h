@@ -20,6 +20,7 @@
 
 @class XMPPEngine, RosterEngine, LocationEngine;
 @class FollowingViewController;
+#import "SettingsViewController.h" 
 
 @interface BuddycloudAppDelegate: NSObject
 {
@@ -35,7 +36,8 @@
 	LocationEngine *location;
 	
 	FollowingViewController *vcFollowing;
-	UINavigationController *ncFollowing;
+	
+	SettingsViewController *settingsController;
 }
 
 @property(nonatomic, retain) IBOutlet UIWindow *window;
@@ -44,5 +46,7 @@
 @property(nonatomic, retain) IBOutlet UITableView *followingTableView;
 @property(nonatomic, retain) IBOutlet UITableView *placesTableView;
 @property(nonatomic, retain) IBOutlet UITableView *channelsTableView;
+@property(nonatomic, retain) SettingsViewController *settingsController;
+@property(nonatomic, retain) FollowingViewController *vcFollowing;
 
 @end

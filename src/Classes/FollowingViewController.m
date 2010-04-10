@@ -9,10 +9,12 @@
 #import "FollowingViewController.h"
 #import "Events.h"
 #import "RosterEngine.h"
+#import "FollowerCellController.h"
 
 #import "XMPPUser.h"
 
 @implementation FollowingViewController
+@synthesize followerCell;
 
 - (id)initWithStyle:(UITableViewStyle)style {
     [super initWithStyle:style];
@@ -23,6 +25,11 @@
 											   object:nil];
 	following = [[NSMutableArray alloc] init];
     return self;
+}
+
+- (void) viewDidLoad
+{
+	self.title = @"Following";
 }
 
 - (void)dealloc {
@@ -49,25 +56,32 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-
+	
     // Dequeue or create a new cell
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
+	//    static NSString *CellIdentifier = @"Cell";
+	//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+	//    if (cell == nil) {	
+	
+	FollowerCellController *controller = [[FollowerCellController alloc] initWithNibName:@"FollowerCell" bundle:[NSBundle mainBundle]];
+	UITableViewCell *cell = (UITableViewCell *)controller.view;
+	//		NSLog(@"Cell %@", cell); 
+	//        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	//    }
     
 	// Set up this specific cell's content
     XMPPUser *user = [following objectAtIndex:indexPath.row];
-    cell.textLabel.text = [user displayName];
-	
+	[[controller nameLabel] setText:[user displayName]];
+	[[controller imageView] setImage:[UIImage imageNamed:@"defaultImage.png"]];
+	[controller release];
 	// Outta here
     return cell;
 }
 
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
+{
+	[tableView deselectRowAtIndexPath:indexPath animated:YES];
     // Navigation logic may go here. Create and push another view controller.
 	/*
 	 <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
@@ -76,6 +90,11 @@
 	 [self.navigationController pushViewController:detailViewController animated:YES];
 	 [detailViewController release];
 	 */
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return 64.0f;
 }
 
 @end
