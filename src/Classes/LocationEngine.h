@@ -12,8 +12,9 @@
 @class XMPPClient;
 
 @interface LocationEngine : NSObject <CLLocationManagerDelegate> {
-	XMPPClient *xmpp;
-	CLLocationManager *locMgr;
+	XMPPClient *xmppClient;
+	CLLocationManager *locationManager;
+	
 	bool gotInitialPosition;
 }
 

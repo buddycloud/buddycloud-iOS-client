@@ -51,6 +51,7 @@
 		57368152116CA838008DC56F /* FollowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57368151116CA838008DC56F /* FollowingViewController.m */; };
 		5736819C116CABE6008DC56F /* Events.m in Sources */ = {isa = PBXBuildFile; fileRef = 5736819B116CABE6008DC56F /* Events.m */; };
 		573681E4116CB627008DC56F /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 573681E3116CB627008DC56F /* Icon.png */; };
+		579397CB117DD98200D340F1 /* XMPPPubsub.m in Sources */ = {isa = PBXBuildFile; fileRef = 579397CA117DD98200D340F1 /* XMPPPubsub.m */; };
 		57E0706A116B89EE00FDB70C /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E07069116B89EE00FDB70C /* libidn.a */; };
 /* End PBXBuildFile section */
 
@@ -136,6 +137,8 @@
 		5736819A116CABE6008DC56F /* Events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Events.h; sourceTree = "<group>"; };
 		5736819B116CABE6008DC56F /* Events.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Events.m; sourceTree = "<group>"; };
 		573681E3116CB627008DC56F /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		579397C9117DD98200D340F1 /* XMPPPubsub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPubsub.h; sourceTree = "<group>"; };
+		579397CA117DD98200D340F1 /* XMPPPubsub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPubsub.m; sourceTree = "<group>"; };
 		57E07069116B89EE00FDB70C /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libidn.a; sourceTree = "<group>"; };
 		57E0706E116B8A6B00FDB70C /* idn-int.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "idn-int.h"; sourceTree = SOURCE_ROOT; };
 		57E0706F116B8A6B00FDB70C /* stringprep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringprep.h; sourceTree = SOURCE_ROOT; };
@@ -270,6 +273,8 @@
 				4B2B7070100F989000FBE3D8 /* XMPPUser.m */,
 				4B2B7057100F980200FBE3D8 /* AsyncSocket.h */,
 				4B2B7058100F980200FBE3D8 /* AsyncSocket.m */,
+				579397C9117DD98200D340F1 /* XMPPPubsub.h */,
+				579397CA117DD98200D340F1 /* XMPPPubsub.m */,
 			);
 			name = XMPPframework;
 			sourceTree = "<group>";
@@ -441,6 +446,7 @@
 				5731AFCA1170E3A600F97613 /* EditSettingsViewController.m in Sources */,
 				5731B03A1170EB2600F97613 /* EditSettingCell.m in Sources */,
 				5731B0781170F01D00F97613 /* FollowerCellController.m in Sources */,
+				579397CB117DD98200D340F1 /* XMPPPubsub.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

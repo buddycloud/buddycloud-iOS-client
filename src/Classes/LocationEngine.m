@@ -15,18 +15,25 @@
 - (LocationEngine*) initWithXMPP:(XMPPClient*)client {
 	[super init];
 	
-	xmpp = client;
-	locMgr = [[CLLocationManager alloc] init];
-	[locMgr setDelegate: self];
-	[locMgr startUpdatingLocation];
+	// Initialize XMPPClient
+	xmppClient = client;
+	[xmppClient addDelegate: self];
+
+	// Initialize location manager
+	locationManager = [[CLLocationManager alloc] init];
+	[locationManager setDelegate: self];
+	[locationManager startUpdatingLocation];
 	
 	return self;
 }
 
 - (void) dealloc {
+	[xmppClient removeDelegate:self];
+	
+	[locationManager stopUpdatingLocation];
+	[locationManager release];
+	
 	[super dealloc];
-	[locMgr stopUpdatingLocation];
-	[locMgr release];
 }
 
 - (void)locationManager: (CLLocationManager*)manager
@@ -34,10 +41,12 @@
            fromLocation: (CLLocation*)oldLocation
 {
 	if (gotInitialPosition)
-		[self sendLocationFromLocationManager: manager
-								   renewTimer: NO];
+	{
+		[self sendLocationFromLocationManager: manager renewTimer: NO];
+	}
 	else {
 		gotInitialPosition = YES;
+		
 		[self sendLocationFromLocationManager: manager];
 	}
 }
@@ -56,7 +65,7 @@
 	CLLocationCoordinate2D coordinate;
 	SEL sel;
 	
-	if (![xmpp isConnected])
+	if (![xmppClient isConnected])
 		goto renew; // Wtf? :O
 	
 	location = [manager location];
@@ -83,7 +92,7 @@
 	[locationquery addChild: [NSXMLElement elementWithName: @"publish" stringValue: @"true"]];
 	
 	[iq addChild: locationquery];
-	[xmpp sendElement: iq];
+	[xmppClient sendElement: iq];
 	
 renew:
 	if (renew) {
@@ -93,5 +102,22 @@ renew:
 				   afterDelay: 120];
 	}
 }
+
+
+- (void)xmppClient: (XMPPClient*)sender
+      didReceiveIQ: (XMPPIQ*)iq
+{
+	NSString *type = [[iq attributeForName: @"type"] stringValue];
+	
+	if ([type isEqualToString: @"result"]) {
+		// Location query result 
+		if ([iq elementForName: @"location" xmlns: @"http://buddycloud.com/protocol/location"])
+		{
+			// TODO: Handle location query result
+			return;
+		}
+	}
+}
+
 
 @end

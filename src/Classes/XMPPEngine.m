@@ -8,15 +8,17 @@
 
 #import "XMPPEngine.h"
 #import "XMPPClient.h"
+#import "XMPPPubsub.h"
 #import "XMPPJID.h"
 #import "XMPPIQ.h"
 #import "NSXMLElementAdditions.h"
 #import "BuddyRequestDelegate.h"
 
-NSString *features[] = {
-	@"http://jabber.org/protocol/disco#info",
+NSString *applicationVersion = @"iPhone-0.1.01";
+
+NSString *discoFeatures[] = {
+	@"http://jabber.org/protocol/pubsub",
 	@"http://jabber.org/protocol/geoloc",
-	@"http://jabber.org/protocol/geoloc+notify",
 	nil
 };
 
@@ -26,25 +28,32 @@ NSString *features[] = {
 - (XMPPEngine*) init {
 	[super init];
 	
-	xmpp = [[XMPPClient alloc] init];
+	// Initialize the XMPPClient
+	xmppClient = [[XMPPClient alloc] init];
 	
-	[xmpp addDelegate: self];
-	[xmpp setDomain: @"cirrus.buddycloud.com"];
-	[xmpp setPort: 443];
-	[xmpp setMyJID: [XMPPJID jidWithUser: @"iphone2"
+	[xmppClient addDelegate: self];
+	[xmppClient setDomain: @"jabber.buddycloud.com"];
+	[xmppClient setPort: 5222];
+	[xmppClient setMyJID: [XMPPJID jidWithUser: @"iphone2"
 										domain: @"buddycloud.com"
-								resource: @"buddycloud/iphone"]];
-	[xmpp setPassword: @"iphone"];
-	[xmpp setPriority: 10];
-	[xmpp setAllowsPlaintextAuth: NO];
-	[xmpp setAutoPresence: NO];
-	[xmpp connect];
+								resource: @"iPhone/bcloud"]];
+	[xmppClient setPassword: @"iphone"];
+	[xmppClient setPriority: 10];
+	[xmppClient setAllowsPlaintextAuth: NO];
+	[xmppClient setAutoPresence: NO];
+	
+	// Initialize XMPPPubsub
+	xmppPubsub = [[XMPPPubsub alloc] initWithXMPPClient:xmppClient delegate:self];
+	[xmppPubsub setPubsubServer:@"broadcaster.buddycloud.com"];
+	
+	// Connect to server
+	[xmppClient connect];
 	
 	return self;
 }
 
 - (XMPPClient*) client {
-	return xmpp;
+	return xmppClient;
 }
 
 - (void)xmppClientDidNotConnect: (XMPPClient*)sender
@@ -77,25 +86,25 @@ didNotAuthenticate: (NSXMLElement*)error
 - (void)xmppClientDidDisconnect: (XMPPClient*)sender
 {
 	if (!wasAuthedBefore)
-		return [self xmppClient: sender
-		     didNotAuthenticate: nil];
+	{
+		return [self xmppClient: sender didNotAuthenticate: nil];
+	}
 }
 
 - (void)xmppClientDidAuthenticate: (XMPPClient*)sender
 {	
-	NSXMLElement *pres, *caps;
-	
 	wasAuthedBefore = YES;
 	
-	pres = [NSXMLElement elementWithName: @"presence"];
-	caps = [NSXMLElement elementWithName: @"c"
-								   xmlns: @"http://jabber.org/protocol/caps"];
-	[caps addAttributeWithName: @"node"
-				   stringValue: @"http://buddycloud.com/iphone/caps"];
-	[caps addAttributeWithName: @"ver"
-				   stringValue: @"0.0.1-alpha"];
-	[pres addChild: caps];
-	[xmpp sendElement: pres];
+	// Build presence with caps stanza
+	NSXMLElement *capsElement = [NSXMLElement elementWithName: @"c" xmlns: @"http://jabber.org/protocol/caps"];
+	[capsElement addAttributeWithName: @"node" stringValue: @"http://buddycloud.com/caps"];
+	[capsElement addAttributeWithName: @"ver" stringValue: applicationVersion];
+	
+	NSXMLElement *presenceStanza = [NSXMLElement elementWithName: @"presence"];
+	[presenceStanza addChild: capsElement];
+	
+	// Send presence
+	[xmppClient sendElement: presenceStanza];
 }
 
 - (void)xmppClient: (XMPPClient*)sender
@@ -104,42 +113,25 @@ didNotAuthenticate: (NSXMLElement*)error
 	NSString *type = [[iq attributeForName: @"type"] stringValue];
 	
 	if ([type isEqualToString: @"get"]) {
-		/* Ping */
-		if ([iq elementForName: @"query"
-						 xmlns: @"urn:xmpp:ping"])
-			return [self sendPingReplyTo: [iq from]
-						   withElementID: [iq elementID]];
-		
-		/* Version */
-		if ([iq elementForName: @"query"
-						 xmlns: @"jabber:iq:version"])
-			return [self sendVersionReplyTo: [iq from]
-							  withElementID: [iq elementID]];
-		
-		/* Disco */
-		if ([iq elementForName: @"query"
-						 xmlns: @"http://jabber.org/protocol/disco"
-			 @"#info"])
-			return [self answerDisco: iq];
-		
-		/* If we're still here, we don't handle it */
-		[self send501ForIQ: iq];
-	} else if ([type isEqualToString: @"set"])
-		[self send501ForIQ: iq];
-	else if ([type isEqualToString: @"result"]) {
-		/* Locationquery result */
-		if ([iq elementForName: @"location"
-						 xmlns: @"http://buddycloud.com/protocol/"
-			 @"location"])
-			return;
-		
-		/* If we're still here, we don't handle it */
-		[self send501ForIQ: iq];
-	} else
-		NSLog(@"WARNING: Received an IQ with invalid type!");	
+		if ([iq elementForName: @"query" xmlns: @"urn:xmpp:ping"])
+		{
+			// Handle ping
+			return [self sendPingResultTo: [iq from] withElementID: [iq elementID]];
+		}
+		else if ([iq elementForName: @"query" xmlns: @"jabber:iq:version"])
+		{
+			// Handle client version request
+			return [self sendVersionResultTo: [iq from] withElementID: [iq elementID]];
+		}
+		else if ([iq elementForName: @"query" xmlns: @"http://jabber.org/protocol/disco#info"])
+		{
+			// Handle feature discovery query
+			return [self sendFeatureDiscovery: iq];
+		}
+	}
 }
 
--	(void)xmppClient: (XMPPClient*)sender
+- (void)xmppClient: (XMPPClient*)sender
 didReceiveBuddyRequest: (XMPPJID*)jid
 {
 	NSString *msg = [NSString stringWithFormat:
@@ -157,130 +149,85 @@ didReceiveBuddyRequest: (XMPPJID*)jid
 	[alert release];
 }
 
-- (void)send501ForIQ: (XMPPIQ*)iq
+- (void)sendPingResultTo:(XMPPJID *)jid withElementID:(NSString *)elementId
 {
-	NSXMLElement *error, *fni, *text;
-	
-	[iq removeAttributeForName: @"to"];
-	[iq addAttributeWithName: @"to"
-				 stringValue: [[iq attributeForName: @"from"] stringValue]];
-	[iq removeAttributeForName: @"from"];
-	[iq removeAttributeForName: @"type"];
-	[iq addAttributeWithName: @"type"
-				 stringValue: @"error"];
-	
-	error = [NSXMLElement elementWithName: @"error"];
-	[error addAttributeWithName: @"code"
-					stringValue: @"501"];
-	[error addAttributeWithName: @"type"
-					stringValue: @"cancel"];
-	
-	fni = [NSXMLElement elementWithName: @"feature-not-implemented"
-								  xmlns: @"urn:ietf:params:xml:ns:"
-		   @"xmpp-stanzas"];
-	[error addChild: fni];
-	
-	text = [NSXMLElement elementWithName: @"text"
-							 stringValue: @"The feature requested is not "
-			@"implemented by the recipient "
-			@"or server and therefore cannot "
-			@"be processed."];
-	[text setXmlns: @"urn:ietf:params:xml:ns:xmpp-stanzas"];
-	[error addChild: text];
-	
-	[iq addChild: error];
-	
-	[xmpp sendElement: iq];
-}
+	NSXMLElement *queryElement = [NSXMLElement elementWithName: @"query" xmlns: @"urn:xmpp:ping"];
 
-- (void)sendPingReplyTo: (XMPPJID*)jid
-		  withElementID: (NSString*)elementId
-{
-	NSXMLElement *iq, *query;
+	NSXMLElement *iqStanza = [NSXMLElement elementWithName: @"iq"];
+	[iqStanza addAttributeWithName: @"to" stringValue: [jid full]];
+	[iqStanza addAttributeWithName: @"type" stringValue: @"result"];
 	
-	iq = [NSXMLElement elementWithName: @"iq"];
-	[iq addAttributeWithName: @"to"
-				 stringValue: [jid full]];
-	[iq addAttributeWithName: @"type"
-				 stringValue: @"result"];
-	if (elementId)
-		[iq addAttributeWithName: @"id"
-					 stringValue: elementId];
-	
-	query = [NSXMLElement elementWithName: @"query"
-									xmlns: @"urn:xmpp:ping"];
-	[iq addChild: query];
-	
-	[xmpp sendElement: iq];
-}
-
-- (void)sendVersionReplyTo: (XMPPJID*)jid
-			 withElementID: (NSString*)elementId
-{
-	NSXMLElement *iq, *query;
-	UIDevice *device = [UIDevice currentDevice];
-	NSMutableString *os = [NSMutableString stringWithCapacity: 0];
-	[os appendString: [device systemName]];
-	[os appendString: @" "];
-	[os appendString: [device systemVersion]];
-	[os appendString: @" @ "];
-	[os appendString: [device model]];
-	
-	iq = [NSXMLElement elementWithName: @"iq"];
-	[iq addAttributeWithName: @"to"
-				 stringValue: [jid full]];
-	[iq addAttributeWithName: @"type"
-				 stringValue: @"result"];
-	if (elementId)
-		[iq addAttributeWithName: @"id"
-					 stringValue: elementId];
-	
-	query = [NSXMLElement elementWithName: @"query"
-									xmlns: @"jabber:iq:version"];
-	[query addChild: [NSXMLElement elementWithName: @"name"
-									   stringValue: @"Buddycloud for "
-					  @"iPhone"]];
-	[query addChild: [NSXMLElement elementWithName: @"version"
-									   stringValue: @"0.0.1-alpha"]];
-	[query addChild: [NSXMLElement elementWithName: @"os"
-									   stringValue: os]];
-	[iq addChild: query];
-	
-	[xmpp sendElement: iq];
-}
-
-- (void)answerDisco: (XMPPIQ*)iq
-{
-	NSXMLElement *query, *identity, *feature;
-	NSString **featureName;
-	
-	[iq removeAttributeForName: @"to"];
-	[iq addAttributeWithName: @"to"
-				 stringValue: [[iq attributeForName: @"from"] stringValue]];
-	[iq removeAttributeForName: @"from"];
-	[iq removeAttributeForName: @"type"];
-	[iq addAttributeWithName: @"type"
-				 stringValue: @"result"];
-	
-	query = [iq elementForName: @"query"
-						 xmlns: @"http://jabber.org/protocol/disco#info"];
-	identity = [NSXMLElement elementWithName: @"identity"];
-	[identity addAttributeWithName: @"category"
-					   stringValue: @"client"];
-	[identity addAttributeWithName: @"type"
-					   stringValue: @"mobile"];
-	[query addChild: identity];
-	
-	// TODO: Check node
-	
-	for (featureName = features; *featureName != nil; featureName++) {
-		feature = [NSXMLElement elementWithName: @"feature"];
-		[feature addAttributeWithName: @"var"
-						  stringValue: *featureName];
-		[query addChild: feature];
+	if (elementId) {
+		[iqStanza addAttributeWithName: @"id" stringValue: elementId];
 	}
 	
-	[xmpp sendElement: iq];
+	[iqStanza addChild: queryElement];
+	
+	[xmppClient sendElement: iqStanza];
+}
+
+- (void)sendVersionResultTo: (XMPPJID*)jid withElementID: (NSString*)elementId
+{
+	// Format current device description
+	UIDevice *deviceInfo = [UIDevice currentDevice];
+	NSMutableString *deviceDescription = [NSMutableString stringWithCapacity: 0];
+	[deviceDescription appendString: [deviceInfo model]];
+	[deviceDescription appendString: @" {"];
+	[deviceDescription appendString: [deviceInfo systemName]];
+	[deviceDescription appendString: @" "];
+	[deviceDescription appendString: [deviceInfo systemVersion]];
+	[deviceDescription appendString: @"}"];
+	
+	// Build query element
+	NSXMLElement *queryElement = [NSXMLElement elementWithName: @"query" xmlns: @"jabber:iq:version"];
+	[queryElement addChild: [NSXMLElement elementWithName: @"name" stringValue: @"Buddycloud"]];
+	[queryElement addChild: [NSXMLElement elementWithName: @"version" stringValue: applicationVersion]];
+	[queryElement addChild: [NSXMLElement elementWithName: @"os" stringValue: deviceDescription]];
+
+	// Build feature discovery IQ result
+	NSXMLElement *iqStanza = [NSXMLElement elementWithName: @"iq"];
+	[iqStanza addAttributeWithName: @"to" stringValue: [jid full]];
+	[iqStanza addAttributeWithName: @"type" stringValue: @"result"];
+	
+	if (elementId)
+	{
+		[iqStanza addAttributeWithName: @"id" stringValue: elementId];
+	}
+										   
+	[iqStanza addChild: queryElement];
+	
+	[xmppClient sendElement: iqStanza];
+}
+
+- (void)sendFeatureDiscovery: (XMPPIQ*)iq
+{
+	// Build identity element
+	NSXMLElement *identityElement = [NSXMLElement elementWithName: @"identity"];
+	[identityElement addAttributeWithName: @"category" stringValue: @"client"];
+	[identityElement addAttributeWithName: @"type" stringValue: @"mobile"];	
+	
+	// Build query result element
+	NSXMLElement *queryElement = [NSXMLElement elementWithName: @"query" xmlns: @"http://jabber.org/protocol/disco#info"];
+	[queryElement addAttributeWithName: @"node" stringValue: [[[iq elementForName: @"query"] attributeForName: @"node"] stringValue]];
+	[queryElement addChild: identityElement];
+	
+	// Build feature list
+	NSString **featureName;
+	
+	for (featureName = discoFeatures; *featureName != nil; featureName++) {
+		NSXMLElement *featureElement = [NSXMLElement elementWithName: @"feature"];
+		[featureElement addAttributeWithName: @"var" stringValue: *featureName];		
+		[queryElement addChild: featureElement];
+	}
+	
+	// Build version IQ result
+	NSXMLElement *iqStanza = [NSXMLElement elementWithName: @"iq"];
+	[iqStanza addAttributeWithName: @"to" stringValue: [[iq attributeForName:@"from"] stringValue]];
+	[iqStanza addAttributeWithName: @"id" stringValue: [[iq attributeForName:@"id"] stringValue]];
+	[iqStanza addAttributeWithName: @"type" stringValue: @"result"];
+	[iqStanza addChild: queryElement];
+	
+	[xmppClient sendElement: iqStanza];
 }
 
 @end

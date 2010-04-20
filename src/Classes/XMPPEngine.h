@@ -9,20 +9,21 @@
 #import <Foundation/Foundation.h>
 
 @class XMPPClient;
-@class XMPPIQ, XMPPJID;
+@class XMPPPubsub;
+@class XMPPJID;
+@class XMPPIQ;
 
 @interface XMPPEngine : NSObject {
-	XMPPClient *xmpp;
+	XMPPClient *xmppClient;
+	XMPPPubsub *xmppPubsub;
+	
 	bool wasAuthedBefore;
 }
 
 - (XMPPClient*) client;
 
-- (void)send501ForIQ: (XMPPIQ*)iq;
-- (void)sendPingReplyTo: (XMPPJID*)from
-		  withElementID: (NSString*)elementId;
-- (void)sendVersionReplyTo: (XMPPJID*)from
-			 withElementID: (NSString*)elementId;
-- (void)answerDisco: (XMPPIQ*)iq;
+- (void)sendPingResultTo: (XMPPJID*)from withElementID: (NSString*)elementId;
+- (void)sendVersionResultTo: (XMPPJID*)from withElementID: (NSString*)elementId;
+- (void)sendFeatureDiscovery: (XMPPIQ*)iq;
 
 @end
