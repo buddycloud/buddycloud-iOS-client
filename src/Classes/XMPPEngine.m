@@ -44,18 +44,52 @@ NSString *discoFeatures[] = {
 	[xmppClient setAutoPresence: NO];
 	
 	// Initialize XMPPPubsub
-	xmppPubsub = [[XMPPPubsub alloc] initWithXMPPClient:xmppClient delegate:self];
-	[xmppPubsub setPubsubServer:@"broadcaster.buddycloud.com"];
+	xmppPubsub = [[XMPPPubsub alloc] initWithXMPPClient: xmppClient toServer: @"broadcaster.buddycloud.com"];
+	[xmppPubsub setDelegate: self];
 	
 	return self;
 }
 
 - (void)connect
-{
-	if (xmppClient && ![xmppClient isConnected]) {
+{	
+	if (![xmppClient isConnected]) {
 		// Connect to server
+		isConnectionCold = YES;
+		
 		[xmppClient connect];
 	}
+}
+
+- (void)disconnect
+{
+	if ([xmppClient isConnected]) {
+		// Disconnect from server
+		isConnectionCold = YES;
+		
+		[xmppClient disconnect];
+	}
+}
+
+- (void)sendPresenceToPubsub
+{
+	[self sendPresenceToPubsubWithLastItemId: 0];
+}
+
+- (void)sendPresenceToPubsubWithLastItemId:(int)itemId
+{
+	// Build & send presence to pubsub server
+	NSXMLElement *pubsubPresenceStanza = [NSXMLElement elementWithName: @"presence"];
+	[pubsubPresenceStanza addAttributeWithName: @"to" stringValue: [xmppPubsub serverName]];
+	
+	if (itemId > 0) {
+		// Add RSM element if set
+		NSXMLElement *setElement = [NSXMLElement elementWithName: @"set" xmlns: @"http://jabber.org/protocol/rsm"];
+		[setElement addChild: [NSXMLElement elementWithName: @"after" stringValue: [NSString stringWithFormat: @"%d", itemId]]];
+		
+		[pubsubPresenceStanza addChild: setElement];
+	}
+	
+	[xmppClient sendElement: pubsubPresenceStanza];
 }
 
 - (void)xmppClientDidNotConnect:(XMPPClient *)sender
@@ -84,18 +118,9 @@ NSString *discoFeatures[] = {
 	[alert release];
 }
 
-- (void)xmppClientDidDisconnect:(XMPPClient *)sender
-{
-	if (!wasAuthedBefore) {
-		return [self xmppClient: sender didNotAuthenticate: nil];
-	}
-}
-
 - (void)xmppClientDidAuthenticate:(XMPPClient *)sender
 {	
-	wasAuthedBefore = YES;
-	
-	// Build presence with caps stanza
+	// Build & send presence with caps stanza
 	NSXMLElement *capsElement = [NSXMLElement elementWithName: @"c" xmlns: @"http://jabber.org/protocol/caps"];
 	[capsElement addAttributeWithName: @"node" stringValue: @"http://buddycloud.com/caps"];
 	[capsElement addAttributeWithName: @"ver" stringValue: applicationVersion];
@@ -103,8 +128,16 @@ NSString *discoFeatures[] = {
 	NSXMLElement *presenceStanza = [NSXMLElement elementWithName: @"presence"];
 	[presenceStanza addChild: capsElement];
 	
-	// Send presence
 	[xmppClient sendElement: presenceStanza];
+	
+	if (isConnectionCold) {
+		// Connection is cold
+		[xmppPubsub fetchOwnSubscriptions];
+
+	}
+	else {
+		[self sendPresenceToPubsub];
+	}
 }
 
 - (void)xmppClient:(XMPPClient *)sender didReceiveIQ:(XMPPIQ *)iq

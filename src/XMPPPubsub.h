@@ -13,17 +13,26 @@
 @interface XMPPPubsub : NSObject {
 	id delegate;
 	
-	XMPPClient *client;
+	XMPPClient *xmppClient;
 	
-	NSString *server;
+	NSString *serverName;
+	
+	int iqIdCounter;
 }
 
-- (id)initWithXMPPClient:(XMPPClient *)xmppClient delegate:(id)delegate;
+@property(readonly) NSString *serverName;
 
-- (id)delegate;
+- (id)initWithXMPPClient:(XMPPClient *)client toServer:(NSString *)serverName;
 - (void)setDelegate:(id)delegate;
 
-- (NSString *)pubsubServer;
-- (void)setPubsubServer:(NSString *)server;
+- (void)fetchOwnSubscriptions;
+
+- (void)setAffiliationForUser:(NSString *)jid onNode:(NSString *)node toAffiliation:(NSString *)affiliation;
+
+@end
+
+@interface NSObject (XMPPPubsubDelegate)
+
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveOwnSubscriptions:(NSMutableArray *)subscriptions;
 
 @end

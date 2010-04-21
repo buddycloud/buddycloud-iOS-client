@@ -17,12 +17,15 @@
 	XMPPClient *xmppClient;
 	XMPPPubsub *xmppPubsub;
 	
-	bool wasAuthedBefore;
+	bool isConnectionCold;
 }
 
 @property(nonatomic, retain) XMPPClient *xmppClient;
 
 - (void)connect;
+- (void)disconnect;
+
+- (void)sendPresenceToPubsubWithLastItemId:(int)itemId;
 
 - (void)sendPingResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId;
 - (void)sendVersionResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId;
