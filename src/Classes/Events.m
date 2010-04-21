@@ -11,8 +11,12 @@
 
 @implementation Events
 
-+ (NSString*) ROSTER_UPDATED {
++ (NSString *) ROSTER_UPDATED {
 	return @"ROSTER_UPDATED";
+}
+
++ (NSString *) LOCATION_CHANGED {
+	return @"LOCATION_CHANGED";
 }
 
 @end

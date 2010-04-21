@@ -20,10 +20,12 @@
 	bool wasAuthedBefore;
 }
 
-- (XMPPClient*) client;
+@property(nonatomic, retain) XMPPClient *xmppClient;
 
-- (void)sendPingResultTo: (XMPPJID*)from withElementID: (NSString*)elementId;
-- (void)sendVersionResultTo: (XMPPJID*)from withElementID: (NSString*)elementId;
-- (void)sendFeatureDiscovery: (XMPPIQ*)iq;
+- (void)connect;
+
+- (void)sendPingResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId;
+- (void)sendVersionResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId;
+- (void)sendFeatureDiscovery:(XMPPIQ *)iq;
 
 @end

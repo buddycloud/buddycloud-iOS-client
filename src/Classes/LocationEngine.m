@@ -9,20 +9,23 @@
 #import "LocationEngine.h"
 #import "XMPPClient.h"
 #import "NSXMLElementAdditions.h"
+#import "Events.h"
 
 @implementation LocationEngine
+@synthesize currentPlaceId;
+@synthesize currentPlaceTitle;
+@synthesize currentCoordinates;
 
 - (LocationEngine*) initWithXMPP:(XMPPClient*)client {
 	[super init];
 	
-	// Initialize XMPPClient
-	xmppClient = client;
-	[xmppClient addDelegate: self];
-
 	// Initialize location manager
 	locationManager = [[CLLocationManager alloc] init];
 	[locationManager setDelegate: self];
-	[locationManager startUpdatingLocation];
+	
+	// Initialize XMPPClient
+	xmppClient = client;
+	[xmppClient addDelegate: self];
 	
 	return self;
 }
@@ -33,88 +36,99 @@
 	[locationManager stopUpdatingLocation];
 	[locationManager release];
 	
+	[currentPlaceTitle release];
+	
 	[super dealloc];
 }
 
-- (void)locationManager: (CLLocationManager*)manager
-    didUpdateToLocation: (CLLocation*)location
-           fromLocation: (CLLocation*)oldLocation
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)location fromLocation:(CLLocation *)oldLocation
 {
-	if (gotInitialPosition)
-	{
-		[self sendLocationFromLocationManager: manager renewTimer: NO];
-	}
-	else {
-		gotInitialPosition = YES;
+	[self sendLocationUpdate: location];
+}
+
+- (void)sendLocationUpdate:(CLLocation *)location
+{
+	// Stop current timer
+	[timer invalidate];
+	timer = nil;
+	
+	// Send location update
+	if (location) {
+		currentCoordinates = [location coordinate];
 		
-		[self sendLocationFromLocationManager: manager];
+		if (currentCoordinates.longitude != NAN && currentCoordinates.latitude != NAN && 
+			(currentCoordinates.longitude != 0 || currentCoordinates.latitude != 0))
+		{
+			NSString *longitude = [NSString stringWithFormat: @"%f", currentCoordinates.longitude];
+			NSString *latitude = [NSString stringWithFormat: @"%f", currentCoordinates.latitude];
+			NSString *accuracy = [NSString stringWithFormat: @"%f", [location horizontalAccuracy]];
+			
+			NSXMLElement *locationElement = [NSXMLElement elementWithName: @"locationquery" xmlns: @"urn:xmpp:locationquery:0"];
+			[locationElement addAttributeWithName: @"clientver" stringValue: @"iPhone/1.0"];
+			[locationElement addChild: [NSXMLElement elementWithName: @"lat" stringValue: latitude]];
+			[locationElement addChild: [NSXMLElement elementWithName: @"lon" stringValue: longitude]];
+			[locationElement addChild: [NSXMLElement elementWithName: @"accuracy" stringValue: accuracy]];
+			[locationElement addChild: [NSXMLElement elementWithName: @"publish" stringValue: @"true"]];
+			
+			NSXMLElement *iqStanza = [NSXMLElement elementWithName: @"iq"];
+			[iqStanza addAttributeWithName: @"to" stringValue: @"butler.buddycloud.com"];
+			[iqStanza addAttributeWithName: @"type" stringValue: @"get"];
+			[iqStanza addAttributeWithName: @"id" stringValue: @"location1"];
+			[iqStanza addChild: locationElement];
+			
+			[xmppClient sendElement: iqStanza];
+		}
 	}
+	
+	// Reset timer
+	timer = [NSTimer scheduledTimerWithTimeInterval:120 target:self selector:@selector(forceLocationUpdate) userInfo:nil repeats:NO];
 }
 
-- (void)sendLocationFromLocationManager: (CLLocationManager*)manager
+- (void)forceLocationUpdate
 {
-	[self sendLocationFromLocationManager: manager renewTimer: YES];
+	// Send location update
+	[self sendLocationUpdate: [locationManager location]];
 }
 
-- (void)sendLocationFromLocationManager: (CLLocationManager*)manager 
-							 renewTimer: (BOOL)renew
+- (void)xmppClientDidDisconnect:(XMPPClient *)sender
 {
-	CLLocation *location;
-	NSXMLElement *iq, *locationquery;
-	NSString *lon, *lat, *accuracy;
-	CLLocationCoordinate2D coordinate;
-	SEL sel;
+	// XMPPClient has disconnected
+	[timer invalidate];
 	
-	if (![xmppClient isConnected])
-		goto renew; // Wtf? :O
-	
-	location = [manager location];
-	coordinate = [location coordinate];
-	
-	if (coordinate.longitude == NAN || coordinate.latitude == NAN ||
-	    coordinate.longitude == 0 || coordinate.latitude == 0 ||
-	    [location horizontalAccuracy] == 0)
-		goto renew;
-	
-	lon = [NSString stringWithFormat: @"%f", coordinate.longitude];
-	lat = [NSString stringWithFormat: @"%f", coordinate.latitude];
-	accuracy = [NSString stringWithFormat: @"%f", [location horizontalAccuracy]];
-	
-	iq = [NSXMLElement elementWithName: @"iq"];
-	[iq addAttributeWithName: @"to" stringValue: @"butler.buddycloud.com"];
-	[iq addAttributeWithName: @"type" stringValue: @"get"];
-	[iq addAttributeWithName: @"id" stringValue: @"location1"];
-	
-	locationquery = [NSXMLElement elementWithName: @"locationquery" xmlns: @"urn:xmpp:locationquery:0"];
-	[locationquery addChild: [NSXMLElement elementWithName: @"lat" stringValue: lat]];
-	[locationquery addChild: [NSXMLElement elementWithName: @"lon" stringValue: lon]];
-	[locationquery addChild: [NSXMLElement elementWithName: @"accuracy" stringValue: accuracy]];
-	[locationquery addChild: [NSXMLElement elementWithName: @"publish" stringValue: @"true"]];
-	
-	[iq addChild: locationquery];
-	[xmppClient sendElement: iq];
-	
-renew:
-	if (renew) {
-		sel = @selector(sendLocationFromLocationManager:);
-		[self performSelector: sel
-				   withObject: manager
-				   afterDelay: 120];
-	}
+	// Stop location updates
+	[locationManager stopUpdatingLocation];
 }
 
+- (void)xmppClientDidAuthenticate:(XMPPClient *)sender
+{
+	// XMPPClient has authenticated connection
+	[self forceLocationUpdate];
+	
+	// Start location updates
+	[locationManager startUpdatingLocation];
+}
 
-- (void)xmppClient: (XMPPClient*)sender
-      didReceiveIQ: (XMPPIQ*)iq
+- (void)xmppClient:(XMPPClient *)sender didReceiveIQ:(XMPPIQ *)iq
 {
 	NSString *type = [[iq attributeForName: @"type"] stringValue];
 	
 	if ([type isEqualToString: @"result"]) {
-		// Location query result 
-		if ([iq elementForName: @"location" xmlns: @"http://buddycloud.com/protocol/location"])
-		{
-			// TODO: Handle location query result
-			return;
+		// Location query result
+		NSXMLElement *locationElement = [iq elementForName: @"location" xmlns: @"http://buddycloud.com/protocol/location"];
+		
+		if (locationElement) {
+			// Update place data
+			NSString *newPlaceLabel = [[locationElement attributeForName: @"label"] stringValue];
+			
+			currentPlaceId = [[[locationElement attributeForName: @"placeid"] stringValue] intValue];
+			
+			if (![newPlaceLabel isEqualToString:currentPlaceTitle]) {
+				[currentPlaceTitle release];
+				currentPlaceTitle = [newPlaceLabel retain];
+				
+				// Notification of location update
+				[[NSNotificationCenter defaultCenter] postNotificationName:[Events LOCATION_CHANGED] object:self];
+			}
 		}
 	}
 }

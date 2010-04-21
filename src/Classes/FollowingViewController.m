@@ -10,7 +10,6 @@
 #import "Events.h"
 #import "RosterEngine.h"
 #import "FollowerCellController.h"
-
 #import "XMPPUser.h"
 
 @implementation FollowingViewController

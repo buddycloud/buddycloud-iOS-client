@@ -23,9 +23,10 @@ NSString *discoFeatures[] = {
 };
 
 @implementation XMPPEngine
+@synthesize xmppClient;
 
 // Basic constructor
-- (XMPPEngine*) init {
+- (XMPPEngine *) init {
 	[super init];
 	
 	// Initialize the XMPPClient
@@ -46,17 +47,18 @@ NSString *discoFeatures[] = {
 	xmppPubsub = [[XMPPPubsub alloc] initWithXMPPClient:xmppClient delegate:self];
 	[xmppPubsub setPubsubServer:@"broadcaster.buddycloud.com"];
 	
-	// Connect to server
-	[xmppClient connect];
-	
 	return self;
 }
 
-- (XMPPClient*) client {
-	return xmppClient;
+- (void)connect
+{
+	if (xmppClient && ![xmppClient isConnected]) {
+		// Connect to server
+		[xmppClient connect];
+	}
 }
 
-- (void)xmppClientDidNotConnect: (XMPPClient*)sender
+- (void)xmppClientDidNotConnect:(XMPPClient *)sender
 {
 	UIAlertView *alert = [[UIAlertView alloc]
 						  initWithTitle: @"Connection failed!"
@@ -69,8 +71,7 @@ NSString *discoFeatures[] = {
 	[alert release];
 }
 
-- (void)xmppClient: (XMPPClient*)sender
-didNotAuthenticate: (NSXMLElement*)error
+- (void)xmppClient:(XMPPClient *)sender didNotAuthenticate:(NSXMLElement *)error
 {
 	UIAlertView *alert = [[UIAlertView alloc]
 						  initWithTitle: @"Authentication failed!"
@@ -83,15 +84,14 @@ didNotAuthenticate: (NSXMLElement*)error
 	[alert release];
 }
 
-- (void)xmppClientDidDisconnect: (XMPPClient*)sender
+- (void)xmppClientDidDisconnect:(XMPPClient *)sender
 {
-	if (!wasAuthedBefore)
-	{
+	if (!wasAuthedBefore) {
 		return [self xmppClient: sender didNotAuthenticate: nil];
 	}
 }
 
-- (void)xmppClientDidAuthenticate: (XMPPClient*)sender
+- (void)xmppClientDidAuthenticate:(XMPPClient *)sender
 {	
 	wasAuthedBefore = YES;
 	
@@ -107,38 +107,34 @@ didNotAuthenticate: (NSXMLElement*)error
 	[xmppClient sendElement: presenceStanza];
 }
 
-- (void)xmppClient: (XMPPClient*)sender
-      didReceiveIQ: (XMPPIQ*)iq
+- (void)xmppClient:(XMPPClient *)sender didReceiveIQ:(XMPPIQ *)iq
 {
 	NSString *type = [[iq attributeForName: @"type"] stringValue];
 	
 	if ([type isEqualToString: @"get"]) {
-		if ([iq elementForName: @"query" xmlns: @"urn:xmpp:ping"])
-		{
+		if ([iq elementForName: @"query" xmlns: @"urn:xmpp:ping"]) {
 			// Handle ping
-			return [self sendPingResultTo: [iq from] withElementID: [iq elementID]];
+			return [self sendPingResultTo: [iq from] withIQId: [iq elementID]];
 		}
-		else if ([iq elementForName: @"query" xmlns: @"jabber:iq:version"])
-		{
+		else if ([iq elementForName: @"query" xmlns: @"jabber:iq:version"]) {
 			// Handle client version request
-			return [self sendVersionResultTo: [iq from] withElementID: [iq elementID]];
+			return [self sendVersionResultTo: [iq from] withIQId: [iq elementID]];
 		}
-		else if ([iq elementForName: @"query" xmlns: @"http://jabber.org/protocol/disco#info"])
-		{
+		else if ([iq elementForName: @"query" xmlns: @"http://jabber.org/protocol/disco#info"]) {
 			// Handle feature discovery query
 			return [self sendFeatureDiscovery: iq];
 		}
 	}
 }
 
-- (void)xmppClient: (XMPPClient*)sender
-didReceiveBuddyRequest: (XMPPJID*)jid
+- (void)xmppClient:(XMPPClient *)sender didReceiveBuddyRequest:(XMPPJID *)jid
 {
 	NSString *msg = [NSString stringWithFormat:
 					 @"The user %@ wants to follow you.\n"
 					 @"Do you want to accept his/her request?", [jid bare]];
-	BuddyRequestDelegate *delegate = [[BuddyRequestDelegate alloc]
-									  initWithJID: jid];
+	
+	BuddyRequestDelegate *delegate = [[BuddyRequestDelegate alloc] initWithJID: jid];
+	
 	UIAlertView *alert = [[UIAlertView alloc]
 						  initWithTitle: @"Following request"
 						  message: msg
@@ -149,16 +145,16 @@ didReceiveBuddyRequest: (XMPPJID*)jid
 	[alert release];
 }
 
-- (void)sendPingResultTo:(XMPPJID *)jid withElementID:(NSString *)elementId
+- (void)sendPingResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId
 {
 	NSXMLElement *queryElement = [NSXMLElement elementWithName: @"query" xmlns: @"urn:xmpp:ping"];
 
 	NSXMLElement *iqStanza = [NSXMLElement elementWithName: @"iq"];
-	[iqStanza addAttributeWithName: @"to" stringValue: [jid full]];
+	[iqStanza addAttributeWithName: @"to" stringValue: [recipient full]];
 	[iqStanza addAttributeWithName: @"type" stringValue: @"result"];
 	
-	if (elementId) {
-		[iqStanza addAttributeWithName: @"id" stringValue: elementId];
+	if (iqId) {
+		[iqStanza addAttributeWithName: @"id" stringValue: iqId];
 	}
 	
 	[iqStanza addChild: queryElement];
@@ -166,7 +162,7 @@ didReceiveBuddyRequest: (XMPPJID*)jid
 	[xmppClient sendElement: iqStanza];
 }
 
-- (void)sendVersionResultTo: (XMPPJID*)jid withElementID: (NSString*)elementId
+- (void)sendVersionResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId
 {
 	// Format current device description
 	UIDevice *deviceInfo = [UIDevice currentDevice];
@@ -186,12 +182,11 @@ didReceiveBuddyRequest: (XMPPJID*)jid
 
 	// Build feature discovery IQ result
 	NSXMLElement *iqStanza = [NSXMLElement elementWithName: @"iq"];
-	[iqStanza addAttributeWithName: @"to" stringValue: [jid full]];
+	[iqStanza addAttributeWithName: @"to" stringValue: [recipient full]];
 	[iqStanza addAttributeWithName: @"type" stringValue: @"result"];
 	
-	if (elementId)
-	{
-		[iqStanza addAttributeWithName: @"id" stringValue: elementId];
+	if (iqId) {
+		[iqStanza addAttributeWithName: @"id" stringValue: iqId];
 	}
 										   
 	[iqStanza addChild: queryElement];
@@ -199,7 +194,7 @@ didReceiveBuddyRequest: (XMPPJID*)jid
 	[xmppClient sendElement: iqStanza];
 }
 
-- (void)sendFeatureDiscovery: (XMPPIQ*)iq
+- (void)sendFeatureDiscovery:(XMPPIQ *)iq
 {
 	// Build identity element
 	NSXMLElement *identityElement = [NSXMLElement elementWithName: @"identity"];

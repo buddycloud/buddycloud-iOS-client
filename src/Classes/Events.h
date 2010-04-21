@@ -13,6 +13,7 @@
 
 }
 
-+ (NSString*) ROSTER_UPDATED;
++ (NSString *) ROSTER_UPDATED;
++ (NSString *) LOCATION_CHANGED;
 
 @end

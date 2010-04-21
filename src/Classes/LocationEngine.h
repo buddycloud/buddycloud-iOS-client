@@ -15,11 +15,17 @@
 	XMPPClient *xmppClient;
 	CLLocationManager *locationManager;
 	
-	bool gotInitialPosition;
+	NSTimer *timer;
+	
+	int currentPlaceId;
+	NSString *currentPlaceTitle;
+	CLLocationCoordinate2D currentCoordinates;
 }
 
-- (void)sendLocationFromLocationManager: (CLLocationManager*)manager;
-- (void)sendLocationFromLocationManager: (CLLocationManager*)manager
-							 renewTimer: (BOOL)renew;
+@property(readonly) int currentPlaceId;
+@property(readonly) NSString *currentPlaceTitle;
+@property(readonly) CLLocationCoordinate2D currentCoordinates;
+
+- (void)sendLocationUpdate:(CLLocation *)location;
 
 @end

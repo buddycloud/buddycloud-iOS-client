@@ -65,12 +65,11 @@
 	
 	// Engines
 	xmpp = [[XMPPEngine alloc] init];
-	location = (LocationEngine*)[[LocationEngine alloc] initWithXMPP:[xmpp client]];
-	roster = [[RosterEngine alloc] initWithXMPP:[xmpp client]];
+	location = (LocationEngine*)[[LocationEngine alloc] initWithXMPP:[xmpp xmppClient]];
+	roster = [[RosterEngine alloc] initWithXMPP:[xmpp xmppClient]];
 	
-	if (launchOptions != nil) {
-//		NSString* launchUrl = [launchOptions objectForKey:@""]
-	}
+	// Start connection
+	[xmpp connect];
 	
 	return YES;
 }
