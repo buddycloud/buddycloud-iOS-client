@@ -8,10 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+@class MulticastDelegate;
 @class XMPPClient;
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Public XMPPPubsub definition
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 @interface XMPPPubsub : NSObject {
-	id delegate;
+	MulticastDelegate *multicastDelegate;
 	
 	XMPPClient *xmppClient;
 	
@@ -23,13 +28,33 @@
 @property(readonly) NSString *serverName;
 
 - (id)initWithXMPPClient:(XMPPClient *)client toServer:(NSString *)serverName;
-- (void)setDelegate:(id)delegate;
+
+- (void)addDelegate:(id)delegate;
+- (void)removeDelegate:(id)delegate;
 
 - (void)fetchOwnSubscriptions;
 
+- (void)fetchAffiliationsForNode:(NSString *)node;
+
+- (void)setSubscriptionForUser:(NSString *)jid onNode:(NSString *)node toSubscription:(NSString *)subscription;
 - (void)setAffiliationForUser:(NSString *)jid onNode:(NSString *)node toAffiliation:(NSString *)affiliation;
 
 @end
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Private XMPPPubsub definition
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@interface XMPPPubsub (PrivateAPI)
+
+- (void)fetchOwnSubscriptionsAfter:(NSString *)node;
+- (void)fetchAffiliationsForNode:(NSString *)node afterJid:(NSString *)jid;
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark XMPPPubsub Delegate definition
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @interface NSObject (XMPPPubsubDelegate)
 

@@ -45,7 +45,7 @@ NSString *discoFeatures[] = {
 	
 	// Initialize XMPPPubsub
 	xmppPubsub = [[XMPPPubsub alloc] initWithXMPPClient: xmppClient toServer: @"broadcaster.buddycloud.com"];
-	[xmppPubsub setDelegate: self];
+	[xmppPubsub addDelegate: self];
 	
 	return self;
 }
@@ -130,13 +130,13 @@ NSString *discoFeatures[] = {
 	
 	[xmppClient sendElement: presenceStanza];
 	
+	// Send initial pubsub presence
+	[self sendPresenceToPubsub];
+	
 	if (isConnectionCold) {
 		// Connection is cold
 		[xmppPubsub fetchOwnSubscriptions];
-
-	}
-	else {
-		[self sendPresenceToPubsub];
+		[xmppPubsub fetchAffiliationsForNode: [NSString stringWithFormat: @"/user/%@/channel", [[xmppClient myJID] bare]]];
 	}
 }
 
