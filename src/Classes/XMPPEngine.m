@@ -9,6 +9,7 @@
 #import "XMPPEngine.h"
 #import "XMPPClient.h"
 #import "XMPPPubsub.h"
+#import "XMPPUser.h"
 #import "XMPPJID.h"
 #import "XMPPIQ.h"
 #import "NSXMLElementAdditions.h"
@@ -24,6 +25,7 @@ NSString *discoFeatures[] = {
 
 @implementation XMPPEngine
 @synthesize xmppClient;
+@synthesize lastItemIdReceived;
 
 // Basic constructor
 - (XMPPEngine *) init {
@@ -42,9 +44,10 @@ NSString *discoFeatures[] = {
 	[xmppClient setPriority: 10];
 	[xmppClient setAllowsPlaintextAuth: NO];
 	[xmppClient setAutoPresence: NO];
+	[xmppClient setAutoRoster: NO];
 	
 	// Initialize XMPPPubsub
-	xmppPubsub = [[XMPPPubsub alloc] initWithXMPPClient: xmppClient toServer: @"broadcaster.buddycloud.com"];
+	xmppPubsub = [[XMPPPubsub alloc] initWithXMPPClient: xmppClient toServer: @"pubsub-bridge@broadcaster.buddycloud.com"];
 	[xmppPubsub addDelegate: self];
 	
 	return self;
@@ -56,6 +59,8 @@ NSString *discoFeatures[] = {
 		// Connect to server
 		isConnectionCold = YES;
 		
+		lastItemIdReceived = [[NSUserDefaults standardUserDefaults] integerForKey: @"lastItemIdReceived"];
+		
 		[xmppClient connect];
 	}
 }
@@ -66,13 +71,10 @@ NSString *discoFeatures[] = {
 		// Disconnect from server
 		isConnectionCold = YES;
 		
+		[[NSUserDefaults standardUserDefaults] setInteger: lastItemIdReceived forKey: @"lastItemIdReceived"];
+		
 		[xmppClient disconnect];
 	}
-}
-
-- (void)sendPresenceToPubsub
-{
-	[self sendPresenceToPubsubWithLastItemId: 0];
 }
 
 - (void)sendPresenceToPubsubWithLastItemId:(int)itemId
@@ -120,6 +122,9 @@ NSString *discoFeatures[] = {
 
 - (void)xmppClientDidAuthenticate:(XMPPClient *)sender
 {	
+	// Fetch roster
+	[xmppClient fetchRoster];
+	
 	// Build & send presence with caps stanza
 	NSXMLElement *capsElement = [NSXMLElement elementWithName: @"c" xmlns: @"http://jabber.org/protocol/caps"];
 	[capsElement addAttributeWithName: @"node" stringValue: @"http://buddycloud.com/caps"];
@@ -130,13 +135,46 @@ NSString *discoFeatures[] = {
 	
 	[xmppClient sendElement: presenceStanza];
 	
-	// Send initial pubsub presence
-	[self sendPresenceToPubsub];
-	
-	if (isConnectionCold) {
-		// Connection is cold
-		[xmppPubsub fetchOwnSubscriptions];
-		[xmppPubsub fetchAffiliationsForNode: [NSString stringWithFormat: @"/user/%@/channel", [[xmppClient myJID] bare]]];
+	if (isPubsubAddedToRoster) {
+		// Collect users node subscriptions
+		if (isConnectionCold) {
+			[xmppPubsub fetchOwnSubscriptions];
+		}
+		else {
+			// Send initial pubsub presence
+			[self sendPresenceToPubsubWithLastItemId: lastItemIdReceived];
+			
+			// WA: Reset pubsub presence (google)
+			if (lastItemIdReceived > 0) {
+				[self sendPresenceToPubsubWithLastItemId: -1];
+			}
+		}
+	}	
+}
+
+- (void)xmppClientDidUpdateRoster:(XMPPClient *)sender
+{
+	// Roster has been updated
+	if (!isPubsubAddedToRoster) {
+		// Interate roster checking for pubsub server
+		NSArray *roster = [xmppClient unsortedUsers];
+		
+		isPubsubAddedToRoster = YES;
+		
+		for (int i = 0; i < [roster count]; i++) {
+			XMPPUser *user = [roster objectAtIndex: i];
+			
+			if ([[[user jid] bare] isEqualToString: [xmppPubsub serverName]]) {
+				// Pubsub server is in roster
+				// Collect users node subscriptions
+				[xmppPubsub fetchOwnSubscriptions];
+				
+				return;
+			}
+		}
+		
+		// Pubsub server not found in roster
+		[xmppClient addBuddy: [XMPPJID jidWithString: [xmppPubsub serverName]] withNickname: @"Buddycloud Service"];
 	}
 }
 
@@ -162,20 +200,30 @@ NSString *discoFeatures[] = {
 
 - (void)xmppClient:(XMPPClient *)sender didReceiveBuddyRequest:(XMPPJID *)jid
 {
-	NSString *msg = [NSString stringWithFormat:
-					 @"The user %@ wants to follow you.\n"
-					 @"Do you want to accept his/her request?", [jid bare]];
-	
-	BuddyRequestDelegate *delegate = [[BuddyRequestDelegate alloc] initWithJID: jid];
-	
-	UIAlertView *alert = [[UIAlertView alloc]
-						  initWithTitle: @"Following request"
-						  message: msg
-						  delegate: delegate
-						  cancelButtonTitle: nil
-						  otherButtonTitles: @"Yes", @"No", nil];
-	[alert show];
-	[alert release];
+	if ([[jid bare] isEqualToString: [xmppPubsub serverName]]) {
+		// Accept pubsub server
+		[xmppClient acceptBuddyRequest: jid];		
+		
+		// Collect users node subscriptions
+		[xmppPubsub fetchOwnSubscriptions];
+	}
+	else {
+		// Display following request
+		NSString *msg = [NSString stringWithFormat:
+						 @"The user %@ wants to follow you.\n"
+						 @"Do you want to accept his/her request?", [jid bare]];
+		
+		BuddyRequestDelegate *delegate = [[BuddyRequestDelegate alloc] initWithJID: jid];
+		
+		UIAlertView *alert = [[UIAlertView alloc]
+							  initWithTitle: @"Following request"
+							  message: msg
+							  delegate: delegate
+							  cancelButtonTitle: nil
+							  otherButtonTitles: @"Yes", @"No", nil];
+		[alert show];
+		[alert release];
+	}	
 }
 
 - (void)sendPingResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId
@@ -256,6 +304,60 @@ NSString *discoFeatures[] = {
 	[iqStanza addChild: queryElement];
 	
 	[xmppClient sendElement: iqStanza];
+}
+
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveOwnSubscriptions:(NSMutableArray *)subscriptions
+{
+	// Handle users subscribed nodes
+	isConnectionCold = NO;
+	
+	// Send initial pubsub presence
+	[self sendPresenceToPubsubWithLastItemId: lastItemIdReceived];
+	
+	// WA: Reset pubsub presence (google)
+	if (lastItemIdReceived > 0) {
+		[self sendPresenceToPubsubWithLastItemId: -1];
+	}
+	
+	//Collect affiliations for the users node
+	[xmppPubsub fetchAffiliationsForNode: [NSString stringWithFormat: @"/user/%@/channel", [[xmppClient myJID] bare]]];
+}
+
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveAffiliations:(NSMutableArray *)affiliations forNode:(NSString *)node
+{
+	// Handle affiliations of users channel
+	NSString *ownChannelNode = [NSString stringWithFormat: @"/user/%@/channel", [[xmppClient myJID] bare]];
+	
+	if ([node isEqualToString: ownChannelNode]) {
+		NSArray *roster = [xmppClient unsortedUsers];
+		
+		// Iterate through roster
+		for (int i = 0; i < [roster count]; i++) {
+			XMPPUser *user = [roster objectAtIndex: i];
+			NSString *userJid = [[user jid] bare];
+			
+			if (![userJid isEqualToString: [xmppPubsub serverName]]) {
+				bool isAffiliated = NO;
+				
+				// Iterate through affiliations
+				for (int x = 0; x < [affiliations count]; x++) {
+					NSXMLElement *affiliation = [affiliations objectAtIndex: x];
+					
+					if ([[[affiliation attributeForName: @"jid"] stringValue] isEqualToString: userJid]) {
+						// User in roster found in affiliations
+						isAffiliated = YES;
+						
+						break;
+					}
+				}
+				
+				if (!isAffiliated) {
+					// User not affiliated
+					[xmppPubsub setAffiliationForUser: userJid onNode: ownChannelNode toAffiliation: @"publisher"];
+				}
+			}
+		}
+	}
 }
 
 @end

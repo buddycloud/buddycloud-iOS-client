@@ -22,9 +22,12 @@
 	XMPPPubsub *xmppPubsub;
 	
 	bool isConnectionCold;
+	bool isPubsubAddedToRoster;
+	int lastItemIdReceived;
 }
 
 @property(nonatomic, retain) XMPPClient *xmppClient;
+@property(readonly) int lastItemIdReceived;
 
 - (void)connect;
 - (void)disconnect;
@@ -38,7 +41,6 @@
 
 @interface XMPPEngine (PrivateAPI)
 
-- (void)sendPresenceToPubsub;
 - (void)sendPresenceToPubsubWithLastItemId:(int)itemId;
 
 - (void)sendPingResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId;
