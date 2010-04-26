@@ -73,6 +73,7 @@
 	[[controller nameLabel] setText:[user displayName]];
 	[[controller imageView] setImage:[UIImage imageNamed:@"defaultImage.png"]];
 	[controller release];
+	
 	// Outta here
     return cell;
 }

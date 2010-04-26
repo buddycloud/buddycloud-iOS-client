@@ -49,6 +49,7 @@ typedef enum {
 - (void)dealloc
 {
 	[multicastDelegate release];
+	[collectionArray release];
 	
 	[serverName release];
 	
@@ -71,11 +72,11 @@ typedef enum {
 - (void)xmppClient:(XMPPClient *)sender didReceiveIQ:(XMPPIQ *)iq
 {
 	if ([[[iq attributeForName: @"from"] stringValue] isEqualToString: serverName]) {
-		NSString *iqType = [[iq attributeForName:@"type"] stringValue];
+		NSString *iqType = [[iq attributeForName: @"type"] stringValue];
 		
-		if([iqType isEqualToString:@"result"]) {
+		if([iqType isEqualToString: @"result"]) {
 			// Process IQ result
-			NSArray *iqIdData = [[[iq attributeForName:@"id"] stringValue] componentsSeparatedByString: @":"];
+			NSArray *iqIdData = [[[iq attributeForName: @"id"] stringValue] componentsSeparatedByString: @":"];
 			
 			if ([iqIdData count] >= 2) {
 				int iqIdType = [(NSString *) [iqIdData objectAtIndex: 0] intValue];
@@ -89,7 +90,19 @@ typedef enum {
 					[self handleNodeAffiliationsResult: iq];
 				}
 			}
-		}		
+		}
+		else if ([iqType isEqualToString: @"set"]) {
+			// TODO: handle specific set data
+			
+			
+			// Acknowledge IQ set
+			NSXMLElement *iqElement = [NSXMLElement elementWithName: @"iq"];
+			[iqElement addAttributeWithName: @"to" stringValue: [[iq attributeForName: @"from"] stringValue]];
+			[iqElement addAttributeWithName: @"id" stringValue: [[iq attributeForName: @"id"] stringValue]];
+			[iqElement addAttributeWithName: @"type" stringValue: @"result"];
+			
+			[xmppClient sendElement: iqElement];
+		}
 	}
 }
 
@@ -141,7 +154,7 @@ typedef enum {
 	NSArray *subscriptions = [subscriptionsElement elementsForName: @"subscription"];
 	
 	[collectionArray addObjectsFromArray: subscriptions];
-	
+		
 	// Process RSM data
 	NSXMLElement *setElement = [subscriptionsElement elementForName: @"set" xmlns: @"http://jabber.org/protocol/rsm"];
 	

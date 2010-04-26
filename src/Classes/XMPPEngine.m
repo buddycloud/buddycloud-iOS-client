@@ -14,6 +14,9 @@
 #import "XMPPIQ.h"
 #import "NSXMLElementAdditions.h"
 #import "BuddyRequestDelegate.h"
+#import "UserItem.h"
+#import "ChannelItem.h"
+#import "Events.h"
 
 NSString *applicationVersion = @"iPhone-0.1.01";
 
@@ -311,6 +314,31 @@ NSString *discoFeatures[] = {
 	// Handle users subscribed nodes
 	isConnectionCold = NO;
 	
+	// Create followed item objects
+	NSMutableArray *followingList = [[NSMutableArray alloc] init];
+	for (NSXMLElement *elem in subscriptions) {
+		NSString *node = [[elem attributeForName:@"node"] stringValue];
+		NSArray *bits = [node componentsSeparatedByString:@"/"];
+		if ([node hasPrefix:@"/user/"] && [node hasSuffix:@"/channel"]) {
+			UserItem *item = [[UserItem alloc] init];
+			item.ident = [bits objectAtIndex:2];
+			item.channel = [[ChannelItem alloc] init];
+			item.channel.affiliation = [ChannelItem affiliationFromString:[[elem attributeForName:@"affiliation"] stringValue]];
+			item.channel.subscription = [ChannelItem subscriptionFromString:[[elem attributeForName:@"subscription"] stringValue]];
+			[followingList addObject:item];
+		}
+		else if ([node hasPrefix:@"/channel/"]) {
+			ChannelItem *item = [[ChannelItem alloc] init];
+			item.ident = [bits objectAtIndex:2];
+			item.affiliation = [ChannelItem affiliationFromString:[[elem attributeForName:@"affiliation"] stringValue]];
+			item.subscription = [ChannelItem subscriptionFromString:[[elem attributeForName:@"subscription"] stringValue]];
+			[followingList addObject:item];
+		}
+	}
+	if ([followingList count] > 0) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:[Events INITIAL_SUBSCRIPTIONS] object:followingList];
+	}
+	
 	// Send initial pubsub presence
 	[self sendPresenceToPubsubWithLastItemId: lastItemIdReceived];
 	
@@ -319,7 +347,7 @@ NSString *discoFeatures[] = {
 		[self sendPresenceToPubsubWithLastItemId: -1];
 	}
 	
-	//Collect affiliations for the users node
+	// Collect affiliations for the users node
 	[xmppPubsub fetchAffiliationsForNode: [NSString stringWithFormat: @"/user/%@/channel", [[xmppClient myJID] bare]]];
 }
 

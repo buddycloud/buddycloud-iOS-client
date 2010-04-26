@@ -51,6 +51,11 @@
 		57368152116CA838008DC56F /* FollowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57368151116CA838008DC56F /* FollowingViewController.m */; };
 		5736819C116CABE6008DC56F /* Events.m in Sources */ = {isa = PBXBuildFile; fileRef = 5736819B116CABE6008DC56F /* Events.m */; };
 		573681E4116CB627008DC56F /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 573681E3116CB627008DC56F /* Icon.png */; };
+		578B8AFC118313F000279015 /* FollowedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8AFB118313F000279015 /* FollowedItem.m */; };
+		578B8AFF118314D400279015 /* UserItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8AFE118314D400279015 /* UserItem.m */; };
+		578B8B091183156C00279015 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B081183156C00279015 /* Location.m */; };
+		578B8B1E1183171000279015 /* ChannelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B1D1183171000279015 /* ChannelItem.m */; };
+		578B8B6511831A7100279015 /* DataEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B6411831A7100279015 /* DataEngine.m */; };
 		579397CB117DD98200D340F1 /* XMPPPubsub.m in Sources */ = {isa = PBXBuildFile; fileRef = 579397CA117DD98200D340F1 /* XMPPPubsub.m */; };
 		57E0706A116B89EE00FDB70C /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E07069116B89EE00FDB70C /* libidn.a */; };
 /* End PBXBuildFile section */
@@ -137,6 +142,16 @@
 		5736819A116CABE6008DC56F /* Events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Events.h; sourceTree = "<group>"; };
 		5736819B116CABE6008DC56F /* Events.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Events.m; sourceTree = "<group>"; };
 		573681E3116CB627008DC56F /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		578B8AFA118313F000279015 /* FollowedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowedItem.h; sourceTree = "<group>"; };
+		578B8AFB118313F000279015 /* FollowedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowedItem.m; sourceTree = "<group>"; };
+		578B8AFD118314D400279015 /* UserItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserItem.h; sourceTree = "<group>"; };
+		578B8AFE118314D400279015 /* UserItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserItem.m; sourceTree = "<group>"; };
+		578B8B071183156C00279015 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		578B8B081183156C00279015 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		578B8B1C1183171000279015 /* ChannelItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelItem.h; sourceTree = "<group>"; };
+		578B8B1D1183171000279015 /* ChannelItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelItem.m; sourceTree = "<group>"; };
+		578B8B6311831A7100279015 /* DataEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataEngine.h; sourceTree = "<group>"; };
+		578B8B6411831A7100279015 /* DataEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataEngine.m; sourceTree = "<group>"; };
 		579397C9117DD98200D340F1 /* XMPPPubsub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPubsub.h; sourceTree = "<group>"; };
 		579397CA117DD98200D340F1 /* XMPPPubsub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPubsub.m; sourceTree = "<group>"; };
 		57E07069116B89EE00FDB70C /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libidn.a; sourceTree = "<group>"; };
@@ -172,6 +187,7 @@
 				4B1D18A10FB89B7A006B6FD7 /* BuddyRequestFollowDelegate.m */,
 				1D3623240D0F684500981E51 /* BuddycloudAppDelegate.h */,
 				1D3623250D0F684500981E51 /* BuddycloudAppDelegate.m */,
+				578B8AF9118313D500279015 /* Concepts */,
 				57368095116C87A3008DC56F /* Engines */,
 				5736814F116CA80F008DC56F /* UI */,
 			);
@@ -307,6 +323,8 @@
 				573680C0116C977C008DC56F /* RosterEngine.m */,
 				5736810E116CA1D8008DC56F /* LocationEngine.h */,
 				5736810F116CA1D8008DC56F /* LocationEngine.m */,
+				578B8B6311831A7100279015 /* DataEngine.h */,
+				578B8B6411831A7100279015 /* DataEngine.m */,
 			);
 			name = Engines;
 			sourceTree = "<group>";
@@ -326,6 +344,21 @@
 				5731B0771170F01D00F97613 /* FollowerCellController.m */,
 			);
 			name = UI;
+			sourceTree = "<group>";
+		};
+		578B8AF9118313D500279015 /* Concepts */ = {
+			isa = PBXGroup;
+			children = (
+				578B8AFA118313F000279015 /* FollowedItem.h */,
+				578B8AFB118313F000279015 /* FollowedItem.m */,
+				578B8AFD118314D400279015 /* UserItem.h */,
+				578B8AFE118314D400279015 /* UserItem.m */,
+				578B8B1C1183171000279015 /* ChannelItem.h */,
+				578B8B1D1183171000279015 /* ChannelItem.m */,
+				578B8B071183156C00279015 /* Location.h */,
+				578B8B081183156C00279015 /* Location.m */,
+			);
+			name = Concepts;
 			sourceTree = "<group>";
 		};
 		57E0706B116B8A5600FDB70C /* libidn */ = {
@@ -447,6 +480,11 @@
 				5731B03A1170EB2600F97613 /* EditSettingCell.m in Sources */,
 				5731B0781170F01D00F97613 /* FollowerCellController.m in Sources */,
 				579397CB117DD98200D340F1 /* XMPPPubsub.m in Sources */,
+				578B8AFC118313F000279015 /* FollowedItem.m in Sources */,
+				578B8AFF118314D400279015 /* UserItem.m in Sources */,
+				578B8B091183156C00279015 /* Location.m in Sources */,
+				578B8B1E1183171000279015 /* ChannelItem.m in Sources */,
+				578B8B6511831A7100279015 /* DataEngine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

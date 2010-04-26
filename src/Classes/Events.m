@@ -19,4 +19,12 @@
 	return @"LOCATION_CHANGED";
 }
 
++ (NSString *) INITIAL_SUBSCRIPTIONS {
+	return @"INITIAL_SUBSCRIPTIONS";
+}
+
++ (NSString *) FOLLOWINGLIST_UPDATED {
+	return @"FOLLOWINGLIST_UPDATED";
+}
+
 @end

@@ -1,0 +1,55 @@
+//
+//  ChannelItem.h
+//  Buddycloud
+//
+//  Created by Ross Savage on 4/24/10.
+//  Copyright 2010 buddycloud. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "FollowedItem.h"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Channel affiliation enumeration
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef enum {
+	CHANAFF_NONE,
+	CHANAFF_OWNER,
+	CHANAFF_MODERATOR,
+	CHANAFF_PUBLISHER,
+	CHANAFF_MEMBER
+} ChannelAffiliation;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Channel subscription enumeration
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+typedef enum {
+	CHANSUB_NONE,
+	CHANSUB_PENDING,
+	CHANSUB_SUBSCRIBED
+} ChannelSubscription;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Channel subscription
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@interface ChannelItem : FollowedItem {
+	NSString *title;
+	NSString *description;
+	ChannelAffiliation affiliation;
+	ChannelSubscription subscription;
+	int waitingMessages;
+}
+
+@property (nonatomic, retain) NSString *title;
+@property (nonatomic, retain) NSString *description;
+@property (nonatomic) ChannelAffiliation affiliation;
+@property (nonatomic) ChannelSubscription subscription;
+@property (nonatomic) int waitingMessages;
+
++ (ChannelAffiliation) affiliationFromString:(NSString*)str;
++ (ChannelSubscription) subscriptionFromString:(NSString*)str;
+
+@end
