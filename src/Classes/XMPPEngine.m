@@ -7,8 +7,8 @@
 //
 
 #import "XMPPEngine.h"
-#import "XMPPClient.h"
 #import "XMPPPubsub.h"
+#import "XMPPStream.h"
 #import "XMPPUser.h"
 #import "XMPPJID.h"
 #import "XMPPIQ.h"
@@ -27,30 +27,24 @@ NSString *discoFeatures[] = {
 };
 
 @implementation XMPPEngine
-@synthesize xmppClient;
+@synthesize xmppStream;
+@synthesize password;
 @synthesize lastItemIdReceived;
 
 // Basic constructor
 - (XMPPEngine *) init {
 	[super init];
 	
-	// Initialize the XMPPClient
-	xmppClient = [[XMPPClient alloc] init];
+	// Initialize the XMPPStream
+	xmppStream = [[XMPPStream alloc] init];
 	
-	[xmppClient addDelegate: self];
-	[xmppClient setDomain: @"jabber.buddycloud.com"];
-	[xmppClient setPort: 5222];
-	[xmppClient setMyJID: [XMPPJID jidWithUser: @"iphone2"
-										domain: @"buddycloud.com"
-								resource: @"iPhone/bcloud"]];
-	[xmppClient setPassword: @"iphone"];
-	[xmppClient setPriority: 10];
-	[xmppClient setAllowsPlaintextAuth: NO];
-	[xmppClient setAutoPresence: NO];
-	[xmppClient setAutoRoster: NO];
+	[xmppStream addDelegate: self];
+	[xmppStream setHostName: @"jabber.buddycloud.com"];
+	[xmppStream setHostPort: 5222];
+	[xmppStream setMyJID: [XMPPJID jidWithString: @"iphone2@buddycloud.com/iPhone/bcloud"]];
 	
 	// Initialize XMPPPubsub
-	xmppPubsub = [[XMPPPubsub alloc] initWithXMPPClient: xmppClient toServer: @"pubsub-bridge@broadcaster.buddycloud.com"];
+	xmppPubsub = [[XMPPPubsub alloc] initWithStream: xmppStream toServer: @"pubsub-bridge@broadcaster.buddycloud.com"];
 	[xmppPubsub addDelegate: self];
 	
 	return self;
@@ -58,25 +52,29 @@ NSString *discoFeatures[] = {
 
 - (void)connect
 {	
-	if (![xmppClient isConnected]) {
-		// Connect to server
+	if (![xmppStream isConnected]) {
 		isConnectionCold = YES;
 		
 		lastItemIdReceived = [[NSUserDefaults standardUserDefaults] integerForKey: @"lastItemIdReceived"];
 		
-		[xmppClient connect];
+		// Connect to server
+		NSError* error = nil;
+		
+		if (![xmppStream connect:&error]) {
+			NSLog(@"ERR [XMPPEngine connect] %@", error);
+		}
 	}
 }
 
 - (void)disconnect
 {
-	if ([xmppClient isConnected]) {
+	if ([xmppStream isConnected]) {
 		// Disconnect from server
 		isConnectionCold = YES;
 		
 		[[NSUserDefaults standardUserDefaults] setInteger: lastItemIdReceived forKey: @"lastItemIdReceived"];
 		
-		[xmppClient disconnect];
+		[xmppStream disconnect];
 	}
 }
 
@@ -94,10 +92,10 @@ NSString *discoFeatures[] = {
 		[pubsubPresenceStanza addChild: setElement];
 	}
 	
-	[xmppClient sendElement: pubsubPresenceStanza];
+	[xmppStream sendElement: pubsubPresenceStanza];
 }
 
-- (void)xmppClientDidNotConnect:(XMPPClient *)sender
+- (void)xmppStreamDidNotConnect:(XMPPStream *)sender
 {
 	UIAlertView *alert = [[UIAlertView alloc]
 						  initWithTitle: @"Connection failed!"
@@ -110,7 +108,7 @@ NSString *discoFeatures[] = {
 	[alert release];
 }
 
-- (void)xmppClient:(XMPPClient *)sender didNotAuthenticate:(NSXMLElement *)error
+- (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
 	UIAlertView *alert = [[UIAlertView alloc]
 						  initWithTitle: @"Authentication failed!"
@@ -123,10 +121,10 @@ NSString *discoFeatures[] = {
 	[alert release];
 }
 
-- (void)xmppClientDidAuthenticate:(XMPPClient *)sender
+- (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {	
-	// Fetch roster
-	[xmppClient fetchRoster];
+	// TODO: Fetch roster
+	//[xmppRoster fetchRoster];
 	
 	// Build & send presence with caps stanza
 	NSXMLElement *capsElement = [NSXMLElement elementWithName: @"c" xmlns: @"http://jabber.org/protocol/caps"];
@@ -136,7 +134,7 @@ NSString *discoFeatures[] = {
 	NSXMLElement *presenceStanza = [NSXMLElement elementWithName: @"presence"];
 	[presenceStanza addChild: capsElement];
 	
-	[xmppClient sendElement: presenceStanza];
+	[xmppStream sendElement: presenceStanza];
 	
 	if (isPubsubAddedToRoster) {
 		// Collect users node subscriptions
@@ -181,24 +179,32 @@ NSString *discoFeatures[] = {
 	}
 }
 
-- (void)xmppClient:(XMPPClient *)sender didReceiveIQ:(XMPPIQ *)iq
+- (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
 {
-	NSString *type = [[iq attributeForName: @"type"] stringValue];
+	NSString *iqType = [[iq attributeForName: @"type"] stringValue];
 	
-	if ([type isEqualToString: @"get"]) {
+	if ([iqType isEqualToString: @"get"]) {
 		if ([iq elementForName: @"query" xmlns: @"urn:xmpp:ping"]) {
 			// Handle ping
-			return [self sendPingResultTo: [iq from] withIQId: [iq elementID]];
+			[self sendPingResultTo: [iq from] withIQId: [iq elementID]];
+			
+			return YES;
 		}
 		else if ([iq elementForName: @"query" xmlns: @"jabber:iq:version"]) {
 			// Handle client version request
-			return [self sendVersionResultTo: [iq from] withIQId: [iq elementID]];
+			[self sendVersionResultTo: [iq from] withIQId: [iq elementID]];
+			
+			return YES;
 		}
 		else if ([iq elementForName: @"query" xmlns: @"http://jabber.org/protocol/disco#info"]) {
 			// Handle feature discovery query
-			return [self sendFeatureDiscovery: iq];
+			[self sendFeatureDiscovery: iq];
+			
+			return YES;
 		}
 	}
+	
+	return NO;
 }
 
 - (void)xmppClient:(XMPPClient *)sender didReceiveBuddyRequest:(XMPPJID *)jid
@@ -243,7 +249,7 @@ NSString *discoFeatures[] = {
 	
 	[iqStanza addChild: queryElement];
 	
-	[xmppClient sendElement: iqStanza];
+	[xmppStream sendElement: iqStanza];
 }
 
 - (void)sendVersionResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId
@@ -275,7 +281,7 @@ NSString *discoFeatures[] = {
 										   
 	[iqStanza addChild: queryElement];
 	
-	[xmppClient sendElement: iqStanza];
+	[xmppStream sendElement: iqStanza];
 }
 
 - (void)sendFeatureDiscovery:(XMPPIQ *)iq
@@ -306,7 +312,7 @@ NSString *discoFeatures[] = {
 	[iqStanza addAttributeWithName: @"type" stringValue: @"result"];
 	[iqStanza addChild: queryElement];
 	
-	[xmppClient sendElement: iqStanza];
+	[xmppStream sendElement: iqStanza];
 }
 
 - (void)xmppPubsub:(XMPPPubsub *)sender didReceiveOwnSubscriptions:(NSMutableArray *)subscriptions

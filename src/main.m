@@ -17,15 +17,10 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "XMPPClient.h"
 
-XMPPClient *xmppClient;
-
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	xmppClient = [[[XMPPClient alloc] init] autorelease];
 	int ret = UIApplicationMain(argc, argv, nil, nil);
 	[pool release];
 	return ret;

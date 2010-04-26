@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class XMPPClient;
+@class XMPPStream;
 @class XMPPPubsub;
 @class XMPPJID;
 @class XMPPIQ;
@@ -18,15 +18,18 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @interface XMPPEngine : NSObject {
-	XMPPClient *xmppClient;
+	XMPPStream *xmppStream;
 	XMPPPubsub *xmppPubsub;
+	
+	NSString *password;
 	
 	bool isConnectionCold;
 	bool isPubsubAddedToRoster;
 	int lastItemIdReceived;
 }
 
-@property(nonatomic, retain) XMPPClient *xmppClient;
+@property(nonatomic, retain) XMPPStream *xmppStream;
+@property(nonatomic, retain) NSString *password;
 @property(readonly) int lastItemIdReceived;
 
 - (void)connect;

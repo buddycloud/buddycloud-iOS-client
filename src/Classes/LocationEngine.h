@@ -9,10 +9,14 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
-@class XMPPClient;
+@class XMPPStream;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Public LocationEngine definition
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @interface LocationEngine : NSObject <CLLocationManagerDelegate> {
-	XMPPClient *xmppClient;
+	XMPPStream *xmppStream;
 	CLLocationManager *locationManager;
 	
 	NSTimer *timer;
@@ -25,6 +29,16 @@
 @property(readonly) int currentPlaceId;
 @property(readonly) NSString *currentPlaceTitle;
 @property(readonly) CLLocationCoordinate2D currentCoordinates;
+
+- (LocationEngine*) initWithStream:(XMPPStream *)xmppStream;
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Private LocationEngine definition
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@interface LocationEngine (PrivateAPI)
 
 - (void)sendLocationUpdate:(CLLocation *)location;
 

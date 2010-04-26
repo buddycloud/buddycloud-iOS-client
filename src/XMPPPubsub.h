@@ -7,20 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "XMPPModule.h"
 #import "DDXML.h"
 
-@class MulticastDelegate;
-@class XMPPClient;
+@class XMPPStream;
 @class XMPPIQ;
+@protocol XMPPPubsubDelegate;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Public XMPPPubsub definition
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface XMPPPubsub : NSObject {
-	MulticastDelegate *multicastDelegate;
-	
-	XMPPClient *xmppClient;
+@interface XMPPPubsub : XMPPModule {
 	NSString *serverName;
 	
 	int iqIdCounter;
@@ -30,10 +28,7 @@
 
 @property(readonly) NSString *serverName;
 
-- (id)initWithXMPPClient:(XMPPClient *)client toServer:(NSString *)serverName;
-
-- (void)addDelegate:(id)delegate;
-- (void)removeDelegate:(id)delegate;
+- (id)initWithStream:(XMPPStream *)xmppStream toServer:(NSString *)serverName;
 
 - (void)fetchOwnSubscriptions;
 
@@ -68,7 +63,8 @@
 #pragma mark XMPPPubsub Delegate definition
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface NSObject (XMPPPubsubDelegate)
+@protocol XMPPPubsubDelegate
+@optional
 
 - (void)xmppPubsub:(XMPPPubsub *)sender didReceiveOwnSubscriptions:(NSMutableArray *)subscriptions;
 - (void)xmppPubsub:(XMPPPubsub *)sender didReceiveAffiliations:(NSMutableArray *)affiliations forNode:(NSString *)node;

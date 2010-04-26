@@ -7,11 +7,9 @@
 //
 
 #import "XMPPPubsub.h"
-#import "XMPPClient.h"
 #import "XMPPJID.h"
 #import "XMPPIQ.h"
 #import "NSXMLElementAdditions.h"
-#import "MulticastDelegate.h"
 
 #define RSM_MAX 50
 
@@ -29,18 +27,14 @@ typedef enum {
 @implementation XMPPPubsub
 @synthesize serverName;
 
-- (id)initWithXMPPClient:(XMPPClient *)client toServer:(NSString *)aServerName;
+
+- (id)initWithStream:(XMPPStream *)aXmppStream toServer:(NSString *)aServerName
 {
-	if(self = [super init])
+	if ((self = [super initWithStream:aXmppStream]))
 	{
-		multicastDelegate = [[MulticastDelegate alloc] init];
-		
 		collectionArray = [[NSMutableArray alloc] initWithCapacity: 0];
 		
 		serverName = [aServerName retain];
-	
-		xmppClient = [client retain];
-		[xmppClient addDelegate:self];
 	}
 	
 	return self;
@@ -48,31 +42,21 @@ typedef enum {
 
 - (void)dealloc
 {
-	[multicastDelegate release];
 	[collectionArray release];
 	
 	[serverName release];
 	
-	[xmppClient removeDelegate:self];
-	[xmppClient release];
-	
 	[super dealloc];
 }
 
-- (void)addDelegate:(id)delegate
+- (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
 {
-	[multicastDelegate addDelegate:delegate];
-}
-
-- (void)removeDelegate:(id)delegate
-{
-	[multicastDelegate removeDelegate:delegate];
-}
-
-- (void)xmppClient:(XMPPClient *)sender didReceiveIQ:(XMPPIQ *)iq
-{
+	BOOL result = NO;
+	
 	if ([[[iq attributeForName: @"from"] stringValue] isEqualToString: serverName]) {
 		NSString *iqType = [[iq attributeForName: @"type"] stringValue];
+		
+		result = YES;
 		
 		if([iqType isEqualToString: @"result"]) {
 			// Process IQ result
@@ -101,9 +85,11 @@ typedef enum {
 			[iqElement addAttributeWithName: @"id" stringValue: [[iq attributeForName: @"id"] stringValue]];
 			[iqElement addAttributeWithName: @"type" stringValue: @"result"];
 			
-			[xmppClient sendElement: iqElement];
+			[xmppStream sendElement: iqElement];
 		}
 	}
+	
+	return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,7 +130,7 @@ typedef enum {
 	[iqStanza addAttributeWithName: @"id" stringValue: [NSString stringWithFormat: @"%d:%d", kIqId_getOwnSubscriptions, iqIdCounter++]];
 	[iqStanza addChild: pubsubElement];
 	
-	[xmppClient sendElement: iqStanza];
+	[xmppStream sendElement: iqStanza];
 }
 
 - (void)handleOwnSubscriptionsResult:(XMPPIQ *)iq
@@ -193,7 +179,7 @@ typedef enum {
 	[iqStanza addAttributeWithName: @"id" stringValue: [NSString stringWithFormat: @"%d:%d", kIqId_getNodeMetadata, iqIdCounter++]];
 	[iqStanza addChild: metadataElement];
 	
-	[xmppClient sendElement: iqStanza];
+	[xmppStream sendElement: iqStanza];
 }
 
 - (void)fetchAffiliationsForNode:(NSString *)node
@@ -233,7 +219,7 @@ typedef enum {
 	[iqStanza addAttributeWithName: @"id" stringValue: [NSString stringWithFormat: @"%d:%d", kIqId_getNodeAffiliations, iqIdCounter++]];
 	[iqStanza addChild: pubsubElement];
 	
-	[xmppClient sendElement: iqStanza];
+	[xmppStream sendElement: iqStanza];
 }
 
 - (void)handleNodeAffiliationsResult:(XMPPIQ *)iq
@@ -297,7 +283,7 @@ typedef enum {
 	[iqStanza addAttributeWithName: @"id" stringValue: [NSString stringWithFormat: @"%d:%d", kIqId_getNodeItems, iqIdCounter++]];
 	[iqStanza addChild: pubsubElement];
 	
-	[xmppClient sendElement: iqStanza];	
+	[xmppStream sendElement: iqStanza];	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -327,7 +313,7 @@ typedef enum {
 	[iqStanza addAttributeWithName: @"id" stringValue: [NSString stringWithFormat: @"%d:%d", kIqId_setSubscription, iqIdCounter++]];
 	[iqStanza addChild: pubsubElement];
 	
-	[xmppClient sendElement: iqStanza];
+	[xmppStream sendElement: iqStanza];
 }
 
 - (void)setAffiliationForUser:(NSString *)jid onNode:(NSString *)node toAffiliation:(NSString *)affiliation
@@ -353,7 +339,7 @@ typedef enum {
 	[iqStanza addAttributeWithName: @"id" stringValue: [NSString stringWithFormat: @"%d:%d", kIqId_setAffiliation, iqIdCounter++]];
 	[iqStanza addChild: pubsubElement];
 	
-	[xmppClient sendElement: iqStanza];
+	[xmppStream sendElement: iqStanza];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -379,7 +365,7 @@ typedef enum {
 	[iqStanza addAttributeWithName: @"id" stringValue: [NSString stringWithFormat: @"%d:%d", kIqId_publishItem, iqIdCounter++]];
 	[iqStanza addChild: pubsubElement];
 	
-	[xmppClient sendElement: iqStanza];	
+	[xmppStream sendElement: iqStanza];	
 }
 
 @end

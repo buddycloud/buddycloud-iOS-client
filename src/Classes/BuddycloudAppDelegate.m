@@ -66,6 +66,8 @@
 	
 	// Engines
 	xmpp = [[XMPPEngine alloc] init];
+	xmpp.password = @"iphone";
+	
 	location = (LocationEngine*)[[LocationEngine alloc] initWithXMPP:[xmpp xmppClient]];
 	roster = [[RosterEngine alloc] initWithXMPP:[xmpp xmppClient]];
 	data = [[DataEngine alloc] initWithRosterEngine:roster];

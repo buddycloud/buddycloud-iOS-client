@@ -7,7 +7,7 @@
 //
 
 #import "LocationEngine.h"
-#import "XMPPClient.h"
+#import "XMPPStream.h"
 #import "NSXMLElementAdditions.h"
 #import "Events.h"
 
@@ -16,22 +16,22 @@
 @synthesize currentPlaceTitle;
 @synthesize currentCoordinates;
 
-- (LocationEngine*) initWithXMPP:(XMPPClient*)client {
+- (LocationEngine*) initWithStream:(XMPPStream *)aXmppStream {
 	[super init];
 	
 	// Initialize location manager
 	locationManager = [[CLLocationManager alloc] init];
 	[locationManager setDelegate: self];
 	
-	// Initialize XMPPClient
-	xmppClient = client;
-	[xmppClient addDelegate: self];
+	// Initialize XMPPStream
+	xmppStream = aXmppStream;
+	[xmppStream addDelegate: self];
 	
 	return self;
 }
 
 - (void) dealloc {
-	[xmppClient removeDelegate:self];
+	[xmppStream removeDelegate:self];
 	
 	[locationManager stopUpdatingLocation];
 	[locationManager release];
@@ -76,7 +76,7 @@
 			[iqStanza addAttributeWithName: @"id" stringValue: @"location1"];
 			[iqStanza addChild: locationElement];
 			
-			[xmppClient sendElement: iqStanza];
+			[xmppStream sendElement: iqStanza];
 		}
 	}
 	
@@ -90,29 +90,29 @@
 	[self sendLocationUpdate: [locationManager location]];
 }
 
-- (void)xmppClientDidDisconnect:(XMPPClient *)sender
+- (void)xmppStreamDidDisconnect:(XMPPStream *)sender
 {
-	// XMPPClient has disconnected
+	// XMPPStream has disconnected
 	[timer invalidate];
 	
 	// Stop location updates
 	[locationManager stopUpdatingLocation];
 }
 
-- (void)xmppClientDidAuthenticate:(XMPPClient *)sender
+- (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {
-	// XMPPClient has authenticated connection
+	// XMPPStream has authenticated connection
 	[self forceLocationUpdate];
 	
 	// Start location updates
 	[locationManager startUpdatingLocation];
 }
 
-- (void)xmppClient:(XMPPClient *)sender didReceiveIQ:(XMPPIQ *)iq
+- (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
 {
-	NSString *type = [[iq attributeForName: @"type"] stringValue];
+	NSString *iqType = [[iq attributeForName: @"type"] stringValue];
 	
-	if ([type isEqualToString: @"result"]) {
+	if ([iqType isEqualToString: @"result"]) {
 		// Location query result
 		NSXMLElement *locationElement = [iq elementForName: @"location" xmlns: @"http://buddycloud.com/protocol/location"];
 		
@@ -130,7 +130,11 @@
 				[[NSNotificationCenter defaultCenter] postNotificationName:[Events LOCATION_CHANGED] object:self];
 			}
 		}
+		
+		return YES;
 	}
+	
+	return NO;
 }
 
 
