@@ -50,7 +50,7 @@
 							<object class="IBUIImageView" id="90052941">
 								<reference key="NSNextResponder" ref="318849641"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{6, 5}, {48, 48}}</string>
+								<string key="NSFrame">{{5, 5}, {48, 48}}</string>
 								<reference key="NSSuperview" ref="318849641"/>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -58,14 +58,14 @@
 							<object class="IBUILabel" id="39599967">
 								<reference key="NSNextResponder" ref="318849641"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{62, -3}, {240, 40}}</string>
+								<string key="NSFrame">{{62, 0}, {230, 30}}</string>
 								<reference key="NSSuperview" ref="318849641"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<string key="IBUIText">Label</string>
+								<string key="IBUIText">Title</string>
 								<object class="NSFont" key="IBUIFont">
 									<string key="NSName">Helvetica-Bold</string>
 									<double key="NSSize">17</double>
@@ -79,8 +79,38 @@
 								<int key="IBUIBaselineAdjustment">1</int>
 								<float key="IBUIMinimumFontSize">10</float>
 							</object>
+							<object class="IBUILabel" id="720591186">
+								<reference key="NSNextResponder" ref="318849641"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{63, 24}, {230, 31}}</string>
+								<reference key="NSSuperview" ref="318849641"/>
+								<object class="NSColor" key="IBUIBackgroundColor">
+									<int key="NSColorSpace">1</int>
+									<bytes key="NSRGB">MCAwIDAgMAA</bytes>
+								</object>
+								<bool key="IBUIOpaque">NO</bool>
+								<bool key="IBUIClipsSubviews">YES</bool>
+								<int key="IBUIContentMode">5</int>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<string key="IBUIText">Description</string>
+								<object class="NSFont" key="IBUIFont">
+									<string key="NSName">Helvetica</string>
+									<double key="NSSize">12</double>
+									<int key="NSfFlags">16</int>
+								</object>
+								<object class="NSColor" key="IBUITextColor">
+									<int key="NSColorSpace">1</int>
+									<bytes key="NSRGB">MC41IDAuNSAwLjUAA</bytes>
+								</object>
+								<nil key="IBUIHighlightedColor"/>
+								<int key="IBUIBaselineAdjustment">1</int>
+								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
+								<float key="IBUIMinimumFontSize">10</float>
+								<int key="IBUINumberOfLines">2</int>
+							</object>
 						</object>
-						<string key="NSFrameSize">{295, 57}</string>
+						<string key="NSFrameSize">{296, 58}</string>
 						<reference key="NSSuperview" ref="559061398"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
@@ -93,7 +123,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 				</object>
-				<string key="NSFrameSize">{295, 57}</string>
+				<string key="NSFrameSize">{296, 58}</string>
 				<reference key="NSSuperview"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
@@ -131,6 +161,14 @@
 					</object>
 					<int key="connectionID">7</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">descriptionLabel</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="720591186"/>
+					</object>
+					<int key="connectionID">14</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -157,8 +195,9 @@
 						<reference key="object" ref="559061398"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="39599967"/>
 							<reference ref="90052941"/>
+							<reference ref="39599967"/>
+							<reference ref="720591186"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -171,6 +210,13 @@
 						<int key="objectID">4</int>
 						<reference key="object" ref="39599967"/>
 						<reference key="parent" ref="559061398"/>
+						<string key="objectName">Title</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">8</int>
+						<reference key="object" ref="720591186"/>
+						<reference key="parent" ref="559061398"/>
+						<string key="objectName">Description</string>
 					</object>
 				</object>
 			</object>
@@ -184,12 +230,14 @@
 					<string>2.IBPluginDependency</string>
 					<string>3.IBPluginDependency</string>
 					<string>4.IBPluginDependency</string>
+					<string>8.IBPluginDependency</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>FollowerCellController</string>
 					<string>UIResponder</string>
-					<string>{{519, 454}, {295, 57}}</string>
+					<string>{{384, 349}, {296, 58}}</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -211,7 +259,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">7</int>
+			<int key="maxID">14</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -223,11 +271,13 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>descriptionLabel</string>
 							<string>imageView</string>
 							<string>nameLabel</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>UILabel</string>
 							<string>UIImageView</string>
 							<string>UILabel</string>
 						</object>
@@ -243,143 +293,6 @@
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">AsyncSocket.h</string>
 					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>xmppClient:didNotAuthenticate:</string>
-							<string>xmppClient:didNotRegister:</string>
-							<string>xmppClient:didReceiveBuddyRequest:</string>
-							<string>xmppClient:didReceiveIQ:</string>
-							<string>xmppClient:didReceiveMessage:</string>
-							<string>xmppClientConnecting:</string>
-							<string>xmppClientDidAuthenticate:</string>
-							<string>xmppClientDidConnect:</string>
-							<string>xmppClientDidDisconnect:</string>
-							<string>xmppClientDidNotConnect:</string>
-							<string>xmppClientDidRegister:</string>
-							<string>xmppClientDidUpdateRoster:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>XMPPClient</string>
-							<string>XMPPClient</string>
-							<string>XMPPClient</string>
-							<string>XMPPClient</string>
-							<string>XMPPClient</string>
-							<string>XMPPClient</string>
-							<string>XMPPClient</string>
-							<string>XMPPClient</string>
-							<string>XMPPClient</string>
-							<string>XMPPClient</string>
-							<string>XMPPClient</string>
-							<string>XMPPClient</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="357801225">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">XMPPClient.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">xmppPing:didReceivePong:</string>
-						<string key="NS.object.0">XMPPPing</string>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="406251802">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">XMPPPing.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>xmppPubsub:didReceiveAffiliations:</string>
-							<string>xmppPubsub:didReceiveOwnSubscriptions:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>XMPPPubsub</string>
-							<string>XMPPPubsub</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="826970121">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">XMPPPubsub.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>xmppStream:didNotAuthenticate:</string>
-							<string>xmppStream:didNotRegister:</string>
-							<string>xmppStream:didReceiveError:</string>
-							<string>xmppStream:didReceiveIQ:</string>
-							<string>xmppStream:didReceiveMessage:</string>
-							<string>xmppStream:didReceivePresence:</string>
-							<string>xmppStream:didSendElementWithTag:</string>
-							<string>xmppStreamDidAuthenticate:</string>
-							<string>xmppStreamDidClose:</string>
-							<string>xmppStreamDidOpen:</string>
-							<string>xmppStreamDidRegister:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>XMPPStream</string>
-							<string>XMPPStream</string>
-							<string>XMPPStream</string>
-							<string>XMPPStream</string>
-							<string>XMPPStream</string>
-							<string>XMPPStream</string>
-							<string>XMPPStream</string>
-							<string>XMPPStream</string>
-							<string>XMPPStream</string>
-							<string>XMPPStream</string>
-							<string>XMPPStream</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="121648858">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">XMPPStream.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">XMPPClient</string>
-					<string key="superclassName">NSObject</string>
-					<reference key="sourceIdentifier" ref="357801225"/>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">XMPPPing</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">delegate</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<reference key="sourceIdentifier" ref="406251802"/>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">XMPPPubsub</string>
-					<string key="superclassName">NSObject</string>
-					<reference key="sourceIdentifier" ref="826970121"/>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">XMPPStream</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">delegate</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<reference key="sourceIdentifier" ref="121648858"/>
 				</object>
 			</object>
 			<object class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">

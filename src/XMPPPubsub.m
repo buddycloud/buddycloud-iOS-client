@@ -22,6 +22,8 @@ typedef enum {
 	kIqId_getNodeItems,
 	kIqId_setSubscription,
 	kIqId_setAffiliation,
+	kIqId_subscribeToNode,
+	kIqId_unsubscribeToNode,
 	kIqId_publishItem
 } iqIdTypes;
 
@@ -375,6 +377,56 @@ typedef enum {
 	[iqStanza addChild: pubsubElement];
 	
 	[xmppStream sendElement: iqStanza];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Node Subscription Management
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)subscribeToNode:(NSString *)node
+{
+	// Subscribe user to a node
+	// http://xmpp.org/extensions/xep-0060.html#subscriber-subscribe
+	NSLog(@"--- XMPPPubsub subscribeToNode: %@", node);
+	
+	// Build & send subscribe stanza
+	NSXMLElement *subscribeElement = [NSXMLElement elementWithName: @"subscribe"];
+	[subscribeElement addAttributeWithName: @"node" stringValue: node];
+	[subscribeElement addAttributeWithName: @"jid" stringValue: [[xmppStream myJID] bare]];
+	
+	NSXMLElement *pubsubElement = [NSXMLElement elementWithName: @"pubsub" xmlns: @"http://jabber.org/protocol/pubsub"];
+	[pubsubElement addChild: subscribeElement];
+	
+	NSXMLElement *iqStanza = [NSXMLElement elementWithName: @"iq"];
+	[iqStanza addAttributeWithName: @"to" stringValue: serverName];
+	[iqStanza addAttributeWithName: @"type" stringValue: @"set"];
+	[iqStanza addAttributeWithName: @"id" stringValue: [NSString stringWithFormat: @"%d:%d", kIqId_subscribeToNode, iqIdCounter++]];
+	[iqStanza addChild: pubsubElement];
+	
+	[xmppStream sendElement: iqStanza];	
+}
+
+- (void)unsubscribeToNode:(NSString *)node
+{
+	// Subscribe user to a node
+	// http://xmpp.org/extensions/xep-0060.html#subscriber-unsubscribe
+	NSLog(@"--- XMPPPubsub unsubscribeToNode: %@", node);
+	
+	// Build & send unsubscribe stanza
+	NSXMLElement *unsubscribeElement = [NSXMLElement elementWithName: @"unsubscribe"];
+	[unsubscribeElement addAttributeWithName: @"node" stringValue: node];
+	[unsubscribeElement addAttributeWithName: @"jid" stringValue: [[xmppStream myJID] bare]];
+	
+	NSXMLElement *pubsubElement = [NSXMLElement elementWithName: @"pubsub" xmlns: @"http://jabber.org/protocol/pubsub"];
+	[pubsubElement addChild: unsubscribeElement];
+	
+	NSXMLElement *iqStanza = [NSXMLElement elementWithName: @"iq"];
+	[iqStanza addAttributeWithName: @"to" stringValue: serverName];
+	[iqStanza addAttributeWithName: @"type" stringValue: @"set"];
+	[iqStanza addAttributeWithName: @"id" stringValue: [NSString stringWithFormat: @"%d:%d", kIqId_unsubscribeToNode, iqIdCounter++]];
+	[iqStanza addChild: pubsubElement];
+	
+	[xmppStream sendElement: iqStanza];	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

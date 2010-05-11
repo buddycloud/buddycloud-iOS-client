@@ -86,6 +86,7 @@
 	
 	if (item) {
 		[[controller nameLabel] setText: [item title]];
+		[[controller descriptionLabel] setText: [item description]];
 		
 		if ([item isKindOfClass: [UserItem class]]) {
 			[[controller imageView] setImage: [UIImage imageNamed:@"contact.png"]];

@@ -10,7 +10,7 @@
 
 
 @implementation FollowerCellController
-@synthesize nameLabel;
+@synthesize nameLabel, descriptionLabel;
 @synthesize imageView;
 
 /*
@@ -33,7 +33,8 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-	[self.nameLabel setText:@"foobar"];
+	[nameLabel setText:@"foobar"];
+	[descriptionLabel setText:@"description"];
 }
 
 /*

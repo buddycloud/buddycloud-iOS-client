@@ -39,6 +39,9 @@
 - (void)setSubscriptionForUser:(NSString *)jid onNode:(NSString *)node toSubscription:(NSString *)subscription;
 - (void)setAffiliationForUser:(NSString *)jid onNode:(NSString *)node toAffiliation:(NSString *)affiliation;
 
+- (void)subscribeToNode:(NSString *)node;
+- (void)unsubscribeToNode:(NSString *)node;
+
 - (void)publishItemToNode:(NSString *)node withItem:(NSXMLElement *)itemElement;
 
 @end
