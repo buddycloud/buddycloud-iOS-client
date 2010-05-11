@@ -10,10 +10,11 @@
 
 
 @implementation ChannelItem
-@synthesize title, description, affiliation, subscription, waitingMessages;
+@synthesize affiliation, subscription, waitingMessages;
 
 // Parse a channel affiliation string
-+ (ChannelAffiliation) affiliationFromString:(NSString*)str {
++ (ChannelAffiliation) affiliationFromString:(NSString*)str
+{
 	if ([str isEqualToString:@"none"]) {
 		return CHANAFF_NONE;
 	} else if ([str isEqualToString:@"owner"]) {
@@ -30,7 +31,8 @@
 }
 
 // Parse a channel subscription string
-+ (ChannelSubscription) subscriptionFromString:(NSString*)str {
++ (ChannelSubscription) subscriptionFromString:(NSString*)str
+{
 	if ([str isEqualToString:@"none"]) {
 		return CHANSUB_NONE;
 	} else if ([str isEqualToString:@"pending"]) {

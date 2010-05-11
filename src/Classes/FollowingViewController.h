@@ -7,11 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+@class FollowingDataModel;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Public FollowingViewController definition
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @interface FollowingViewController : UITableViewController {
-	NSMutableArray *following;
+	FollowingDataModel *followingList;
+	NSArray *orderedKeys;
+	
 	UITableViewCell *followerCell;
 }
-@property (nonatomic, assign) IBOutlet UITableViewCell *followerCell;
+
+@property(nonatomic, retain) NSArray *orderedKeys;
+@property(nonatomic, assign) IBOutlet UITableViewCell *followerCell;
+
+- (id)initWithStyle:(UITableViewStyle)style andDataModel:(FollowingDataModel *)dataModel;
 
 @end

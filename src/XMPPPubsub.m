@@ -7,6 +7,7 @@
 //
 
 #import "XMPPPubsub.h"
+#import "XMPPStream.h"
 #import "XMPPJID.h"
 #import "XMPPIQ.h"
 #import "NSXMLElementAdditions.h"
@@ -69,6 +70,10 @@ typedef enum {
 					// Own subscriptions packet received
 					[self handleOwnSubscriptionsResult: iq];
 				}
+				else if (iqIdType == kIqId_getNodeMetadata) {
+					// Node metadata packet received
+					[self handleNodeMetadataResult: iq];
+				}
 				else if (iqIdType == kIqId_getNodeAffiliations) {
 					// Node affiliations packet received
 					[self handleNodeAffiliationsResult: iq];
@@ -100,6 +105,7 @@ typedef enum {
 {
 	// Fetch the users own node subscriptions
 	// http://xmpp.org/extensions/xep-0060.html#entity-subscriptions
+	NSLog(@"--- XMPPPubsub fetchOwnSubscriptions");
 	
 	[collectionArray removeAllObjects];
 	
@@ -110,6 +116,7 @@ typedef enum {
 {
 	// Fetch the users own node subscriptions
 	// http://xmpp.org/extensions/xep-0060.html#entity-subscriptions
+	NSLog(@"--- XMPPPubsub fetchOwnSubscriptionsAfter: %@", node);
 	
 	// Build & send subscriptions stanza
 	NSXMLElement *pubsubElement = [NSXMLElement elementWithName: @"pubsub" xmlns: @"http://jabber.org/protocol/pubsub"];
@@ -168,6 +175,7 @@ typedef enum {
 {
 	// Fetch the metadata of a node
 	// http://xmpp.org/extensions/xep-0060.html#entity-metadata
+	NSLog(@"--- XMPPPubsub fetchMetadataForNode: %@", node);
 		
 	// Build & send metadata stanza
 	NSXMLElement *metadataElement = [NSXMLElement elementWithName: @"query" xmlns: @"http://jabber.org/protocol/disco#info"];
@@ -182,10 +190,32 @@ typedef enum {
 	[xmppStream sendElement: iqStanza];
 }
 
+- (void)handleNodeMetadataResult:(XMPPIQ *)iq
+{	
+	NSXMLElement *queryElement = [iq elementForName: @"query" xmlns: @"http://jabber.org/protocol/disco#info"];
+	NSXMLElement *xElement = [queryElement elementForName: @"x" xmlns: @"jabber:x:data"];
+	NSString *node = [[queryElement attributeForName: @"node"] stringValue];
+	NSArray *fields = [xElement elementsForName: @"field"];
+	
+	NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithCapacity: [fields count]];
+	
+	for (NSXMLElement *fieldElement in fields) {
+		[metadata setObject: [[fieldElement elementForName: @"value"] stringValue] 
+					 forKey: [[fieldElement attributeForName: @"var"] stringValue]];
+	}
+	
+	if ([metadata count] > 0) {
+		// Notify delegate of result
+		[multicastDelegate xmppPubsub: self didReceiveMetadata: metadata forNode: node];
+	}
+	
+}
+
 - (void)fetchAffiliationsForNode:(NSString *)node
 {
 	// Fetch the affiliation list of a node
 	// http://xmpp.org/extensions/xep-0060.html#owner-affiliations-retrieve
+	NSLog(@"--- XMPPPubsub fetchAffiliationsForNode: %@", node);
 	
 	[collectionArray removeAllObjects];
 	
@@ -196,6 +226,7 @@ typedef enum {
 {
 	// Fetch the affiliation list of a node
 	// http://xmpp.org/extensions/xep-0060.html#owner-affiliations-retrieve
+	NSLog(@"--- XMPPPubsub fetchAffiliationsForNode: %@ afterJid: %@", node, jid);
 	
 	// Build & send affiliations stanza
 	NSXMLElement *affiliationsElement = [NSXMLElement elementWithName: @"affiliations"];
@@ -254,6 +285,7 @@ typedef enum {
 {
 	// Fetch all items for a node
 	// http://xmpp.org/extensions/xep-0060.html#subscriber-retrieve
+	NSLog(@"--- XMPPPubsub fetchItemsForNode: %@", node);
 	
 	[self fetchItemsForNode: node afterItemId: 0];
 }
@@ -262,6 +294,7 @@ typedef enum {
 {
 	// Fetch all items for a node
 	// http://xmpp.org/extensions/xep-0060.html#subscriber-retrieve
+	NSLog(@"--- XMPPPubsub fetchItemsForNode: %@ afterItemId: %d", node, itemId);
 	
 	// Build & send items stanza
 	NSXMLElement *itemsElement = [NSXMLElement elementWithName: @"items"];
@@ -294,6 +327,7 @@ typedef enum {
 {
 	// Set a users subscription to a pubsub node
 	// http://xmpp.org/extensions/xep-0060.html#owner-subscriptions-modify
+	NSLog(@"--- XMPPPubsub setSubscriptionForUser: %@ onNode: %@ toSubscription: %@", jid, node, subscription);
 	
 	// Build & send subscription stanza
 	NSXMLElement *subscriptionElement = [NSXMLElement elementWithName: @"subscription"];
@@ -320,6 +354,7 @@ typedef enum {
 {
 	// Set a users affiliation to a pubsub node
 	// http://xmpp.org/extensions/xep-0060.html#owner-affiliations-modify
+	NSLog(@"--- XMPPPubsub setAffiliationForUser: %@ onNode: %@ toAffiliation: %@", jid, node, affiliation);
 	
 	// Build & send affiliation stanza
 	NSXMLElement *affiliationElement = [NSXMLElement elementWithName: @"affiliation"];
@@ -350,6 +385,7 @@ typedef enum {
 {
 	// Publish an item to a pubsub node
 	// http://xmpp.org/extensions/xep-0060.html#publisher-publish
+	NSLog(@"--- XMPPPubsub publishItemToNode: %@", node);
 
 	// Build & send affiliation stanza
 	NSXMLElement *publishElement = [NSXMLElement elementWithName: @"publish"];

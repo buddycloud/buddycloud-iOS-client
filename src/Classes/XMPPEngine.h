@@ -7,8 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FollowingDataModel.h"
 
 @class XMPPStream;
+@class XMPPRoster;
 @class XMPPPubsub;
 @class XMPPJID;
 @class XMPPIQ;
@@ -17,8 +19,9 @@
 #pragma mark Public XMPPEngine definition
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface XMPPEngine : NSObject {
+@interface XMPPEngine : FollowingDataModel {
 	XMPPStream *xmppStream;
+	XMPPRoster *xmppRoster;
 	XMPPPubsub *xmppPubsub;
 	
 	NSString *password;
@@ -29,6 +32,7 @@
 }
 
 @property(nonatomic, retain) XMPPStream *xmppStream;
+@property(nonatomic, retain) XMPPRoster *xmppRoster;
 @property(nonatomic, retain) NSString *password;
 @property(readonly) int lastItemIdReceived;
 

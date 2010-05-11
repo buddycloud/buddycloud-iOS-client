@@ -9,16 +9,20 @@
 #import "FollowedItem.h"
 
 @implementation FollowedItem
-@synthesize ident, lastUpdated;
+@synthesize lastUpdated;
+@synthesize ident, title, description;
 
-- (FollowedItem*) init {
+- (FollowedItem *)init
+{
 	[super init];
 	lastUpdated = [[NSDate alloc] init];
+	
 	return self;
 }
 
-- (NSComparisonResult) compareAge:(FollowedItem*)item {
-	return NSOrderedSame;
+- (NSComparisonResult)compareUpdate:(FollowedItem *)other
+{
+	return [[other lastUpdated] compare: lastUpdated];
 }
 
 @end

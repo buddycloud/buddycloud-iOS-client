@@ -9,25 +9,36 @@
 #import <Foundation/Foundation.h>
 #import "FollowedItem.h"
 
+@class XMPPJID;
 @class GeoLocation;
 @class ChannelItem;
 
+typedef enum {
+	PRESSUB_REMOVE = -1,
+	PRESSUB_NONE,
+	PRESSUB_TO,
+	PRESSUB_FROM,
+	PRESSUB_BOTH
+} PresenceSubscription;
+
 @interface UserItem : FollowedItem {
-	NSString *jid;
-	NSString *status;
+	PresenceSubscription subscription;
+	
 	GeoLocation *geoCurrent;
 	GeoLocation *geoPrevious;
 	GeoLocation *geoFuture;
+	
 	ChannelItem *channel;
 	int waitingMessages;
 }
 
-@property (nonatomic, retain) NSString *jid;
-@property (nonatomic, retain) NSString *status;
+@property (nonatomic) PresenceSubscription subscription;
 @property (nonatomic, retain) GeoLocation *geoCurrent;
 @property (nonatomic, retain) GeoLocation *geoPrevious;
 @property (nonatomic, retain) GeoLocation *geoFuture;
 @property (nonatomic, retain) ChannelItem *channel;
 @property (nonatomic) int waitingMessages;
+
++ (PresenceSubscription)subscriptionFromString:(NSString *)str;
 
 @end

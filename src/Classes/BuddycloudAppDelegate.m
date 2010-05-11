@@ -24,8 +24,6 @@
 
 #import "XMPPEngine.h"
 #import "LocationEngine.h"
-#import "RosterEngine.h"
-#import "DataEngine.h"
 
 #import "FollowingViewController.h"
 
@@ -47,13 +45,19 @@
 		NSLog(@"channel");
 	}
 						
-		return YES;
+	return YES;
 }
 
 - (BOOL)application: (UIApplication*)application didFinishLaunchingWithOptions: (NSDictionary*)launchOptions
 {
+	// Engines
+	xmppEngine = [[XMPPEngine alloc] init];
+	xmppEngine.password = @"iphone";
+	
+	locationEngine = [[LocationEngine alloc] initWithStream: [xmppEngine xmppStream]];
+	
 	// View controllers
-	self.vcFollowing = [[[FollowingViewController alloc] initWithStyle:UITableViewStylePlain] autorelease];
+	self.vcFollowing = [[[FollowingViewController alloc] initWithStyle: UITableViewStylePlain andDataModel: (FollowingDataModel *)xmppEngine] autorelease];
 	UINavigationController *ncFollowing = [[[UINavigationController alloc] initWithRootViewController:vcFollowing] autorelease];
 	
 	self.settingsController = [[[SettingsViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
@@ -64,16 +68,8 @@
 	[self.tabBarController setViewControllers:[NSArray arrayWithObjects:ncFollowing, settingsNavigationController, nil]];
 	[window addSubview:tabBarController.view];
 	
-	// Engines
-	xmpp = [[XMPPEngine alloc] init];
-	xmpp.password = @"iphone";
-	
-	location = (LocationEngine*)[[LocationEngine alloc] initWithXMPP:[xmpp xmppClient]];
-	roster = [[RosterEngine alloc] initWithXMPP:[xmpp xmppClient]];
-	data = [[DataEngine alloc] initWithRosterEngine:roster];
-	
 	// Start connection
-	[xmpp connect];
+	[xmppEngine connect];
 	
 	return YES;
 }

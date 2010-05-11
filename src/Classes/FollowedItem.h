@@ -10,13 +10,18 @@
 
 
 @interface FollowedItem : NSObject {
-	NSString *ident;
 	NSDate *lastUpdated;
+	NSString *ident;
+	
+	NSString *title;
+	NSString *description;
 }
 
-@property (nonatomic,retain) NSString *ident;
-@property (nonatomic,retain) NSDate *lastUpdated;
+@property (nonatomic, retain) NSDate *lastUpdated;
+@property (nonatomic, retain) NSString *ident;
+@property (nonatomic, retain) NSString *title;
+@property (nonatomic, retain) NSString *description;
 
-- (NSComparisonResult) compareAge:(FollowedItem*)item;
+- (NSComparisonResult)compareUpdate:(FollowedItem *)other;
 
 @end

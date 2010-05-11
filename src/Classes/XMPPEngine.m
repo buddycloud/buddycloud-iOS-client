@@ -7,9 +7,9 @@
 //
 
 #import "XMPPEngine.h"
-#import "XMPPPubsub.h"
 #import "XMPPStream.h"
-#import "XMPPUser.h"
+#import "XMPPPubsub.h"
+#import "XMPPRoster.h"
 #import "XMPPJID.h"
 #import "XMPPIQ.h"
 #import "NSXMLElementAdditions.h"
@@ -28,24 +28,28 @@ NSString *discoFeatures[] = {
 
 @implementation XMPPEngine
 @synthesize xmppStream;
+@synthesize xmppRoster;
 @synthesize password;
 @synthesize lastItemIdReceived;
 
 // Basic constructor
 - (XMPPEngine *) init {
-	[super init];
-	
-	// Initialize the XMPPStream
-	xmppStream = [[XMPPStream alloc] init];
-	
-	[xmppStream addDelegate: self];
-	[xmppStream setHostName: @"jabber.buddycloud.com"];
-	[xmppStream setHostPort: 5222];
-	[xmppStream setMyJID: [XMPPJID jidWithString: @"iphone2@buddycloud.com/iPhone/bcloud"]];
-	
-	// Initialize XMPPPubsub
-	xmppPubsub = [[XMPPPubsub alloc] initWithStream: xmppStream toServer: @"pubsub-bridge@broadcaster.buddycloud.com"];
-	[xmppPubsub addDelegate: self];
+	if (self = [super init]) {;
+		// Initialize the XMPPStream
+		xmppStream = [[XMPPStream alloc] init];	
+		[xmppStream addDelegate: self];
+		[xmppStream setHostName: @"jabber.buddycloud.com"];
+		[xmppStream setHostPort: 5222];
+		[xmppStream setMyJID: [XMPPJID jidWithString: @"iphone2@buddycloud.com/iPhone/bcloud"]];
+		
+		// Initialize XMPPRoster
+		xmppRoster = [[XMPPRoster alloc] initWithStream: xmppStream];
+		[xmppRoster addDelegate: self];
+		
+		// Initialize XMPPPubsub
+		xmppPubsub = [[XMPPPubsub alloc] initWithStream: xmppStream toServer: @"pubsub-bridge@broadcaster.buddycloud.com"];
+		[xmppPubsub addDelegate: self];
+	}
 	
 	return self;
 }
@@ -55,12 +59,15 @@ NSString *discoFeatures[] = {
 	if (![xmppStream isConnected]) {
 		isConnectionCold = YES;
 		
-		lastItemIdReceived = [[NSUserDefaults standardUserDefaults] integerForKey: @"lastItemIdReceived"];
+		// Load XMPPEngine settings
+		if ((lastItemIdReceived = [[NSUserDefaults standardUserDefaults] integerForKey: @"lastItemIdReceived"]) == 0) {
+			lastItemIdReceived = 1;
+		}
 		
 		// Connect to server
 		NSError* error = nil;
 		
-		if (![xmppStream connect:&error]) {
+		if (![xmppStream connect: &error]) {
 			NSLog(@"ERR [XMPPEngine connect] %@", error);
 		}
 	}
@@ -95,6 +102,10 @@ NSString *discoFeatures[] = {
 	[xmppStream sendElement: pubsubPresenceStanza];
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark XMPPStream Delegates
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 - (void)xmppStreamDidNotConnect:(XMPPStream *)sender
 {
 	UIAlertView *alert = [[UIAlertView alloc]
@@ -106,6 +117,15 @@ NSString *discoFeatures[] = {
 						  otherButtonTitles: nil];
 	[alert show];
 	[alert release];
+}
+
+- (void)xmppStreamDidConnect:(XMPPStream *)sender
+{
+	NSError *error = nil;
+	
+	if (![xmppStream authenticateWithPassword: password error: &error]) {
+		NSLog(@"Error authenticating: %@", error);
+	}	
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
@@ -123,8 +143,8 @@ NSString *discoFeatures[] = {
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {	
-	// TODO: Fetch roster
-	//[xmppRoster fetchRoster];
+	// Fetch roster
+	[xmppRoster fetchRoster];
 	
 	// Build & send presence with caps stanza
 	NSXMLElement *capsElement = [NSXMLElement elementWithName: @"c" xmlns: @"http://jabber.org/protocol/caps"];
@@ -153,32 +173,6 @@ NSString *discoFeatures[] = {
 	}	
 }
 
-- (void)xmppClientDidUpdateRoster:(XMPPClient *)sender
-{
-	// Roster has been updated
-	if (!isPubsubAddedToRoster) {
-		// Interate roster checking for pubsub server
-		NSArray *roster = [xmppClient unsortedUsers];
-		
-		isPubsubAddedToRoster = YES;
-		
-		for (int i = 0; i < [roster count]; i++) {
-			XMPPUser *user = [roster objectAtIndex: i];
-			
-			if ([[[user jid] bare] isEqualToString: [xmppPubsub serverName]]) {
-				// Pubsub server is in roster
-				// Collect users node subscriptions
-				[xmppPubsub fetchOwnSubscriptions];
-				
-				return;
-			}
-		}
-		
-		// Pubsub server not found in roster
-		[xmppClient addBuddy: [XMPPJID jidWithString: [xmppPubsub serverName]] withNickname: @"Buddycloud Service"];
-	}
-}
-
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
 {
 	NSString *iqType = [[iq attributeForName: @"type"] stringValue];
@@ -205,34 +199,6 @@ NSString *discoFeatures[] = {
 	}
 	
 	return NO;
-}
-
-- (void)xmppClient:(XMPPClient *)sender didReceiveBuddyRequest:(XMPPJID *)jid
-{
-	if ([[jid bare] isEqualToString: [xmppPubsub serverName]]) {
-		// Accept pubsub server
-		[xmppClient acceptBuddyRequest: jid];		
-		
-		// Collect users node subscriptions
-		[xmppPubsub fetchOwnSubscriptions];
-	}
-	else {
-		// Display following request
-		NSString *msg = [NSString stringWithFormat:
-						 @"The user %@ wants to follow you.\n"
-						 @"Do you want to accept his/her request?", [jid bare]];
-		
-		BuddyRequestDelegate *delegate = [[BuddyRequestDelegate alloc] initWithJID: jid];
-		
-		UIAlertView *alert = [[UIAlertView alloc]
-							  initWithTitle: @"Following request"
-							  message: msg
-							  delegate: delegate
-							  cancelButtonTitle: nil
-							  otherButtonTitles: @"Yes", @"No", nil];
-		[alert show];
-		[alert release];
-	}	
 }
 
 - (void)sendPingResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId
@@ -315,35 +281,208 @@ NSString *discoFeatures[] = {
 	[xmppStream sendElement: iqStanza];
 }
 
-- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveOwnSubscriptions:(NSMutableArray *)subscriptions
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark XMPPRoster Delegates
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)xmppRoster:(XMPPRoster *)sender didReceiveRoster:(NSArray *)itemElements isPush:(BOOL)push
+{
+	NSString *ownChannelNode = [NSString stringWithFormat: @"/user/%@/channel", [[xmppStream myJID] bare]];
+	NSMutableDictionary *oldFollowingData = [[NSMutableDictionary alloc] initWithDictionary: followingData];
+	
+	for (NSXMLElement *item in itemElements) {
+		NSString *itemJid = [[item attributeForName: @"jid"] stringValue];
+		NSString *itemName = [[item attributeForName: @"name"] stringValue];
+		PresenceSubscription itemType = [UserItem subscriptionFromString: [[item attributeForName: @"subscription"] stringValue]];
+		
+		// Check for pubsub server jid
+		if ([itemJid isEqualToString: [xmppPubsub serverName]]) {
+			// Handle pubsub server item
+			if(!isPubsubAddedToRoster && itemType == PRESSUB_BOTH) {
+				isPubsubAddedToRoster = YES;
+				
+				[xmppPubsub fetchOwnSubscriptions];
+			}
+		}
+		else {
+			// Handle the non-pubsub item
+			NSString *itemKey = [NSString stringWithFormat: @"/user/%@/channel", itemJid];
+			UserItem *storedItem = [followingData objectForKey: itemKey];
+			
+			if (!storedItem && itemType > PRESSUB_NONE) {
+				// Init & insert item
+				storedItem = [[UserItem alloc] init];
+				[storedItem setIdent: itemJid];
+				[storedItem setTitle: itemJid];
+				[storedItem setSubscription: PRESSUB_NONE];
+				
+				if ([itemName length] > 0) {
+					[storedItem setTitle: itemName];
+				}
+					
+				[followingData setObject: storedItem forKey: itemKey];
+			}
+			
+			if (storedItem) {
+				[oldFollowingData removeObjectForKey: itemKey];
+				
+				if (storedItem.subscription != itemType) {
+					// Item subscription changed
+					if (isPubsubAddedToRoster && push) {						
+						if (storedItem.subscription < PRESSUB_FROM && itemType >= PRESSUB_FROM) {
+							// Add user to own channel node subscribers
+							[xmppPubsub setAffiliationForUser: itemJid onNode: ownChannelNode toAffiliation: @"publisher"];
+						}
+						else if (storedItem.subscription >= PRESSUB_FROM && itemType < PRESSUB_FROM) {
+							// Remove user from own channel node subscribers
+							[xmppPubsub setSubscriptionForUser: itemJid onNode: ownChannelNode toSubscription: @"none"];
+						
+							// TODO: Remove self from user's channel subscribers
+						}
+					}
+					
+					[storedItem setSubscription: itemType];
+				}
+				
+				if (storedItem.subscription <= PRESSUB_NONE) {
+					// Item has been removed
+					[followingData removeObjectForKey: itemKey];
+				}
+			}			
+		}
+	}
+	
+	// Full roster has been collected
+	if (!push) {
+		// Iterate old following data, removing old followed users
+		for (id key in oldFollowingData) {
+			FollowedItem *item = [oldFollowingData objectForKey: key];
+			
+			if ([item isKindOfClass: [UserItem class]]) {
+				UserItem *userItem = (UserItem *)item;
+				
+				if (isPubsubAddedToRoster && userItem.subscription >= PRESSUB_FROM) {
+					// Remove user from own channel node subscribers
+					[xmppPubsub setSubscriptionForUser: userItem.ident onNode: ownChannelNode toSubscription: @"none"];
+					
+					// TODO: Remove self from user's channel subscribers
+				}
+
+				// Remove user item from following data
+				[followingData removeObjectForKey: key];
+			}
+		}
+		
+		if (!isPubsubAddedToRoster) {
+			// Pubsub server not found in roster
+			[xmppRoster addToRoster: [XMPPJID jidWithString: [xmppPubsub serverName]] withName: @"Buddycloud Service"];
+		}
+	}
+		
+	[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];
+}
+								   
+- (void)xmppRoster:(XMPPRoster *)sender didReceivePresence:(XMPPPresence *)presence
+{
+	if ([[presence type] isEqualToString: @"subscribe"]) {
+		if ([[[presence from] bare] isEqualToString: [xmppPubsub serverName]]) {
+			// Accept pubsub server
+			[xmppRoster acceptPresenceRequest: [presence from]];		
+			
+			// Collect users node subscriptions
+			[xmppPubsub fetchOwnSubscriptions];
+		}
+		else {
+			// TODO: Handle presence request (auto-subscribe for now)
+			[xmppRoster acceptPresenceRequest: [presence from]];
+			
+			[xmppRoster addToRoster: [presence from] withName: nil];
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark XMPPPubsub Delegates
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveOwnSubscriptions:(NSArray *)subscriptions
 {
 	// Handle users subscribed nodes
 	isConnectionCold = NO;
 	
-	// Create followed item objects
-	NSMutableArray *followingList = [[NSMutableArray alloc] init];
-	for (NSXMLElement *elem in subscriptions) {
-		NSString *node = [[elem attributeForName:@"node"] stringValue];
-		NSArray *bits = [node componentsSeparatedByString:@"/"];
-		if ([node hasPrefix:@"/user/"] && [node hasSuffix:@"/channel"]) {
-			UserItem *item = [[UserItem alloc] init];
-			item.ident = [bits objectAtIndex:2];
-			item.channel = [[ChannelItem alloc] init];
-			item.channel.affiliation = [ChannelItem affiliationFromString:[[elem attributeForName:@"affiliation"] stringValue]];
-			item.channel.subscription = [ChannelItem subscriptionFromString:[[elem attributeForName:@"subscription"] stringValue]];
-			[followingList addObject:item];
-		}
-		else if ([node hasPrefix:@"/channel/"]) {
-			ChannelItem *item = [[ChannelItem alloc] init];
-			item.ident = [bits objectAtIndex:2];
-			item.affiliation = [ChannelItem affiliationFromString:[[elem attributeForName:@"affiliation"] stringValue]];
-			item.subscription = [ChannelItem subscriptionFromString:[[elem attributeForName:@"subscription"] stringValue]];
-			[followingList addObject:item];
+	// Init & parse subscriptions from list
+	NSMutableDictionary *subscribedNodes = [[NSMutableDictionary alloc] initWithCapacity: [subscriptions count]];
+	
+	for (NSXMLElement *element in subscriptions) {
+		[subscribedNodes setObject: [[element attributeForName: @"affiliation"] stringValue] forKey: [[element attributeForName: @"node"] stringValue]];
+	}
+	
+	// Iterate followed items
+	NSMutableArray *keysToRemove = [[NSMutableArray alloc] init];
+	
+	for (NSString *itemKey in followingData) {
+		FollowedItem *item = [followingData objectForKey: itemKey];
+		NSString *itemAffiliation = [subscribedNodes objectForKey: itemKey];
+		
+		if (itemAffiliation) {
+			// Item already in following list
+			if ([item isKindOfClass: [ChannelItem class]]) {
+				// Is a topic channel
+				if (itemAffiliation) {
+					// Update affiliation
+					ChannelItem *channelItem = (ChannelItem *)item;
+					[channelItem setAffiliation: [ChannelItem affiliationFromString: itemAffiliation]];
+				}
+				else {
+					// Add to remove list
+					[keysToRemove addObject: itemKey];
+				}
+			}
+			else if ([item isKindOfClass: [UserItem class]]) {
+				// Is a user channel
+				UserItem *userItem = (UserItem *)item;
+				
+				if (itemAffiliation) {
+					if (!userItem.channel) {
+						// Create user channel
+						userItem.channel = [[ChannelItem alloc] init];
+						[userItem.channel setIdent: itemKey];
+						[userItem.channel setAffiliation: [ChannelItem affiliationFromString: itemAffiliation]];
+					}
+				}
+				else if (userItem.channel) {
+					// Remove user channel
+					[userItem.channel dealloc];
+					userItem.channel = nil;
+				}
+			}
+			
+			// Remove from list
+			[subscribedNodes removeObjectForKey: itemKey];
 		}
 	}
-	if ([followingList count] > 0) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:[Events INITIAL_SUBSCRIPTIONS] object:followingList];
+	
+	// Remove old followed items
+	[followingData removeObjectsForKeys: keysToRemove];
+	
+	// Add newly followed topic channels
+	for (NSString *node in subscribedNodes) {
+		if ([node hasPrefix: @"/channel/"]) {
+			// Create topic channel
+			ChannelItem *channelItem = [[ChannelItem alloc] init];
+			[channelItem setIdent: node];
+			[channelItem setTitle: [NSString stringWithFormat: @"#%@", [node substringFromIndex: 9]]];
+			[channelItem setAffiliation: [ChannelItem affiliationFromString: [subscribedNodes objectForKey: node]]];
+			
+			[followingData setObject: channelItem forKey: node];
+			
+			// Collect channel metadata
+			[xmppPubsub fetchMetadataForNode: node];
+		}
 	}
+
+	// Notify observers
+	[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];
 	
 	// Send initial pubsub presence
 	[self sendPresenceToPubsubWithLastItemId: lastItemIdReceived];
@@ -354,43 +493,59 @@ NSString *discoFeatures[] = {
 	}
 	
 	// Collect affiliations for the users node
-	[xmppPubsub fetchAffiliationsForNode: [NSString stringWithFormat: @"/user/%@/channel", [[xmppClient myJID] bare]]];
+	[xmppPubsub fetchAffiliationsForNode: [NSString stringWithFormat: @"/user/%@/channel", [[xmppStream myJID] bare]]];
 }
 
-- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveAffiliations:(NSMutableArray *)affiliations forNode:(NSString *)node
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveMetadata:(NSDictionary *)metadata forNode:(NSString *)node
+{
+	// Handle metadata for a pubsub node
+	FollowedItem *item = [followingData objectForKey: node];
+	
+	if (item) {
+		if ([item isKindOfClass: [ChannelItem class]]) {
+			// Is a topic channel
+			[item setLastUpdated: [NSDate date]];
+			[item setTitle: [metadata objectForKey: @"pubsub#title"]];
+			[item setDescription: [metadata objectForKey: @"pubsub#description"]];
+			
+			// Notify observers
+			[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];
+		}
+	}
+}
+
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveAffiliations:(NSArray *)affiliations forNode:(NSString *)node
 {
 	// Handle affiliations of users channel
-	NSString *ownChannelNode = [NSString stringWithFormat: @"/user/%@/channel", [[xmppClient myJID] bare]];
+	NSString *ownChannelNode = [NSString stringWithFormat: @"/user/%@/channel", [[xmppStream myJID] bare]];
 	
 	if ([node isEqualToString: ownChannelNode]) {
-		NSArray *roster = [xmppClient unsortedUsers];
+		// Init & parse jid's from affiliation list
+		NSMutableDictionary *affiliatedJids = [[NSMutableDictionary alloc] initWithCapacity: [affiliations count]];
 		
-		// Iterate through roster
-		for (int i = 0; i < [roster count]; i++) {
-			XMPPUser *user = [roster objectAtIndex: i];
-			NSString *userJid = [[user jid] bare];
+		for (NSXMLElement *element in affiliations) {
+			[affiliatedJids setObject: [[element attributeForName: @"affiliation"] stringValue] forKey: [[element attributeForName: @"jid"] stringValue]];
+		}
+		
+		// Iterate roster items for affiliated users
+		for (id itemKey in followingData) {
+			FollowedItem *item = [followingData objectForKey: itemKey];
 			
-			if (![userJid isEqualToString: [xmppPubsub serverName]]) {
-				bool isAffiliated = NO;
+			if ([item isKindOfClass: [UserItem class]]) {
+				NSString *userAffiliation = [affiliatedJids objectForKey: item.ident];
 				
-				// Iterate through affiliations
-				for (int x = 0; x < [affiliations count]; x++) {
-					NSXMLElement *affiliation = [affiliations objectAtIndex: x];
-					
-					if ([[[affiliation attributeForName: @"jid"] stringValue] isEqualToString: userJid]) {
-						// User in roster found in affiliations
-						isAffiliated = YES;
-						
-						break;
-					}
+				if (userAffiliation) {
+					// User is affiliated, remove from list
+					[affiliatedJids removeObjectForKey: item.ident];
 				}
-				
-				if (!isAffiliated) {
-					// User not affiliated
-					[xmppPubsub setAffiliationForUser: userJid onNode: ownChannelNode toAffiliation: @"publisher"];
+				else {
+					// Add user to own node affiliations
+					[xmppPubsub setAffiliationForUser: item.ident onNode: ownChannelNode toAffiliation: @"publisher"];
 				}
 			}
 		}
+		
+		// TODO: If whitelist config, remove remaining affiliators from own node
 	}
 }
 

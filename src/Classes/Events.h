@@ -13,9 +13,6 @@
 
 }
 
-// Fires when the XMPP roster is updated
-+ (NSString *) ROSTER_UPDATED;
-
 // Fires when the location engine has a new location for us
 + (NSString *) LOCATION_CHANGED;
 

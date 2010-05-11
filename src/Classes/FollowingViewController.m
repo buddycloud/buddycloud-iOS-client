@@ -7,54 +7,67 @@
 //
 
 #import "FollowingViewController.h"
-#import "Events.h"
-#import "RosterEngine.h"
 #import "FollowerCellController.h"
-#import "XMPPUser.h"
+#import "FollowingDataModel.h"
+#import "Events.h"
+#import "UserItem.h"
 
 @implementation FollowingViewController
+@synthesize orderedKeys;
 @synthesize followerCell;
 
-- (id)initWithStyle:(UITableViewStyle)style {
-    [super initWithStyle:style];
-	self.navigationItem.title = @"Following";
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(onRosterUpdated:)
-												 name:[Events ROSTER_UPDATED]
-											   object:nil];
-	following = [[NSMutableArray alloc] init];
-    return self;
+- (id)initWithStyle:(UITableViewStyle)style andDataModel:(FollowingDataModel *)dataModel {
+    if(self = [super initWithStyle:style]) {
+		self.navigationItem.title = @"Following";
+		
+		followingList = [dataModel retain];
+		[self setOrderedKeys: [followingList orderKeysByUpdated]];
+		
+		[[NSNotificationCenter defaultCenter] addObserver: self
+												 selector: @selector(onFollowingListUpdated)
+													 name: [Events FOLLOWINGLIST_UPDATED]
+												   object: nil];
+	}
+	
+	return self;
 }
 
-- (void) viewDidLoad
+- (void)viewDidLoad
 {
 	self.title = @"Following";
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	
+	[followingList release];
+	[orderedKeys release];
+
     [super dealloc];
-	[following release];
 }
 
-- (void) onRosterUpdated:(id)sender {
-	NSNotification *nn = (NSNotification*)sender;
-	RosterEngine *roster = (RosterEngine*)[nn object];
-	[following removeAllObjects];
-	[following addObjectsFromArray:[roster sortedUsersByName]];
+- (void)onFollowingListUpdated
+{
+	[self setOrderedKeys: [followingList orderKeysByUpdated]];
+
 	[[self tableView] reloadData];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
     return 1;
 }
 
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [following count];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+	return [self.orderedKeys count];
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
 	
     // Dequeue or create a new cell
 	//    static NSString *CellIdentifier = @"Cell";
@@ -69,13 +82,22 @@
 	//    }
     
 	// Set up this specific cell's content
-    XMPPUser *user = [following objectAtIndex:indexPath.row];
-	[[controller nameLabel] setText:[user displayName]];
-	[[controller imageView] setImage:[UIImage imageNamed:@"defaultImage.png"]];
-	[controller release];
+	FollowedItem *item = [followingList getItemByKey: [orderedKeys objectAtIndex: indexPath.row]];
 	
-	// Outta here
-    return cell;
+	if (item) {
+		[[controller nameLabel] setText: [item title]];
+		
+		if ([item isKindOfClass: [UserItem class]]) {
+			[[controller imageView] setImage: [UIImage imageNamed:@"contact.png"]];
+		}
+		else {
+			[[controller imageView] setImage: [UIImage imageNamed:@"channel.png"]];
+		}
+		
+		[controller release];
+	}
+
+	return cell;
 }
 
 

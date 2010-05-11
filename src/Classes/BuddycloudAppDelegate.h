@@ -20,7 +20,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class XMPPEngine, RosterEngine, LocationEngine, DataEngine;
+@class XMPPEngine, LocationEngine;
 @class FollowingViewController;
 #import "SettingsViewController.h" 
 
@@ -33,13 +33,10 @@
 	
 	NSArray *places, *nearby, *channels;
 	
-	XMPPEngine *xmpp;
-	RosterEngine *roster;
-	LocationEngine *location;
-	DataEngine *data;
+	XMPPEngine *xmppEngine;
+	LocationEngine *locationEngine;
 	
-	FollowingViewController *vcFollowing;
-	
+	FollowingViewController *vcFollowing;	
 	SettingsViewController *settingsController;
 }
 

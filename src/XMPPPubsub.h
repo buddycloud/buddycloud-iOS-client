@@ -52,6 +52,8 @@
 - (void)fetchOwnSubscriptionsAfter:(NSString *)node;
 - (void)handleOwnSubscriptionsResult:(XMPPIQ *)iq;
 
+- (void)handleNodeMetadataResult:(XMPPIQ *)iq;
+
 - (void)fetchAffiliationsForNode:(NSString *)node afterJid:(NSString *)jid;
 - (void)handleNodeAffiliationsResult:(XMPPIQ *)iq;
 
@@ -66,7 +68,8 @@
 @protocol XMPPPubsubDelegate
 @optional
 
-- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveOwnSubscriptions:(NSMutableArray *)subscriptions;
-- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveAffiliations:(NSMutableArray *)affiliations forNode:(NSString *)node;
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveOwnSubscriptions:(NSArray *)subscriptions;
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveMetadata:(NSDictionary *)metadata forNode:(NSString *)node;
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveAffiliations:(NSArray *)affiliations forNode:(NSString *)node;
 
 @end
