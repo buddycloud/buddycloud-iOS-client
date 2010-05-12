@@ -83,8 +83,20 @@ typedef enum {
 			}
 		}
 		else if ([iqType isEqualToString: @"set"]) {
-			// TODO: handle specific set data
+			// Process IQ set
+			NSXMLElement *eventElement = [iq elementForName: @"event" xmlns: @"http://jabber.org/protocol/pubsub#event"];
 			
+			if (eventElement) {
+				// Handle incoming event
+				NSXMLElement *itemsElement = [eventElement elementForName: @"items"];
+				NSString *node = [[itemsElement attributeForName: @"node"] stringValue];
+				NSArray *items = [itemsElement elementsForName: @"item"];
+				
+				for (NSXMLElement *itemElement in items) {
+					// Notify delegate of item
+					[multicastDelegate xmppPubsub: self didReceiveItem: itemElement forNode: node];
+				}
+			}
 			
 			// Acknowledge IQ set
 			NSXMLElement *iqElement = [NSXMLElement elementWithName: @"iq"];

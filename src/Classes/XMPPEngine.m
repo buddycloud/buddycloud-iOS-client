@@ -549,4 +549,42 @@ NSString *discoFeatures[] = {
 	}
 }
 
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveItem:(NSXMLElement *)item forNode:(NSString *)node
+{
+	// Handle published item for node
+	NSMutableString *itemKey = [NSMutableString stringWithString: node];
+	
+	if ([itemKey hasPrefix: @"/user/"] && ![itemKey hasSuffix: @"/channel"]) {
+		NSRange clipRange = [itemKey rangeOfString: @"/" options: 0 range: NSMakeRange(6, [itemKey length] - 6)];
+		clipRange.length = [itemKey length] - clipRange.location;
+		
+		[itemKey replaceCharactersInRange: clipRange withString: @"/channel"];
+	}
+	
+	// Get followed item by key
+	FollowedItem *followedItem = [followingData objectForKey: itemKey];
+	
+	if (followedItem) {
+		NSXMLElement *publishedElement;
+		BOOL notifyObservers = NO;
+		
+		if (publishedElement = [item elementForName: @"mood" xmlns: @"http://jabber.org/protocol/mood"]) {
+			NSString *moodText = [[publishedElement elementForName: @"text"] stringValue];
+			
+			if (![[followedItem description] isEqualToString: moodText]) {
+				// Mood text changed
+				[followedItem setDescription: moodText];
+				[followedItem setLastUpdated: [NSDate date]];
+				
+				notifyObservers = YES;
+			}
+		}
+		
+		if (notifyObservers) {
+			// Notify observers
+			[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];
+		}
+	}
+}
+
 @end
