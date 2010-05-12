@@ -34,7 +34,9 @@
 
 - (void)fetchMetadataForNode:(NSString *)node;
 - (void)fetchAffiliationsForNode:(NSString *)node;
+
 - (void)fetchItemsForNode:(NSString *)node;
+- (void)fetchItemsForNode:(NSString *)node afterItemId:(int)itemId;
 
 - (void)setSubscriptionForUser:(NSString *)jid onNode:(NSString *)node toSubscription:(NSString *)subscription;
 - (void)setAffiliationForUser:(NSString *)jid onNode:(NSString *)node toAffiliation:(NSString *)affiliation;
@@ -55,12 +57,14 @@
 - (void)fetchOwnSubscriptionsAfter:(NSString *)node;
 - (void)handleOwnSubscriptionsResult:(XMPPIQ *)iq;
 
-- (void)handleNodeMetadataResult:(XMPPIQ *)iq;
+- (void)handleNodeMetadataResult:(NSXMLElement *)xElement forNode:(NSString *)node;
 
 - (void)fetchAffiliationsForNode:(NSString *)node afterJid:(NSString *)jid;
 - (void)handleNodeAffiliationsResult:(XMPPIQ *)iq;
 
-- (void)fetchItemsForNode:(NSString *)node afterItemId:(int)itemId;
+- (void)handleChangeOfSubscriptionOrAffiliation:(NSXMLElement *)item;
+
+- (void)handleIncomingPubsubEvent:(NSXMLElement *)eventElement;
 
 @end
 
@@ -72,7 +76,11 @@
 @optional
 
 - (void)xmppPubsub:(XMPPPubsub *)sender didReceiveOwnSubscriptions:(NSArray *)subscriptions;
+
 - (void)xmppPubsub:(XMPPPubsub *)sender didReceiveMetadata:(NSDictionary *)metadata forNode:(NSString *)node;
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveChangedSubscription:(NSString *)subscription forNode:(NSString *)node;
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveChangedAffiliation:(NSString *)affiliation forNode:(NSString *)node;
+
 - (void)xmppPubsub:(XMPPPubsub *)sender didReceiveAffiliations:(NSArray *)affiliations forNode:(NSString *)node;
 - (void)xmppPubsub:(XMPPPubsub *)sender didReceiveItem:(NSXMLElement *)item forNode:(NSString *)node;
 

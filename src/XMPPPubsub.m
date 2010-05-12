@@ -74,11 +74,20 @@ typedef enum {
 				}
 				else if (iqIdType == kIqId_getNodeMetadata) {
 					// Node metadata packet received
-					[self handleNodeMetadataResult: iq];
+					NSXMLElement *queryElement = [iq elementForName: @"query" xmlns: @"http://jabber.org/protocol/disco#info"];
+					NSString *node = [[queryElement attributeForName: @"node"] stringValue];
+
+					[self handleNodeMetadataResult: [queryElement elementForName: @"x" xmlns: @"jabber:x:data"] forNode: node];
 				}
 				else if (iqIdType == kIqId_getNodeAffiliations) {
 					// Node affiliations packet received
 					[self handleNodeAffiliationsResult: iq];
+				}
+				else if (iqIdType == kIqId_subscribeToNode) {
+					// Node subscription result received
+					NSXMLElement *pubsubElement = [iq elementForName: @"pubsub" xmlns: @"http://jabber.org/protocol/pubsub"];
+					
+					[self handleChangeOfSubscriptionOrAffiliation: [pubsubElement elementForName: @"subscription"]];
 				}
 			}
 		}
@@ -87,15 +96,8 @@ typedef enum {
 			NSXMLElement *eventElement = [iq elementForName: @"event" xmlns: @"http://jabber.org/protocol/pubsub#event"];
 			
 			if (eventElement) {
-				// Handle incoming event
-				NSXMLElement *itemsElement = [eventElement elementForName: @"items"];
-				NSString *node = [[itemsElement attributeForName: @"node"] stringValue];
-				NSArray *items = [itemsElement elementsForName: @"item"];
-				
-				for (NSXMLElement *itemElement in items) {
-					// Notify delegate of item
-					[multicastDelegate xmppPubsub: self didReceiveItem: itemElement forNode: node];
-				}
+				// Handle pubsub event
+				[self handleIncomingPubsubEvent: eventElement];
 			}
 			
 			// Acknowledge IQ set
@@ -118,27 +120,65 @@ typedef enum {
 		NSXMLElement *eventElement = [message elementForName: @"event" xmlns: @"http://jabber.org/protocol/pubsub#event"];
 		
 		if (eventElement) {
-			NSXMLElement *incomingElement;
-			
-			if (incomingElement = [eventElement elementForName: @"configuration"]) {
-				// Metadata is reconfigured
-				NSXMLElement *xElement = [incomingElement elementForName: @"x" xmlns: @"jabber:x:data"];
-				NSString *node = [[incomingElement attributeForName: @"node"] stringValue];
-				NSArray *fields = [xElement elementsForName: @"field"];
-				NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithCapacity: [fields count]];
-				
-				for (NSXMLElement *fieldElement in fields) {
-					[metadata setObject: [[fieldElement elementForName: @"value"] stringValue] 
-								 forKey: [[fieldElement attributeForName: @"var"] stringValue]];
-				}
-				
-				if ([metadata count] > 0) {
-					// Notify delegate of result
-					[multicastDelegate xmppPubsub: self didReceiveMetadata: metadata forNode: node];
-				}	
-			}
+			// Handle pubsub event
+			[self handleIncomingPubsubEvent: eventElement];
 		}			
 	}	
+}
+
+- (void)handleChangeOfSubscriptionOrAffiliation:(NSXMLElement *)item
+{
+	if (item) {
+		NSString *node = [[item attributeForName: @"node"] stringValue];
+		NSString *affiliation = [[item attributeForName: @"affiliation"] stringValue];
+		NSString *subscription = [[item attributeForName: @"subscription"] stringValue];
+		
+		if ([subscription length] > 0) {
+			// Notify delegates of subscription
+			[multicastDelegate xmppPubsub: self didReceiveChangedSubscription: subscription forNode: node];
+		}
+		
+		if ([affiliation length] > 0) {
+			// Notify delegates of affiliation
+			[multicastDelegate xmppPubsub: self didReceiveChangedAffiliation: affiliation forNode: node];
+		}	
+	}
+}
+
+- (void)handleIncomingPubsubEvent:(NSXMLElement *)eventElement
+{
+	if (eventElement) {
+		NSXMLElement *incomingElement = nil;
+		
+		if (incomingElement = [eventElement elementForName: @"items"]) {
+			// Published items
+			NSString *node = [[incomingElement attributeForName: @"node"] stringValue];
+			NSArray *items = [incomingElement elementsForName: @"item"];
+			
+			for (NSXMLElement *itemElement in items) {
+				// Notify delegate of item
+				[multicastDelegate xmppPubsub: self didReceiveItem: itemElement forNode: node];
+			}
+		}
+		else if ((incomingElement = [eventElement elementForName: @"subscription"]) || 
+				 (incomingElement = [eventElement elementForName: @"affiliation"])) {
+			
+			// Subscription and/or affiliation changed
+			[self handleChangeOfSubscriptionOrAffiliation: incomingElement];
+		}
+		else if (incomingElement = [eventElement elementForName: @"configuration"]) {
+			// Metadata is reconfigured
+			NSString *node = [[incomingElement attributeForName: @"node"] stringValue];
+			
+			[self handleNodeMetadataResult: [incomingElement elementForName: @"x" xmlns: @"jabber:x:data"] forNode: node];
+		}
+		else if (incomingElement = [eventElement elementForName: @"delete"]) {
+			// Node deleted
+			NSString *node = [[incomingElement attributeForName: @"node"] stringValue];
+			
+			[multicastDelegate xmppPubsub: self didReceiveChangedSubscription: @"none" forNode: node];
+		}
+	}			
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,24 +274,22 @@ typedef enum {
 	[xmppStream sendElement: iqStanza];
 }
 
-- (void)handleNodeMetadataResult:(XMPPIQ *)iq
+- (void)handleNodeMetadataResult:(NSXMLElement *)xElement forNode:(NSString *)node
 {	
-	NSXMLElement *queryElement = [iq elementForName: @"query" xmlns: @"http://jabber.org/protocol/disco#info"];
-	NSXMLElement *xElement = [queryElement elementForName: @"x" xmlns: @"jabber:x:data"];
-	NSString *node = [[queryElement attributeForName: @"node"] stringValue];
-	NSArray *fields = [xElement elementsForName: @"field"];
-	
-	NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithCapacity: [fields count]];
-	
-	for (NSXMLElement *fieldElement in fields) {
-		[metadata setObject: [[fieldElement elementForName: @"value"] stringValue] 
-					 forKey: [[fieldElement attributeForName: @"var"] stringValue]];
+	if(xElement) {
+		NSArray *fields = [xElement elementsForName: @"field"];		
+		NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithCapacity: [fields count]];
+		
+		for (NSXMLElement *fieldElement in fields) {
+			[metadata setObject: [[fieldElement elementForName: @"value"] stringValue] 
+						 forKey: [[fieldElement attributeForName: @"var"] stringValue]];
+		}
+		
+		if ([metadata count] > 0) {
+			// Notify delegate of result
+			[multicastDelegate xmppPubsub: self didReceiveMetadata: metadata forNode: node];
+		}
 	}
-	
-	if ([metadata count] > 0) {
-		// Notify delegate of result
-		[multicastDelegate xmppPubsub: self didReceiveMetadata: metadata forNode: node];
-	}	
 }
 
 - (void)fetchAffiliationsForNode:(NSString *)node
@@ -330,7 +368,7 @@ typedef enum {
 	// http://xmpp.org/extensions/xep-0060.html#subscriber-retrieve
 	NSLog(@"--- XMPPPubsub fetchItemsForNode: %@", node);
 	
-	[self fetchItemsForNode: node afterItemId: 0];
+	[self fetchItemsForNode: node afterItemId: 1];
 }
 
 - (void)fetchItemsForNode:(NSString *)node afterItemId:(int)itemId

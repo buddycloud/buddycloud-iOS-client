@@ -85,6 +85,22 @@ NSString *discoFeatures[] = {
 	}
 }
 
+- (ChannelItem *)getChannelItemForFollowedItem:(FollowedItem *)item
+{
+	ChannelItem *channelItem = nil;
+	
+	if(item) {
+		if([item isKindOfClass: [UserItem class]]) {
+			channelItem = [(UserItem *)item channel];
+		}
+		else {
+			channelItem = (ChannelItem *)item;
+		}
+	}
+
+	return channelItem;
+}
+
 - (void)sendPresenceToPubsubWithLastItemId:(int)itemId
 {
 	// Build & send presence to pubsub server
@@ -411,54 +427,57 @@ NSString *discoFeatures[] = {
 	isConnectionCold = NO;
 	
 	// Init & parse subscriptions from list
-	NSMutableDictionary *subscribedNodes = [[NSMutableDictionary alloc] initWithCapacity: [subscriptions count]];
+	NSMutableDictionary *subscribedItems = [[NSMutableDictionary alloc] initWithCapacity: [subscriptions count]];
 	
 	for (NSXMLElement *element in subscriptions) {
-		[subscribedNodes setObject: [[element attributeForName: @"affiliation"] stringValue] forKey: [[element attributeForName: @"node"] stringValue]];
+		ChannelItem *channelItem = [[ChannelItem alloc] init];
+		[channelItem setAffiliation: [ChannelItem affiliationFromString: [[element attributeForName: @"affiliation"] stringValue]]];
+		[channelItem setSubscription: [ChannelItem subscriptionFromString: [[element attributeForName: @"subscription"] stringValue]]];
+		
+		[subscribedItems setObject: channelItem forKey: [[element attributeForName: @"node"] stringValue]];
 	}
 	
-	// Iterate followed items
 	NSMutableArray *keysToRemove = [[NSMutableArray alloc] init];
 	
+	// Iterate followed items
 	for (NSString *itemKey in followingData) {
-		FollowedItem *item = [followingData objectForKey: itemKey];
-		NSString *itemAffiliation = [subscribedNodes objectForKey: itemKey];
+		FollowedItem *followedItem = [followingData objectForKey: itemKey];
+		ChannelItem *subscribedItem = [subscribedItems objectForKey: itemKey];
 		
-		if (itemAffiliation) {
+		if (subscribedItem) {
 			// Item already in following list
-			if ([item isKindOfClass: [ChannelItem class]]) {
+			if ([followedItem isKindOfClass: [ChannelItem class]]) {
 				// Is a topic channel
-				if (itemAffiliation) {
+				if (subscribedItem) {
 					// Update affiliation
-					ChannelItem *channelItem = (ChannelItem *)item;
-					[channelItem setAffiliation: [ChannelItem affiliationFromString: itemAffiliation]];
+					ChannelItem *channelItem = (ChannelItem *)followedItem;
+					[channelItem setAffiliation: [subscribedItem affiliation]];
+					[channelItem setSubscription: [subscribedItem subscription]];
 				}
 				else {
 					// Add to remove list
 					[keysToRemove addObject: itemKey];
 				}
 			}
-			else if ([item isKindOfClass: [UserItem class]]) {
+			else if ([followedItem isKindOfClass: [UserItem class]]) {
 				// Is a user channel
-				UserItem *userItem = (UserItem *)item;
+				UserItem *userItem = (UserItem *)followedItem;
 				
-				if (itemAffiliation) {
-					if (!userItem.channel) {
-						// Create user channel
-						userItem.channel = [[ChannelItem alloc] init];
-						[userItem.channel setIdent: itemKey];
-						[userItem.channel setAffiliation: [ChannelItem affiliationFromString: itemAffiliation]];
+				if (subscribedItem) {
+					if (![userItem channel]) {
+						// Set user channel
+						[subscribedItem setIdent: itemKey];
+						[userItem setChannel: subscribedItem];
 					}
 				}
-				else if (userItem.channel) {
+				else if ([userItem channel]) {
 					// Remove user channel
-					[userItem.channel dealloc];
-					userItem.channel = nil;
+					[userItem setChannel: nil];
 				}
 			}
 			
 			// Remove from list
-			[subscribedNodes removeObjectForKey: itemKey];
+			[subscribedItems removeObjectForKey: itemKey];
 		}
 	}
 	
@@ -466,15 +485,14 @@ NSString *discoFeatures[] = {
 	[followingData removeObjectsForKeys: keysToRemove];
 	
 	// Add newly followed topic channels
-	for (NSString *node in subscribedNodes) {
+	for (NSString *node in subscribedItems) {
 		if ([node hasPrefix: @"/channel/"]) {
-			// Create topic channel
-			ChannelItem *channelItem = [[ChannelItem alloc] init];
-			[channelItem setIdent: node];
-			[channelItem setTitle: [NSString stringWithFormat: @"#%@", [node substringFromIndex: 9]]];
-			[channelItem setAffiliation: [ChannelItem affiliationFromString: [subscribedNodes objectForKey: node]]];
+			// Set topic channel
+			ChannelItem *subscribedItem = [subscribedItems objectForKey: node];
+			[subscribedItem setIdent: node];
+			[subscribedItem setTitle: [NSString stringWithFormat: @"#%@", [node substringFromIndex: 9]]];
 			
-			[followingData setObject: channelItem forKey: node];
+			[followingData setObject: subscribedItem forKey: node];
 			
 			// Collect channel metadata
 			[xmppPubsub fetchMetadataForNode: node];
@@ -509,6 +527,59 @@ NSString *discoFeatures[] = {
 		
 		// Notify observers
 		[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];
+	}
+}
+
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveChangedSubscription:(NSString *)subscription forNode:(NSString *)node
+{
+	// Handle subscription change for pubsub node
+	FollowedItem *item = [followingData objectForKey: node];
+	
+	if (item) {
+		ChannelItem *channelItem = [self getChannelItemForFollowedItem: item];
+		ChannelSubscription newSubscription = [ChannelItem subscriptionFromString: subscription];
+		
+		if (channelItem && [channelItem subscription] != newSubscription) {
+			// Subscription did change
+			[channelItem setSubscription: newSubscription];
+			
+			if ([channelItem subscription] == CHANSUB_SUBSCRIBED) {
+				// Now subscribed to node, get items
+				[xmppPubsub fetchItemsForNode: node];
+			}
+			else if (newSubscription == CHANSUB_NONE) {
+				// Unsubscribed to node
+				if ([item isKindOfClass: [UserItem class]]) {
+					// Remove channel from user item
+					UserItem *userItem = (UserItem *)item;
+					[userItem setChannel: nil];
+				}
+				else {
+					// Remove topic channel from list
+					[followingData removeObjectForKey: node];
+				}
+
+				
+				// Notify observers
+				[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];
+			}
+		}
+	}
+}
+
+- (void)xmppPubsub:(XMPPPubsub *)sender didReceiveChangedAffiliation:(NSString *)affiliation forNode:(NSString *)node
+{
+	// Handle affiliation change for pubsub node
+	FollowedItem *item = [followingData objectForKey: node];
+	
+	if (item) {
+		ChannelItem *channelItem = [self getChannelItemForFollowedItem: item];
+		ChannelAffiliation newAffiliation = [ChannelItem affiliationFromString: affiliation];
+		
+		if (channelItem && channelItem.affiliation != newAffiliation) {
+			// Affiliation did change
+			[channelItem setAffiliation: newAffiliation];
+		}
 	}
 }
 
