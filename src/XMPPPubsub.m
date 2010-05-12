@@ -111,6 +111,36 @@ typedef enum {
 	return result;
 }
 
+- (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
+{
+	if ([[[message attributeForName: @"from"] stringValue] isEqualToString: serverName]) {
+		// Process message event
+		NSXMLElement *eventElement = [message elementForName: @"event" xmlns: @"http://jabber.org/protocol/pubsub#event"];
+		
+		if (eventElement) {
+			NSXMLElement *incomingElement;
+			
+			if (incomingElement = [eventElement elementForName: @"configuration"]) {
+				// Metadata is reconfigured
+				NSXMLElement *xElement = [incomingElement elementForName: @"x" xmlns: @"jabber:x:data"];
+				NSString *node = [[incomingElement attributeForName: @"node"] stringValue];
+				NSArray *fields = [xElement elementsForName: @"field"];
+				NSMutableDictionary *metadata = [[NSMutableDictionary alloc] initWithCapacity: [fields count]];
+				
+				for (NSXMLElement *fieldElement in fields) {
+					[metadata setObject: [[fieldElement elementForName: @"value"] stringValue] 
+								 forKey: [[fieldElement attributeForName: @"var"] stringValue]];
+				}
+				
+				if ([metadata count] > 0) {
+					// Notify delegate of result
+					[multicastDelegate xmppPubsub: self didReceiveMetadata: metadata forNode: node];
+				}	
+			}
+		}			
+	}	
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Service Discovery & User Node Retrieval
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -221,8 +251,7 @@ typedef enum {
 	if ([metadata count] > 0) {
 		// Notify delegate of result
 		[multicastDelegate xmppPubsub: self didReceiveMetadata: metadata forNode: node];
-	}
-	
+	}	
 }
 
 - (void)fetchAffiliationsForNode:(NSString *)node

@@ -501,16 +501,14 @@ NSString *discoFeatures[] = {
 	// Handle metadata for a pubsub node
 	FollowedItem *item = [followingData objectForKey: node];
 	
-	if (item) {
-		if ([item isKindOfClass: [ChannelItem class]]) {
-			// Is a topic channel
-			[item setLastUpdated: [NSDate date]];
-			[item setTitle: [metadata objectForKey: @"pubsub#title"]];
-			[item setDescription: [metadata objectForKey: @"pubsub#description"]];
-			
-			// Notify observers
-			[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];
-		}
+	if (item && [item isKindOfClass: [ChannelItem class]]) {
+		// Is a topic channel
+		[item setLastUpdated: [NSDate date]];
+		[item setTitle: [metadata objectForKey: @"pubsub#title"]];
+		[item setDescription: [metadata objectForKey: @"pubsub#description"]];
+		
+		// Notify observers
+		[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];
 	}
 }
 
