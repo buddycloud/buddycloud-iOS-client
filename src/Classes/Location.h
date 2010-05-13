@@ -7,10 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DDXML.h"
 
 // BC implementation of XEP-0080 (TODO)
 @interface GeoLocation : NSObject {
-
+	NSString *text;
 }
+
+@property(nonatomic, retain) NSString *text;
+
+- (GeoLocation *)initFromXML:(NSXMLElement *)geolocElement;
+
+- (BOOL)compare:(GeoLocation *)other;
 
 @end

@@ -16,6 +16,7 @@
 #import "BuddyRequestDelegate.h"
 #import "UserItem.h"
 #import "ChannelItem.h"
+#import "Location.h"
 #import "Events.h"
 
 NSString *applicationVersion = @"iPhone-0.1.01";
@@ -637,7 +638,38 @@ NSString *discoFeatures[] = {
 		NSXMLElement *publishedElement;
 		BOOL notifyObservers = NO;
 		
-		if (publishedElement = [item elementForName: @"mood" xmlns: @"http://jabber.org/protocol/mood"]) {
+		if (publishedElement = [item elementForName: @"entry" xmlns: @"http://www.w3.org/2005/Atom"]) {
+			// Published item is channel entry
+		}
+		else if (publishedElement = [item elementForName: @"geoloc" xmlns: @"http://jabber.org/protocol/geoloc"]) {
+			// Published item is geolocation
+			if ([followedItem isKindOfClass: [UserItem class]]) {
+				UserItem *userItem = (UserItem *)followedItem;
+				GeoLocation *geoloc = [[GeoLocation alloc] initFromXML: publishedElement];
+				
+				if ([node hasSuffix: @"/geo/previous"]) {
+					// Users previous geolocation is updated
+					[userItem setGeoPrevious: geoloc];
+				}
+				else if ([node hasSuffix: @"/geo/current"] && ![[userItem geoCurrent] compare: geoloc]) {
+					// Users current geolocation is updated
+					[userItem setGeoCurrent: geoloc];
+					[userItem setLastUpdated: [NSDate date]];
+				}
+				else if ([node hasSuffix: @"/geo/future"] && ![[userItem geoFuture] compare: geoloc]) {
+					// Users future geolocation is updated
+					[userItem setGeoFuture: geoloc];
+					
+					if ([[[userItem geoFuture] text] length] > 0) {
+						[userItem setLastUpdated: [NSDate date]];
+					}
+				}
+				
+				notifyObservers = YES;
+			}
+		}
+		else if (publishedElement = [item elementForName: @"mood" xmlns: @"http://jabber.org/protocol/mood"]) {
+			// Published item is mood
 			NSString *moodText = [[publishedElement elementForName: @"text"] stringValue];
 			
 			if (![[followedItem description] isEqualToString: moodText]) {
