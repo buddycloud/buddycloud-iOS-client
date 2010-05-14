@@ -12,6 +12,11 @@
 #import "NSXMLElementAdditions.h"
 #import "Events.h"
 
+typedef enum {
+	kIqId_setNextLocation = 256,
+	kIqId_locationQuery
+} placeIQIdTypes;
+
 @implementation PlaceEngine
 @synthesize xmppStream;
 @synthesize serverName;
@@ -149,9 +154,9 @@
 			[locationElement addChild: [NSXMLElement elementWithName: @"publish" stringValue: @"true"]];
 			
 			NSXMLElement *iqStanza = [NSXMLElement elementWithName: @"iq"];
-			[iqStanza addAttributeWithName: @"to" stringValue: @"butler.buddycloud.com"];
+			[iqStanza addAttributeWithName: @"to" stringValue: serverName];
 			[iqStanza addAttributeWithName: @"type" stringValue: @"get"];
-			[iqStanza addAttributeWithName: @"id" stringValue: @"location1"];
+			[iqStanza addAttributeWithName: @"id" stringValue: [NSString stringWithFormat: @"%d:%d", kIqId_locationQuery, iqIdCounter++]];
 			[iqStanza addChild: locationElement];
 			
 			[xmppStream sendElement: iqStanza];

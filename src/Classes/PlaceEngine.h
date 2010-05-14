@@ -9,10 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CLLocation.h>
 
-typedef enum {
-	kIqId_setNextLocation,
-} placeIQIdTypes;
-
 @class XMPPStream;
 @class LocationEngine;
 
