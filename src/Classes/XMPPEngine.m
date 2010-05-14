@@ -647,14 +647,28 @@ NSString *discoFeatures[] = {
 				UserItem *userItem = (UserItem *)followedItem;
 				GeoLocation *geoloc = [[GeoLocation alloc] initFromXML: publishedElement];
 				
-				if ([node hasSuffix: @"/geo/previous"]) {
+				if ([node hasSuffix: @"/geo/previous"] && ![[userItem geoPrevious] compare: geoloc]) {
 					// Users previous geolocation is updated
 					[userItem setGeoPrevious: geoloc];
+					
+					notifyObservers = YES;
 				}
 				else if ([node hasSuffix: @"/geo/current"] && ![[userItem geoCurrent] compare: geoloc]) {
 					// Users current geolocation is updated
 					[userItem setGeoCurrent: geoloc];
 					[userItem setLastUpdated: [NSDate date]];
+					
+					if ([[userItem ident] isEqualToString: [[xmppStream myJID] bare]]) {
+						// User's own location has changed
+						if ([userItem geoFuture] && [[[userItem geoFuture] text] length] > 0 &&
+							[[[userItem geoFuture] text] rangeOfString: [[userItem geoCurrent] text]].location == 0) {
+						
+							// Arrived at future location
+							[[NSNotificationCenter defaultCenter] postNotificationName: [Events ARRIVED_AT_FUTURE_LOCATION] object: geoloc];
+						}
+					}
+					
+					notifyObservers = YES;
 				}
 				else if ([node hasSuffix: @"/geo/future"] && ![[userItem geoFuture] compare: geoloc]) {
 					// Users future geolocation is updated
@@ -663,9 +677,9 @@ NSString *discoFeatures[] = {
 					if ([[[userItem geoFuture] text] length] > 0) {
 						[userItem setLastUpdated: [NSDate date]];
 					}
+					
+					notifyObservers = YES;
 				}
-				
-				notifyObservers = YES;
 			}
 		}
 		else if (publishedElement = [item elementForName: @"mood" xmlns: @"http://jabber.org/protocol/mood"]) {

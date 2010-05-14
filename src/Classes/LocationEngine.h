@@ -9,28 +9,21 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
-@class XMPPStream;
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Public LocationEngine definition
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @interface LocationEngine : NSObject <CLLocationManagerDelegate> {
-	XMPPStream *xmppStream;
 	CLLocationManager *locationManager;
 	
+	id delegate;
 	NSTimer *timer;
-	
-	int currentPlaceId;
-	NSString *currentPlaceTitle;
-	CLLocationCoordinate2D currentCoordinates;
 }
 
-@property(readonly) int currentPlaceId;
-@property(readonly) NSString *currentPlaceTitle;
-@property(readonly) CLLocationCoordinate2D currentCoordinates;
+- (LocationEngine *)initWithDelegate:(id)delegate;
 
-- (LocationEngine*) initWithStream:(XMPPStream *)xmppStream;
+- (void)startReceivingLocation;
+- (void)stopReceivingLocation;
 
 @end
 
@@ -40,6 +33,18 @@
 
 @interface LocationEngine (PrivateAPI)
 
-- (void)sendLocationUpdate:(CLLocation *)location;
+- (void)handleLocationUpdate;
+- (void)handleLocationUpdateWithLocation:(CLLocation *)location;
+
+@end
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark LocationEngine Delegate definition
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+@protocol LocationEngineDelegate
+@required
+
+- (void)LocationEngine:(LocationEngine *)sender didReceiveLocation:(CLLocation *)location;
 
 @end

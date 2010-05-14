@@ -25,7 +25,7 @@ typedef enum {
 	kIqId_subscribeToNode,
 	kIqId_unsubscribeToNode,
 	kIqId_publishItem
-} iqIdTypes;
+} pubsubIQIdTypes;
 
 @implementation XMPPPubsub
 @synthesize serverName;

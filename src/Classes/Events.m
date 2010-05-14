@@ -11,16 +11,15 @@
 
 @implementation Events
 
-+ (NSString *) LOCATION_CHANGED {
-	return @"LOCATION_CHANGED";
-}
-
-+ (NSString *) INITIAL_SUBSCRIPTIONS {
-	return @"INITIAL_SUBSCRIPTIONS";
-}
-
 + (NSString *) FOLLOWINGLIST_UPDATED {
 	return @"FOLLOWINGLIST_UPDATED";
 }
 
++ (NSString *) LOCATION_CHANGED {
+	return @"LOCATION_CHANGED";
+}
+
++ (NSString *) ARRIVED_AT_FUTURE_LOCATION {
+	return @"ARRIVED_AT_FUTURE_LOCATION";
+}
 @end

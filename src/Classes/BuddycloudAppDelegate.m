@@ -23,7 +23,7 @@
 #import "BuddyRequestDelegate.h"
 
 #import "XMPPEngine.h"
-#import "LocationEngine.h"
+#import "PlaceEngine.h"
 
 #import "FollowingViewController.h"
 
@@ -54,7 +54,7 @@
 	xmppEngine = [[XMPPEngine alloc] init];
 	xmppEngine.password = @"iphone";
 	
-	locationEngine = [[LocationEngine alloc] initWithStream: [xmppEngine xmppStream]];
+	placeEngine = [[PlaceEngine alloc] initWithStream: [xmppEngine xmppStream] toServer: @"butler.buddycloud.com"];
 	
 	// View controllers
 	self.vcFollowing = [[[FollowingViewController alloc] initWithStyle: UITableViewStylePlain andDataModel: (FollowingDataModel *)xmppEngine] autorelease];

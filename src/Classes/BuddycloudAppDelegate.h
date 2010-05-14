@@ -20,7 +20,8 @@
 
 #import <UIKit/UIKit.h>
 
-@class XMPPEngine, LocationEngine;
+@class XMPPEngine;
+@class PlaceEngine;
 @class FollowingViewController;
 #import "SettingsViewController.h" 
 
@@ -31,10 +32,8 @@
 	UINavigationController *navigationController;
 	UITableView *followingTableView, *placesTableView, *channelsTableView;
 	
-	NSArray *places, *nearby, *channels;
-	
 	XMPPEngine *xmppEngine;
-	LocationEngine *locationEngine;
+	PlaceEngine *placeEngine;
 	
 	FollowingViewController *vcFollowing;	
 	SettingsViewController *settingsController;

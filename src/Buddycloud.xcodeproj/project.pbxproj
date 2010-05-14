@@ -35,6 +35,7 @@
 		579397CB117DD98200D340F1 /* XMPPPubsub.m in Sources */ = {isa = PBXBuildFile; fileRef = 579397CA117DD98200D340F1 /* XMPPPubsub.m */; };
 		57A180B7119951B300DFFD42 /* contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 57A180B6119951B300DFFD42 /* contact.png */; };
 		57A180B9119951BE00DFFD42 /* channel.png in Resources */ = {isa = PBXBuildFile; fileRef = 57A180B8119951BE00DFFD42 /* channel.png */; };
+		57A182E0119D9D8200DFFD42 /* PlaceEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A182DF119D9D8200DFFD42 /* PlaceEngine.m */; };
 		57DD026F1185D7A100CC00D1 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD02671185D7A100CC00D1 /* DDXMLDocument.m */; };
 		57DD02701185D7A100CC00D1 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD02691185D7A100CC00D1 /* DDXMLElement.m */; };
 		57DD02711185D7A100CC00D1 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD026B1185D7A100CC00D1 /* DDXMLNode.m */; };
@@ -106,6 +107,8 @@
 		579397CA117DD98200D340F1 /* XMPPPubsub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPubsub.m; sourceTree = "<group>"; };
 		57A180B6119951B300DFFD42 /* contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contact.png; sourceTree = "<group>"; };
 		57A180B8119951BE00DFFD42 /* channel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = channel.png; sourceTree = "<group>"; };
+		57A182DE119D9D8200DFFD42 /* PlaceEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceEngine.h; sourceTree = "<group>"; };
+		57A182DF119D9D8200DFFD42 /* PlaceEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceEngine.m; sourceTree = "<group>"; };
 		57DD02651185D7A100CC00D1 /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
 		57DD02661185D7A100CC00D1 /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
 		57DD02671185D7A100CC00D1 /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
@@ -261,6 +264,8 @@
 				5736808F116C84EF008DC56F /* XMPPEngine.m */,
 				5736810E116CA1D8008DC56F /* LocationEngine.h */,
 				5736810F116CA1D8008DC56F /* LocationEngine.m */,
+				57A182DE119D9D8200DFFD42 /* PlaceEngine.h */,
+				57A182DF119D9D8200DFFD42 /* PlaceEngine.m */,
 			);
 			name = Engines;
 			sourceTree = "<group>";
@@ -559,6 +564,7 @@
 				57DD02D51185D8AF00CC00D1 /* DDNumber.m in Sources */,
 				57DD02D61185D8AF00CC00D1 /* TURNSocket.m in Sources */,
 				57DD02D71185D8AF00CC00D1 /* XMPPTransports.m in Sources */,
+				57A182E0119D9D8200DFFD42 /* PlaceEngine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
