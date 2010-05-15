@@ -36,6 +36,7 @@
 		57A180B7119951B300DFFD42 /* contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 57A180B6119951B300DFFD42 /* contact.png */; };
 		57A180B9119951BE00DFFD42 /* channel.png in Resources */ = {isa = PBXBuildFile; fileRef = 57A180B8119951BE00DFFD42 /* channel.png */; };
 		57A182E0119D9D8200DFFD42 /* PlaceEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A182DF119D9D8200DFFD42 /* PlaceEngine.m */; };
+		57A183A1119ED30400DFFD42 /* TextFieldAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A183A0119ED30400DFFD42 /* TextFieldAlertView.m */; };
 		57DD026F1185D7A100CC00D1 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD02671185D7A100CC00D1 /* DDXMLDocument.m */; };
 		57DD02701185D7A100CC00D1 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD02691185D7A100CC00D1 /* DDXMLElement.m */; };
 		57DD02711185D7A100CC00D1 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD026B1185D7A100CC00D1 /* DDXMLNode.m */; };
@@ -109,6 +110,8 @@
 		57A180B8119951BE00DFFD42 /* channel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = channel.png; sourceTree = "<group>"; };
 		57A182DE119D9D8200DFFD42 /* PlaceEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceEngine.h; sourceTree = "<group>"; };
 		57A182DF119D9D8200DFFD42 /* PlaceEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceEngine.m; sourceTree = "<group>"; };
+		57A1839F119ED30400DFFD42 /* TextFieldAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldAlertView.h; sourceTree = "<group>"; };
+		57A183A0119ED30400DFFD42 /* TextFieldAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldAlertView.m; sourceTree = "<group>"; };
 		57DD02651185D7A100CC00D1 /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
 		57DD02661185D7A100CC00D1 /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
 		57DD02671185D7A100CC00D1 /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
@@ -283,6 +286,8 @@
 				5731B0391170EB2600F97613 /* EditSettingCell.m */,
 				5731B0761170F01D00F97613 /* FollowerCellController.h */,
 				5731B0771170F01D00F97613 /* FollowerCellController.m */,
+				57A1839F119ED30400DFFD42 /* TextFieldAlertView.h */,
+				57A183A0119ED30400DFFD42 /* TextFieldAlertView.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -565,6 +570,7 @@
 				57DD02D61185D8AF00CC00D1 /* TURNSocket.m in Sources */,
 				57DD02D71185D8AF00CC00D1 /* XMPPTransports.m in Sources */,
 				57A182E0119D9D8200DFFD42 /* PlaceEngine.m in Sources */,
+				57A183A1119ED30400DFFD42 /* TextFieldAlertView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

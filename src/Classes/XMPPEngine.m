@@ -119,6 +119,40 @@ NSString *discoFeatures[] = {
 	[xmppStream sendElement: pubsubPresenceStanza];
 }
 
+- (void)followItem:(NSString *)item 
+{
+	if (item && [item length] > 0 && [item rangeOfString: @" "].location == NSNotFound) {
+		NSString *lowercaseItem = [item lowercaseString];
+		
+		if ([lowercaseItem rangeOfString: @"@"].location != NSNotFound) {
+			// Follow a user
+			[xmppRoster addToRoster: [XMPPJID jidWithString: lowercaseItem] withName: nil];
+ 		}
+		else {
+			// Follow a channel
+			NSString *node;
+			
+			if ([lowercaseItem rangeOfString: @"#"].location == 0) {
+				node = [NSString stringWithFormat: @"/channel/%@", [lowercaseItem substringFromIndex: 1]];
+			}
+			else {
+				node = [NSString stringWithFormat: @"/channel/%@", lowercaseItem];
+			}
+			
+			[xmppPubsub subscribeToNode: node];
+		}
+	}
+	else {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Invalid ID"
+							  message: @"Please enter a valid Jabber or #Channel ID"
+							  delegate: self
+							  cancelButtonTitle: @"OK"
+							  otherButtonTitles: nil];
+		[alert show];
+		[alert release];
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPStream Delegates
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -416,6 +450,10 @@ NSString *discoFeatures[] = {
 			[xmppRoster addToRoster: [presence from] withName: nil];
 		}
 	}
+	else if ([[presence type] isEqualToString: @"unsubscribed"]) {
+		// Remove unsubscribed user from roster
+		[xmppRoster removeFromRoster: [presence from]];
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -535,10 +573,35 @@ NSString *discoFeatures[] = {
 {
 	// Handle subscription change for pubsub node
 	FollowedItem *item = [followingData objectForKey: node];
+	ChannelSubscription newSubscription = [ChannelItem subscriptionFromString: subscription];
+	BOOL notifyObservers = NO;
+	
+	if (!item && [node hasPrefix: @"/channel/"] && newSubscription != CHANSUB_NONE) {
+		// Add topic channel to list
+		ChannelItem *channelItem = [[ChannelItem alloc] init];
+		[channelItem setLastUpdated: [NSDate date]];
+		[channelItem setIdent: node];
+		[channelItem setTitle: [NSString stringWithFormat: @"#%@", [node substringFromIndex: 9]]];
+		
+		[followingData setObject: channelItem forKey: node];
+		
+		// Collect channel metadata
+		[xmppPubsub fetchMetadataForNode: node];
+		
+		notifyObservers = YES;
+		item = channelItem;
+	}
 	
 	if (item) {
 		ChannelItem *channelItem = [self getChannelItemForFollowedItem: item];
-		ChannelSubscription newSubscription = [ChannelItem subscriptionFromString: subscription];
+		
+		if (!channelItem && [item isKindOfClass: [UserItem class]]) {
+			// Set user channel
+			channelItem = [[ChannelItem alloc] init];
+			[channelItem setIdent: node];
+			
+			[(UserItem *)item setChannel: channelItem];
+		}
 		
 		if (channelItem && [channelItem subscription] != newSubscription) {
 			// Subscription did change
@@ -547,6 +610,14 @@ NSString *discoFeatures[] = {
 			if ([channelItem subscription] == CHANSUB_SUBSCRIBED) {
 				// Now subscribed to node, get items
 				[xmppPubsub fetchItemsForNode: node];
+				
+				if ([item isKindOfClass: [UserItem class]]) {
+					// Get mood & geoloc data for user
+					[xmppPubsub fetchItemsForNode: [NSString stringWithFormat: @"/user/%@/mood", [item ident]]];
+					[xmppPubsub fetchItemsForNode: [NSString stringWithFormat: @"/user/%@/geo/current", [item ident]]];
+					[xmppPubsub fetchItemsForNode: [NSString stringWithFormat: @"/user/%@/geo/previous", [item ident]]];
+					[xmppPubsub fetchItemsForNode: [NSString stringWithFormat: @"/user/%@/geo/future", [item ident]]];
+				}
 			}
 			else if (newSubscription == CHANSUB_NONE) {
 				// Unsubscribed to node
@@ -560,11 +631,14 @@ NSString *discoFeatures[] = {
 					[followingData removeObjectForKey: node];
 				}
 
-				
-				// Notify observers
-				[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];
+				notifyObservers = YES;
 			}
 		}
+	}
+	
+	if (notifyObservers) {
+		// Notify observers
+		[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];
 	}
 }
 

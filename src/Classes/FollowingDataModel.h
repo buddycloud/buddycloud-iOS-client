@@ -19,6 +19,8 @@
 - (FollowedItem *)getItemByKey:(id)key;
 - (FollowedItem *)getItemByIdent:(NSString *)ident;
 
+- (void)followItem:(NSString *)item;
+
 @end
 
 @interface FollowingDataModel (PrivateAPI)

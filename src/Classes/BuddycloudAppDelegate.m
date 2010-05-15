@@ -35,7 +35,7 @@
 @synthesize placesTableView;
 @synthesize channelsTableView;
 @synthesize settingsController;
-@synthesize vcFollowing;
+@synthesize followingController;
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
@@ -52,13 +52,13 @@
 {
 	// Engines
 	xmppEngine = [[XMPPEngine alloc] init];
-	xmppEngine.password = @"iphone";
+	[xmppEngine setPassword: @"iphone"];
 	
 	placeEngine = [[PlaceEngine alloc] initWithStream: [xmppEngine xmppStream] toServer: @"butler.buddycloud.com"];
 	
 	// View controllers
-	self.vcFollowing = [[[FollowingViewController alloc] initWithStyle: UITableViewStylePlain andDataModel: (FollowingDataModel *)xmppEngine] autorelease];
-	UINavigationController *ncFollowing = [[[UINavigationController alloc] initWithRootViewController:vcFollowing] autorelease];
+	self.followingController = [[[FollowingViewController alloc] initWithStyle: UITableViewStylePlain andDataModel: (FollowingDataModel *)xmppEngine] autorelease];
+	UINavigationController *ncFollowing = [[[UINavigationController alloc] initWithRootViewController:followingController] autorelease];
 	
 	self.settingsController = [[[SettingsViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
 	UINavigationController *settingsNavigationController = [[[UINavigationController alloc] initWithRootViewController:self.settingsController] autorelease];

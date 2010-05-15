@@ -35,7 +35,7 @@
 	XMPPEngine *xmppEngine;
 	PlaceEngine *placeEngine;
 	
-	FollowingViewController *vcFollowing;	
+	FollowingViewController *followingController;	
 	SettingsViewController *settingsController;
 }
 
@@ -46,6 +46,6 @@
 @property(nonatomic, retain) IBOutlet UITableView *placesTableView;
 @property(nonatomic, retain) IBOutlet UITableView *channelsTableView;
 @property(nonatomic, retain) SettingsViewController *settingsController;
-@property(nonatomic, retain) FollowingViewController *vcFollowing;
+@property(nonatomic, retain) FollowingViewController *followingController;
 
 @end

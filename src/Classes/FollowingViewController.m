@@ -11,6 +11,7 @@
 #import "FollowingDataModel.h"
 #import "Events.h"
 #import "UserItem.h"
+#import "TextFieldAlertView.h"
 
 @implementation FollowingViewController
 @synthesize orderedKeys;
@@ -33,8 +34,13 @@
 }
 
 - (void)viewDidLoad
-{
+{	
+	UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAdd 
+																			   target: self 
+																			   action: @selector(onAddButton)];
+	
 	self.title = @"Following";
+	self.navigationItem.rightBarButtonItem = addButton;
 }
 
 - (void)dealloc
@@ -45,6 +51,29 @@
 	[orderedKeys release];
 
     [super dealloc];
+}
+
+- (void)onAddButton
+{
+	TextFieldAlertView *followView = [[TextFieldAlertView alloc] initWithTitle: NSLocalizedString(@"Add following", @"")  
+																	   message: NSLocalizedString(@"Enter Jabber ID or #Channel ID", @"") 
+																	  delegate: self 
+															 cancelButtonTitle: NSLocalizedString(@"Cancel", @"")
+															 okButtonTitle:  NSLocalizedString(@"Follow", @"")];
+	
+	[[followView textField] setAutocapitalizationType: UITextAutocapitalizationTypeNone];
+	[[followView textField] setKeyboardType: UIKeyboardTypeASCIICapable];
+	
+	[followView show];
+	[followView release];
+}
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex != [alertView cancelButtonIndex]) {
+		// User adds an item to follow
+		[followingList followItem: [(TextFieldAlertView *)alertView enteredText]];
+	}
 }
 
 - (void)onFollowingListUpdated
