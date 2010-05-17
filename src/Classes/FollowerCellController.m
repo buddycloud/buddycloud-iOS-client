@@ -11,6 +11,7 @@
 
 @implementation FollowerCellController
 @synthesize nameLabel, descriptionLabel;
+@synthesize geoPreviousLabel, geoCurrentLabel;
 @synthesize imageView;
 
 /*
@@ -33,8 +34,8 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-	[nameLabel setText:@"foobar"];
-	[descriptionLabel setText:@"description"];
+	[geoPreviousLabel setText: nil];
+	[geoCurrentLabel setText: nil];
 }
 
 /*

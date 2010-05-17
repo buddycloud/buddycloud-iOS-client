@@ -118,7 +118,18 @@
 		[[controller descriptionLabel] setText: [item description]];
 		
 		if ([item isKindOfClass: [UserItem class]]) {
+			UserItem *userItem = (UserItem *)item;
+			
+			if ([userItem geoPrevious]) {
+				[[controller geoPreviousLabel] setText: [[userItem geoPrevious] text]];
+			}
+			
+			if ([userItem geoCurrent]) {
+				[[controller geoCurrentLabel] setText: [[userItem geoCurrent] text]];
+			}
+			
 			[[controller imageView] setImage: [UIImage imageNamed:@"contact.png"]];
+			
 		}
 		else {
 			[[controller imageView] setImage: [UIImage imageNamed:@"channel.png"]];
@@ -146,6 +157,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	FollowedItem *item = [followingList getItemByKey: [orderedKeys objectAtIndex: indexPath.row]];
+	
+	if (item) {
+		if ([[item description] length] > 0) {
+			return 90.0f;
+		}
+	}		
+	
 	return 58.0f;
 }
 
