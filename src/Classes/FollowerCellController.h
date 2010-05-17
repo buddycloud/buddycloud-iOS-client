@@ -11,19 +11,23 @@
 
 
 @interface FollowerCellController : UIViewController {
-	UILabel *nameLabel;
+	UILabel *titleLabel;
 	UILabel *descriptionLabel;
 	
 	UILabel *geoPreviousLabel;
 	UILabel *geoCurrentLabel;
+	UILabel *geoFutureLabel;
+
 
 	UIImageView *imageView;
 }
 
-@property (nonatomic, retain) IBOutlet UILabel *nameLabel;
+@property (nonatomic, retain) IBOutlet UILabel *titleLabel;
 @property (nonatomic, retain) IBOutlet UILabel *descriptionLabel;
 @property (nonatomic, retain) IBOutlet UILabel *geoPreviousLabel;
 @property (nonatomic, retain) IBOutlet UILabel *geoCurrentLabel;
+@property (nonatomic, retain) IBOutlet UILabel *geoFutureLabel;
+
 @property (nonatomic, retain) IBOutlet UIImageView *imageView;
 
 @end

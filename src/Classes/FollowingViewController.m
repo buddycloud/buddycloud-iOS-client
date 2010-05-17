@@ -114,7 +114,7 @@
 	FollowedItem *item = [followingList getItemByKey: [orderedKeys objectAtIndex: indexPath.row]];
 	
 	if (item) {
-		[[controller nameLabel] setText: [item title]];
+		[[controller titleLabel] setText: [item title]];
 		[[controller descriptionLabel] setText: [item description]];
 		
 		if ([item isKindOfClass: [UserItem class]]) {
@@ -128,8 +128,9 @@
 				[[controller geoCurrentLabel] setText: [[userItem geoCurrent] text]];
 			}
 			
-			[[controller imageView] setImage: [UIImage imageNamed:@"contact.png"]];
-			
+			if ([userItem geoFuture]) {
+				[[controller geoFutureLabel] setText: [[userItem geoFuture] text]];
+			}
 		}
 		else {
 			[[controller imageView] setImage: [UIImage imageNamed:@"channel.png"]];
@@ -165,7 +166,7 @@
 		}
 	}		
 	
-	return 58.0f;
+	return 64.0f;
 }
 
 @end

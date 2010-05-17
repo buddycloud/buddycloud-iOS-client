@@ -60,6 +60,7 @@
 		57DD02D61185D8AF00CC00D1 /* TURNSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD02B21185D8AF00CC00D1 /* TURNSocket.m */; };
 		57DD02D71185D8AF00CC00D1 /* XMPPTransports.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD02B51185D8AF00CC00D1 /* XMPPTransports.m */; };
 		57E0706A116B89EE00FDB70C /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E07069116B89EE00FDB70C /* libidn.a */; };
+		F42611F111A18C84003DE867 /* TopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F42611F011A18C84003DE867 /* TopicCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -164,6 +165,7 @@
 		57DD02B51185D8AF00CC00D1 /* XMPPTransports.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPTransports.m; sourceTree = "<group>"; };
 		57E07069116B89EE00FDB70C /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libidn.a; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F42611F011A18C84003DE867 /* TopicCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,6 +242,7 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				5731AF301170BD2100F97613 /* Settings.bundle */,
 				5731B0731170EF5000F97613 /* FollowerCell.xib */,
+				F42611F011A18C84003DE867 /* TopicCell.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -521,6 +524,7 @@
 				5731B0741170EF5000F97613 /* FollowerCell.xib in Resources */,
 				57A180B7119951B300DFFD42 /* contact.png in Resources */,
 				57A180B9119951BE00DFFD42 /* channel.png in Resources */,
+				F42611F111A18C84003DE867 /* TopicCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

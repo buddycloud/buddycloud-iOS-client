@@ -10,8 +10,8 @@
 
 
 @implementation FollowerCellController
-@synthesize nameLabel, descriptionLabel;
-@synthesize geoPreviousLabel, geoCurrentLabel;
+@synthesize titleLabel, descriptionLabel;
+@synthesize geoPreviousLabel, geoCurrentLabel, geoFutureLabel;
 @synthesize imageView;
 
 /*
@@ -36,6 +36,7 @@
     [super viewDidLoad];
 	[geoPreviousLabel setText: nil];
 	[geoCurrentLabel setText: nil];
+	[geoFutureLabel setText: nil];
 }
 
 /*
