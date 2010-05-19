@@ -38,12 +38,13 @@ typedef enum {
 @interface ChannelItem : FollowedItem {
 	ChannelAffiliation affiliation;
 	ChannelSubscription subscription;
-	int waitingMessages;
+	
+	int rank;
 }
 
 @property (nonatomic) ChannelAffiliation affiliation;
 @property (nonatomic) ChannelSubscription subscription;
-@property (nonatomic) int waitingMessages;
+@property (nonatomic) int rank;
 
 + (ChannelAffiliation) affiliationFromString:(NSString*)str;
 + (ChannelSubscription) subscriptionFromString:(NSString*)str;

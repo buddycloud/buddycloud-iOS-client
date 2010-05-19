@@ -11,13 +11,16 @@
 
 @class XMPPStream;
 @class LocationEngine;
-
+@class PlacesDataModel;
+ 
 @interface PlaceEngine : NSObject {
 	XMPPStream *xmppStream;
 	LocationEngine* locationEngine;
 	
 	NSString *serverName;
 	int iqIdCounter;
+	
+	PlacesDataModel *dataModel;
 	
 	int currentPlaceId;
 	NSString *currentPlaceTitle;
@@ -32,6 +35,7 @@
 
 - (PlaceEngine *)initWithStream:(XMPPStream *)xmppStream toServer:(NSString *)serverName;
 
-- (void)updateFutureLocationTo:(NSString *)placeText withPlaceId:(NSString *)placeId;
+- (void)setCurrentGeolocationById:(NSString *)placeId;
+- (void)setFutureGeolocationText:(NSString *)text withPlaceId:(NSString *)placeId;
 
 @end

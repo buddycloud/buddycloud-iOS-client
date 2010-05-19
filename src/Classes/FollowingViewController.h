@@ -18,10 +18,12 @@
 	NSArray *orderedKeys;
 	
 	UITableViewCell *followerCell;
+	UITableViewCell *channelCell;
 }
 
 @property(nonatomic, retain) NSArray *orderedKeys;
 @property(nonatomic, assign) IBOutlet UITableViewCell *followerCell;
+@property(nonatomic, assign) IBOutlet UITableViewCell *channelCell;
 
 - (id)initWithStyle:(UITableViewStyle)style andDataModel:(FollowingDataModel *)dataModel;
 

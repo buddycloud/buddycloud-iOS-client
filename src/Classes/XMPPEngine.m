@@ -143,10 +143,10 @@ NSString *discoFeatures[] = {
 		}
 	}
 	else {
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Invalid ID"
-							  message: @"Please enter a valid Jabber or #Channel ID"
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Invalid ID", @"")
+							  message: NSLocalizedString(@"Please enter a valid Jabber or #Channel ID", @"")
 							  delegate: self
-							  cancelButtonTitle: @"OK"
+							  cancelButtonTitle: NSLocalizedString(@"Ok", @"")
 							  otherButtonTitles: nil];
 		[alert show];
 		[alert release];
@@ -160,11 +160,10 @@ NSString *discoFeatures[] = {
 - (void)xmppStreamDidNotConnect:(XMPPStream *)sender
 {
 	UIAlertView *alert = [[UIAlertView alloc]
-						  initWithTitle: @"Connection failed!"
-						  message: @"The client could not connect to the "
-						  @"Buddycloud server!"
+						  initWithTitle: NSLocalizedString(@"Connection failed", @"")
+						  message: NSLocalizedString(@"The client could not connect to the Buddycloud server", @"")
 						  delegate: self
-						  cancelButtonTitle: @"OK"
+						  cancelButtonTitle: NSLocalizedString(@"Ok", @"")
 						  otherButtonTitles: nil];
 	[alert show];
 	[alert release];
@@ -182,11 +181,10 @@ NSString *discoFeatures[] = {
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
 	UIAlertView *alert = [[UIAlertView alloc]
-						  initWithTitle: @"Authentication failed!"
-						  message: @"The client could not authenticate with the"
-						  @"Buddycloud server!"
+						  initWithTitle: NSLocalizedString(@"Authentication failed", @"")
+						  message: NSLocalizedString(@"The client could not authenticate with the Buddycloud server", @"")
 						  delegate: self
-						  cancelButtonTitle: @"OK"
+						  cancelButtonTitle: NSLocalizedString(@"Ok", @"")
 						  otherButtonTitles: nil];
 	[alert show];
 	[alert release];
@@ -343,7 +341,6 @@ NSString *discoFeatures[] = {
 	
 	for (NSXMLElement *item in itemElements) {
 		NSString *itemJid = [[item attributeForName: @"jid"] stringValue];
-		NSString *itemName = [[item attributeForName: @"name"] stringValue];
 		PresenceSubscription itemType = [UserItem subscriptionFromString: [[item attributeForName: @"subscription"] stringValue]];
 		
 		// Check for pubsub server jid
@@ -366,10 +363,6 @@ NSString *discoFeatures[] = {
 				[storedItem setIdent: itemJid];
 				[storedItem setTitle: itemJid];
 				[storedItem setSubscription: PRESSUB_NONE];
-				
-				if ([itemName length] > 0) {
-					[storedItem setTitle: itemName];
-				}
 					
 				[followingData setObject: storedItem forKey: itemKey];
 			}
@@ -560,9 +553,12 @@ NSString *discoFeatures[] = {
 	
 	if (item && [item isKindOfClass: [ChannelItem class]]) {
 		// Is a topic channel
-		[item setLastUpdated: [NSDate date]];
-		[item setTitle: [metadata objectForKey: @"pubsub#title"]];
-		[item setDescription: [metadata objectForKey: @"pubsub#description"]];
+		ChannelItem *channelItem = (ChannelItem *)item;
+		
+		[channelItem setLastUpdated: [NSDate date]];
+		[channelItem setTitle: [metadata objectForKey: @"pubsub#title"]];
+		[channelItem setDescription: [metadata objectForKey: @"pubsub#description"]];
+		[channelItem setRank: [[metadata objectForKey: @"x-buddycloud#rank"] intValue]];
 		
 		// Notify observers
 		[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];

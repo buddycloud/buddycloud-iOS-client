@@ -10,13 +10,14 @@
 #import "NSXMLElementAdditions.h"
 
 @implementation GeoLocation
-@synthesize text;
+@synthesize text, uri;
 
 - (GeoLocation *)initFromXML:(NSXMLElement *)geolocElement
 {
 	if(self = [super init]) {
 		// TODO: Parse geoloc element
 		[self setText: [[geolocElement elementForName: @"text"] stringValue]];
+		[self setUri: [[geolocElement elementForName: @"uri"] stringValue]];
 	}
 	
 	return self;
@@ -25,6 +26,7 @@
 - (void)dealloc
 {
 	[text release];
+	[uri release];
 	
 	[super dealloc];
 }

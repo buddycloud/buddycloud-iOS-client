@@ -10,7 +10,8 @@
 
 
 @implementation ChannelItem
-@synthesize affiliation, subscription, waitingMessages;
+@synthesize affiliation, subscription;
+@synthesize rank;
 
 // Parse a channel affiliation string
 + (ChannelAffiliation) affiliationFromString:(NSString*)str

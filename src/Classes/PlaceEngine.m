@@ -7,6 +7,7 @@
 //
 
 #import "PlaceEngine.h"
+#import "PlacesDataModel.h"
 #import "LocationEngine.h"
 #import "XMPPStream.h"
 #import "NSXMLElementAdditions.h"
@@ -25,6 +26,8 @@ typedef enum {
 - (PlaceEngine *) initWithStream:(XMPPStream *)aXmppStream toServer:(NSString *)aServerName {
 	if (self = [super init]) {
 		[self setServerName: aServerName];
+		
+		dataModel = [[PlacesDataModel alloc] init];
 		
 		// Initialize LocationEngine
 		locationEngine = [[LocationEngine alloc] initWithDelegate: self];
@@ -50,22 +53,32 @@ typedef enum {
 	[locationEngine release];	
 	[currentPlaceTitle release];
 	
+	[dataModel release];
+	
 	[super dealloc];
 }
 
 - (void)onFutureLocationArrival:(id)object
 {
-	[self updateFutureLocationTo: @"" withPlaceId: nil];
+	[self setFutureGeolocationText: @"" withPlaceId: nil];
 }
 
-- (void)updateFutureLocationTo:(NSString *)placeText withPlaceId:(NSString *)placeId
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Public PlaceEngine Place Setting
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)setCurrentGeolocationById:(NSString *)placeId
+{
+}
+
+- (void)setFutureGeolocationText:(NSString *)text withPlaceId:(NSString *)placeId
 {
 	// Update future location
 	// http://buddycloud.com/cms/node/103#place_next
 	
 	// Build place element
 	NSXMLElement *placeElement = [NSXMLElement elementWithName: @"place"];
-	[placeElement addChild: [NSXMLElement elementWithName: @"text" stringValue: placeText]];
+	[placeElement addChild: [NSXMLElement elementWithName: @"text" stringValue: text]];
 	
 	if (placeId) {
 		[placeElement addChild: [NSXMLElement elementWithName: @"id" stringValue: placeId]];		

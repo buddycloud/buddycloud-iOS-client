@@ -61,8 +61,8 @@
 							</object>
 							<object class="IBUILabel" id="39599967">
 								<reference key="NSNextResponder" ref="318849641"/>
-								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{64, 0}, {230, 30}}</string>
+								<int key="NSvFlags">288</int>
+								<string key="NSFrame">{{64, 0}, {250, 30}}</string>
 								<reference key="NSSuperview" ref="318849641"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -72,7 +72,7 @@
 								<string key="IBUIText">Title</string>
 								<object class="NSFont" key="IBUIFont">
 									<string key="NSName">Helvetica-Bold</string>
-									<double key="NSSize">12</double>
+									<double key="NSSize">14</double>
 									<int key="NSfFlags">16</int>
 								</object>
 								<object class="NSColor" key="IBUITextColor">
@@ -86,8 +86,8 @@
 							</object>
 							<object class="IBUILabel" id="720591186">
 								<reference key="NSNextResponder" ref="318849641"/>
-								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{8, 67}, {432, 30}}</string>
+								<int key="NSvFlags">288</int>
+								<string key="NSFrame">{{8, 67}, {302, 30}}</string>
 								<reference key="NSSuperview" ref="318849641"/>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">1</int>
@@ -116,8 +116,8 @@
 							</object>
 							<object class="IBUILabel" id="30316655">
 								<reference key="NSNextResponder" ref="318849641"/>
-								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{64, 38}, {230, 21}}</string>
+								<int key="NSvFlags">288</int>
+								<string key="NSFrame">{{64, 38}, {230, 14}}</string>
 								<reference key="NSSuperview" ref="318849641"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -136,8 +136,8 @@
 							</object>
 							<object class="IBUILabel" id="971810005">
 								<reference key="NSNextResponder" ref="318849641"/>
-								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{64, 52}, {230, 21}}</string>
+								<int key="NSvFlags">288</int>
+								<string key="NSFrame">{{64, 51}, {230, 14}}</string>
 								<reference key="NSSuperview" ref="318849641"/>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">1</int>
@@ -160,8 +160,8 @@
 							</object>
 							<object class="IBUILabel" id="801455543">
 								<reference key="NSNextResponder" ref="318849641"/>
-								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{64, 25}, {230, 21}}</string>
+								<int key="NSvFlags">288</int>
+								<string key="NSFrame">{{64, 25}, {230, 14}}</string>
 								<reference key="NSSuperview" ref="318849641"/>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">1</int>
@@ -184,7 +184,7 @@
 								<float key="IBUIMinimumFontSize">10</float>
 							</object>
 						</object>
-						<string key="NSFrameSize">{329, 100}</string>
+						<string key="NSFrameSize">{320, 100}</string>
 						<reference key="NSSuperview" ref="559061398"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
@@ -197,7 +197,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 				</object>
-				<string key="NSFrameSize">{329, 100}</string>
+				<string key="NSFrameSize">{320, 100}</string>
 				<reference key="NSSuperview"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
@@ -361,7 +361,7 @@
 					<string>UIResponder</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>{{659, 729}, {329, 100}}</string>
+					<string>{{522, 349}, {320, 100}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>

@@ -12,9 +12,11 @@
 // BC implementation of XEP-0080 (TODO)
 @interface GeoLocation : NSObject {
 	NSString *text;
+	NSString *uri;
 }
 
 @property(nonatomic, retain) NSString *text;
+@property(nonatomic, retain) NSString *uri;
 
 - (GeoLocation *)initFromXML:(NSXMLElement *)geolocElement;
 

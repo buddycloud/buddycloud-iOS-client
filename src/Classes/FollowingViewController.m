@@ -8,14 +8,16 @@
 
 #import "FollowingViewController.h"
 #import "FollowerCellController.h"
+#import "ChannelCellController.h"
 #import "FollowingDataModel.h"
 #import "Events.h"
 #import "UserItem.h"
+#import "ChannelItem.h"
 #import "TextFieldAlertView.h"
 
 @implementation FollowingViewController
 @synthesize orderedKeys;
-@synthesize followerCell;
+@synthesize followerCell, channelCell;
 
 - (id)initWithStyle:(UITableViewStyle)style andDataModel:(FollowingDataModel *)dataModel {
     if(self = [super initWithStyle:style]) {
@@ -56,7 +58,7 @@
 - (void)onAddButton
 {
 	TextFieldAlertView *followView = [[TextFieldAlertView alloc] initWithTitle: NSLocalizedString(@"Add following", @"")  
-																	   message: NSLocalizedString(@"Enter Jabber ID or #Channel ID", @"") 
+																	   message: NSLocalizedString(@"Enter Jabber or #Channel ID", @"") 
 																	  delegate: self 
 															 cancelButtonTitle: NSLocalizedString(@"Cancel", @"")
 															 okButtonTitle:  NSLocalizedString(@"Follow", @"")];
@@ -88,60 +90,94 @@
     return 1;
 }
 
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	return [self.orderedKeys count];
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	UITableViewCell *cell = nil;
+	
+	FollowedItem *item = [followingList getItemByKey: [orderedKeys objectAtIndex: indexPath.row]];
+	
+	if (item) {
+		if ([item isKindOfClass: [UserItem class]]) {
+			FollowerCellController *controller = [[FollowerCellController alloc] initWithNibName:@"FollowerCell" bundle:[NSBundle mainBundle]];
+			
+			// Set table cell
+			cell = (UITableViewCell *)controller.view;
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			
+			// Set cell data
+			UserItem *userItem = (UserItem *)item;
+			
+			[[controller titleLabel] setText: [userItem title]];
+			
+			// Adjust & set description
+			if ([[userItem description] length] > 0) {
+				CGRect descriptionFrame = [[controller descriptionLabel] frame];
+				CGSize descriptionSize = [[userItem description] sizeWithFont: [[controller descriptionLabel] font] 
+											   constrainedToSize: descriptionFrame.size
+												   lineBreakMode: [[controller descriptionLabel] lineBreakMode]];
+				
+				descriptionFrame.size.height = descriptionSize.height;
+				
+				if ([[[userItem geoPrevious] text] length] == 0 || [[[userItem geoFuture] text] length] == 0) {
+					descriptionFrame.origin.y -= [[[controller descriptionLabel] font] xHeight];
+				}
+				
+				[[controller descriptionLabel] setFrame: descriptionFrame];
+			}
+			
+			[[controller descriptionLabel] setText: [userItem description]];
+			
+			// Set geolocation labels
+			[[controller geoPreviousLabel] setText: [[userItem geoPrevious] text]];
+			[[controller geoCurrentLabel] setText: [[userItem geoCurrent] text]];
+			[[controller geoFutureLabel] setText: [[userItem geoFuture] text]];
+
+			if ([[[userItem geoPrevious] text] length] == 0) {
+				// If there is no previous set, adjust curent & future frames
+				[[controller geoFutureLabel] setFrame: [[controller geoCurrentLabel] frame]];
+				[[controller geoCurrentLabel] setFrame: [[controller geoPreviousLabel] frame]];
+			}
+				
+			//}
+			
+			//if ([userItem geoFuture]) {
+			//}
+			
+			[controller release];			
+		}
+		else if ([item isKindOfClass: [ChannelItem class]]) {
+			ChannelCellController *controller = [[ChannelCellController alloc] initWithNibName:@"TopicCell" bundle:[NSBundle mainBundle]];
+			
+			// Set table cell
+			cell = (UITableViewCell *)controller.view;
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			
+			// Set cell data
+			ChannelItem *channelItem = (ChannelItem *)item;
+			
+			[[controller titleLabel] setText: [channelItem title]];
+			[[controller rankLabel] setText: [NSString stringWithFormat: @"%@: %d", NSLocalizedString(@"Rank", @""), [channelItem rank]]];
+			[[controller descriptionLabel] setText: [channelItem description]];
+			
+			[controller release];			
+		}
+	}		
 	
     // Dequeue or create a new cell
 	//    static NSString *CellIdentifier = @"Cell";
 	//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-	//    if (cell == nil) {	
-	
-	FollowerCellController *controller = [[FollowerCellController alloc] initWithNibName:@"FollowerCell" bundle:[NSBundle mainBundle]];
-	UITableViewCell *cell = (UITableViewCell *)controller.view;
+	//    if (cell == nil) {		
 	//		NSLog(@"Cell %@", cell); 
 	//        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	//    }
-    
-	// Set up this specific cell's content
-	FollowedItem *item = [followingList getItemByKey: [orderedKeys objectAtIndex: indexPath.row]];
-	
-	if (item) {
-		[[controller titleLabel] setText: [item title]];
-		[[controller descriptionLabel] setText: [item description]];
-		
-		if ([item isKindOfClass: [UserItem class]]) {
-			UserItem *userItem = (UserItem *)item;
-			
-			if ([userItem geoPrevious]) {
-				[[controller geoPreviousLabel] setText: [[userItem geoPrevious] text]];
-			}
-			
-			if ([userItem geoCurrent]) {
-				[[controller geoCurrentLabel] setText: [[userItem geoCurrent] text]];
-			}
-			
-			if ([userItem geoFuture]) {
-				[[controller geoFutureLabel] setText: [[userItem geoFuture] text]];
-			}
-		}
-		else {
-			[[controller imageView] setImage: [UIImage imageNamed:@"channel.png"]];
-		}
-		
-		[controller release];
-	}
 
 	return cell;
 }
-
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
@@ -158,15 +194,28 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	CGFloat result = 64.0f;
+	
 	FollowedItem *item = [followingList getItemByKey: [orderedKeys objectAtIndex: indexPath.row]];
 	
-	if (item) {
-		if ([[item description] length] > 0) {
-			return 90.0f;
+	if (item && [item isKindOfClass: [UserItem class]]) {
+		UserItem *userItem = (UserItem *)item;
+		
+		if ([[userItem description] length] > 0) {
+			UIFont *font = [UIFont fontWithName: @"Helvetica" size: 12];
+			CGSize descriptionSize = [[userItem description] sizeWithFont: font 
+														constrainedToSize: CGSizeMake(tableView.bounds.size.width - 18, 30)
+															lineBreakMode: UILineBreakModeTailTruncation];
+			
+			if ([[[userItem geoPrevious] text] length] == 0 || [[[userItem geoFuture] text] length] == 0) {
+				result -= [font xHeight];
+			}
+			
+			result += (descriptionSize.height + [font xHeight]);
 		}
-	}		
+	}
 	
-	return 64.0f;
+	return ((result < 64.0f) ? 64.0f : result);
 }
 
 @end

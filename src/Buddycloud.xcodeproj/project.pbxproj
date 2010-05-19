@@ -16,6 +16,7 @@
 		4BE6F8930FB5A288001696C8 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE6F8920FB5A288001696C8 /* CFNetwork.framework */; };
 		4BE6F9400FB5A872001696C8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE6F93F0FB5A872001696C8 /* SystemConfiguration.framework */; };
 		4BE6FB5B0FB5ECC8001696C8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BE6FB5A0FB5ECC8001696C8 /* CoreLocation.framework */; };
+		571129A011A3CE5800921B1D /* database.sql in Resources */ = {isa = PBXBuildFile; fileRef = 5711299F11A3CE5800921B1D /* database.sql */; };
 		5731AF311170BD2100F97613 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5731AF301170BD2100F97613 /* Settings.bundle */; };
 		5731AF9B1170E05800F97613 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5731AF9A1170E05800F97613 /* SettingsViewController.m */; };
 		5731AFCA1170E3A600F97613 /* EditSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5731AFC91170E3A600F97613 /* EditSettingsViewController.m */; };
@@ -32,11 +33,15 @@
 		578B8B091183156C00279015 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B081183156C00279015 /* Location.m */; };
 		578B8B1E1183171000279015 /* ChannelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B1D1183171000279015 /* ChannelItem.m */; };
 		578B8B6511831A7100279015 /* FollowingDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B6411831A7100279015 /* FollowingDataModel.m */; };
+		5791901311A3E6EF0089B853 /* ChannelCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5791901211A3E6EF0089B853 /* ChannelCellController.m */; };
 		579397CB117DD98200D340F1 /* XMPPPubsub.m in Sources */ = {isa = PBXBuildFile; fileRef = 579397CA117DD98200D340F1 /* XMPPPubsub.m */; };
 		57A180B7119951B300DFFD42 /* contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 57A180B6119951B300DFFD42 /* contact.png */; };
 		57A180B9119951BE00DFFD42 /* channel.png in Resources */ = {isa = PBXBuildFile; fileRef = 57A180B8119951BE00DFFD42 /* channel.png */; };
 		57A182E0119D9D8200DFFD42 /* PlaceEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A182DF119D9D8200DFFD42 /* PlaceEngine.m */; };
 		57A183A1119ED30400DFFD42 /* TextFieldAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A183A0119ED30400DFFD42 /* TextFieldAlertView.m */; };
+		57A3AC6911A2C96200E39894 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 57A3AC6811A2C96200E39894 /* libsqlite3.dylib */; };
+		57A3AC6D11A2CCBC00E39894 /* PlacesDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A3AC6C11A2CCBC00E39894 /* PlacesDataModel.m */; };
+		57A3AC7011A2CFB700E39894 /* DatabaseAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A3AC6F11A2CFB700E39894 /* DatabaseAccess.m */; };
 		57DD026F1185D7A100CC00D1 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD02671185D7A100CC00D1 /* DDXMLDocument.m */; };
 		57DD02701185D7A100CC00D1 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD02691185D7A100CC00D1 /* DDXMLElement.m */; };
 		57DD02711185D7A100CC00D1 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD026B1185D7A100CC00D1 /* DDXMLNode.m */; };
@@ -76,6 +81,7 @@
 		4BE6F8920FB5A288001696C8 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4BE6F93F0FB5A872001696C8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		4BE6FB5A0FB5ECC8001696C8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		5711299F11A3CE5800921B1D /* database.sql */ = {isa = PBXFileReference; lastKnownFileType = file; path = database.sql; sourceTree = "<group>"; };
 		5731AF301170BD2100F97613 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		5731AF991170E05800F97613 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		5731AF9A1170E05800F97613 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
@@ -105,6 +111,8 @@
 		578B8B1D1183171000279015 /* ChannelItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelItem.m; sourceTree = "<group>"; };
 		578B8B6311831A7100279015 /* FollowingDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowingDataModel.h; sourceTree = "<group>"; };
 		578B8B6411831A7100279015 /* FollowingDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowingDataModel.m; sourceTree = "<group>"; };
+		5791901111A3E6EF0089B853 /* ChannelCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelCellController.h; sourceTree = "<group>"; };
+		5791901211A3E6EF0089B853 /* ChannelCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelCellController.m; sourceTree = "<group>"; };
 		579397C9117DD98200D340F1 /* XMPPPubsub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPubsub.h; sourceTree = "<group>"; };
 		579397CA117DD98200D340F1 /* XMPPPubsub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPubsub.m; sourceTree = "<group>"; };
 		57A180B6119951B300DFFD42 /* contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contact.png; sourceTree = "<group>"; };
@@ -113,6 +121,11 @@
 		57A182DF119D9D8200DFFD42 /* PlaceEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceEngine.m; sourceTree = "<group>"; };
 		57A1839F119ED30400DFFD42 /* TextFieldAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldAlertView.h; sourceTree = "<group>"; };
 		57A183A0119ED30400DFFD42 /* TextFieldAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldAlertView.m; sourceTree = "<group>"; };
+		57A3AC6811A2C96200E39894 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/usr/lib/libsqlite3.dylib; sourceTree = DEVELOPER_DIR; };
+		57A3AC6B11A2CCBC00E39894 /* PlacesDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesDataModel.h; sourceTree = "<group>"; };
+		57A3AC6C11A2CCBC00E39894 /* PlacesDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlacesDataModel.m; sourceTree = "<group>"; };
+		57A3AC6E11A2CFB700E39894 /* DatabaseAccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseAccess.h; sourceTree = "<group>"; };
+		57A3AC6F11A2CFB700E39894 /* DatabaseAccess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseAccess.m; sourceTree = "<group>"; };
 		57DD02651185D7A100CC00D1 /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
 		57DD02661185D7A100CC00D1 /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
 		57DD02671185D7A100CC00D1 /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
@@ -180,6 +193,7 @@
 				4BE6F9400FB5A872001696C8 /* SystemConfiguration.framework in Frameworks */,
 				4BE6FB5B0FB5ECC8001696C8 /* CoreLocation.framework in Frameworks */,
 				57E0706A116B89EE00FDB70C /* libidn.a in Frameworks */,
+				57A3AC6911A2C96200E39894 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,14 +249,15 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5711299F11A3CE5800921B1D /* database.sql */,
 				57A180B8119951BE00DFFD42 /* channel.png */,
 				57A180B6119951B300DFFD42 /* contact.png */,
 				573681E3116CB627008DC56F /* Icon.png */,
 				28AD73870D9D96C1002E5188 /* MainWindow.xib */,
-				8D1107310486CEB800E47090 /* Info.plist */,
 				5731AF301170BD2100F97613 /* Settings.bundle */,
 				5731B0731170EF5000F97613 /* FollowerCell.xib */,
 				F42611F011A18C84003DE867 /* TopicCell.xib */,
+				8D1107310486CEB800E47090 /* Info.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -257,6 +272,7 @@
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				288765070DF74369002DB57D /* CoreGraphics.framework */,
+				57A3AC6811A2C96200E39894 /* libsqlite3.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -291,6 +307,8 @@
 				5731B0771170F01D00F97613 /* FollowerCellController.m */,
 				57A1839F119ED30400DFFD42 /* TextFieldAlertView.h */,
 				57A183A0119ED30400DFFD42 /* TextFieldAlertView.m */,
+				5791901111A3E6EF0089B853 /* ChannelCellController.h */,
+				5791901211A3E6EF0089B853 /* ChannelCellController.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -327,6 +345,10 @@
 			children = (
 				578B8B6311831A7100279015 /* FollowingDataModel.h */,
 				578B8B6411831A7100279015 /* FollowingDataModel.m */,
+				57A3AC6B11A2CCBC00E39894 /* PlacesDataModel.h */,
+				57A3AC6C11A2CCBC00E39894 /* PlacesDataModel.m */,
+				57A3AC6E11A2CFB700E39894 /* DatabaseAccess.h */,
+				57A3AC6F11A2CFB700E39894 /* DatabaseAccess.m */,
 			);
 			name = "Data Models";
 			sourceTree = "<group>";
@@ -525,6 +547,7 @@
 				57A180B7119951B300DFFD42 /* contact.png in Resources */,
 				57A180B9119951BE00DFFD42 /* channel.png in Resources */,
 				F42611F111A18C84003DE867 /* TopicCell.xib in Resources */,
+				571129A011A3CE5800921B1D /* database.sql in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,6 +598,9 @@
 				57DD02D71185D8AF00CC00D1 /* XMPPTransports.m in Sources */,
 				57A182E0119D9D8200DFFD42 /* PlaceEngine.m in Sources */,
 				57A183A1119ED30400DFFD42 /* TextFieldAlertView.m in Sources */,
+				57A3AC6D11A2CCBC00E39894 /* PlacesDataModel.m in Sources */,
+				57A3AC7011A2CFB700E39894 /* DatabaseAccess.m in Sources */,
+				5791901311A3E6EF0089B853 /* ChannelCellController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,6 +620,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/usr/lib\"",
 				);
 				PRODUCT_NAME = Buddycloud;
 			};
@@ -610,6 +637,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
+					"\"$(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/usr/lib\"",
 				);
 				PRODUCT_NAME = Buddycloud;
 			};
