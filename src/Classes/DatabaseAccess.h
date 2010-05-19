@@ -9,21 +9,25 @@
 #import <Foundation/Foundation.h>
 #import "sqlite3.h"
 
+@protocol DatabaseAccessDelegate
+@required
+
+- (void)prepareDatabaseForVersion:(int)majorVersion build:(int)minorVersion;
+
+@end
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Public DatabaseAccess definition
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface DatabaseAccess : NSObject {
+@interface DatabaseAccess : NSObject<DatabaseAccessDelegate> {
 	sqlite3 *db;
-	
-	int dbVersion;
 }
-
-@property(nonatomic) int dbVersion;
 
 - (id)initWithDatabaseName:(NSString *)fileName;
 
 - (BOOL)isDatabaseOpen;
+- (void)setDatabaseToVersion:(int)majorVersion build:(int)minorVersion;
 
 @end
 

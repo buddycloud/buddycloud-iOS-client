@@ -13,4 +13,6 @@
 	
 }
 
+- (void)prepareDatabaseForVersion:(int)majorVersion build:(int)minorVersion;
+
 @end

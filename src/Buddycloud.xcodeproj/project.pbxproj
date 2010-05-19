@@ -34,12 +34,12 @@
 		578B8B1E1183171000279015 /* ChannelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B1D1183171000279015 /* ChannelItem.m */; };
 		578B8B6511831A7100279015 /* FollowingDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B6411831A7100279015 /* FollowingDataModel.m */; };
 		5791901311A3E6EF0089B853 /* ChannelCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5791901211A3E6EF0089B853 /* ChannelCellController.m */; };
+		579191DF11A439AD0089B853 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 579191DE11A439AD0089B853 /* libsqlite3.dylib */; };
 		579397CB117DD98200D340F1 /* XMPPPubsub.m in Sources */ = {isa = PBXBuildFile; fileRef = 579397CA117DD98200D340F1 /* XMPPPubsub.m */; };
 		57A180B7119951B300DFFD42 /* contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 57A180B6119951B300DFFD42 /* contact.png */; };
 		57A180B9119951BE00DFFD42 /* channel.png in Resources */ = {isa = PBXBuildFile; fileRef = 57A180B8119951BE00DFFD42 /* channel.png */; };
 		57A182E0119D9D8200DFFD42 /* PlaceEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A182DF119D9D8200DFFD42 /* PlaceEngine.m */; };
 		57A183A1119ED30400DFFD42 /* TextFieldAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A183A0119ED30400DFFD42 /* TextFieldAlertView.m */; };
-		57A3AC6911A2C96200E39894 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 57A3AC6811A2C96200E39894 /* libsqlite3.dylib */; };
 		57A3AC6D11A2CCBC00E39894 /* PlacesDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A3AC6C11A2CCBC00E39894 /* PlacesDataModel.m */; };
 		57A3AC7011A2CFB700E39894 /* DatabaseAccess.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A3AC6F11A2CFB700E39894 /* DatabaseAccess.m */; };
 		57DD026F1185D7A100CC00D1 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD02671185D7A100CC00D1 /* DDXMLDocument.m */; };
@@ -113,6 +113,7 @@
 		578B8B6411831A7100279015 /* FollowingDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowingDataModel.m; sourceTree = "<group>"; };
 		5791901111A3E6EF0089B853 /* ChannelCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelCellController.h; sourceTree = "<group>"; };
 		5791901211A3E6EF0089B853 /* ChannelCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelCellController.m; sourceTree = "<group>"; };
+		579191DE11A439AD0089B853 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		579397C9117DD98200D340F1 /* XMPPPubsub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPubsub.h; sourceTree = "<group>"; };
 		579397CA117DD98200D340F1 /* XMPPPubsub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPubsub.m; sourceTree = "<group>"; };
 		57A180B6119951B300DFFD42 /* contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = contact.png; sourceTree = "<group>"; };
@@ -121,7 +122,6 @@
 		57A182DF119D9D8200DFFD42 /* PlaceEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceEngine.m; sourceTree = "<group>"; };
 		57A1839F119ED30400DFFD42 /* TextFieldAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFieldAlertView.h; sourceTree = "<group>"; };
 		57A183A0119ED30400DFFD42 /* TextFieldAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextFieldAlertView.m; sourceTree = "<group>"; };
-		57A3AC6811A2C96200E39894 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/usr/lib/libsqlite3.dylib; sourceTree = DEVELOPER_DIR; };
 		57A3AC6B11A2CCBC00E39894 /* PlacesDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlacesDataModel.h; sourceTree = "<group>"; };
 		57A3AC6C11A2CCBC00E39894 /* PlacesDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlacesDataModel.m; sourceTree = "<group>"; };
 		57A3AC6E11A2CFB700E39894 /* DatabaseAccess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseAccess.h; sourceTree = "<group>"; };
@@ -193,7 +193,7 @@
 				4BE6F9400FB5A872001696C8 /* SystemConfiguration.framework in Frameworks */,
 				4BE6FB5B0FB5ECC8001696C8 /* CoreLocation.framework in Frameworks */,
 				57E0706A116B89EE00FDB70C /* libidn.a in Frameworks */,
-				57A3AC6911A2C96200E39894 /* libsqlite3.dylib in Frameworks */,
+				579191DF11A439AD0089B853 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,7 +272,7 @@
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				288765070DF74369002DB57D /* CoreGraphics.framework */,
-				57A3AC6811A2C96200E39894 /* libsqlite3.dylib */,
+				579191DE11A439AD0089B853 /* libsqlite3.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
