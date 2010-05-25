@@ -59,6 +59,15 @@ static sqlite3_stmt *updateVersionStatement = nil;
 	[super dealloc];
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Public DatabaseAccess methods
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (BOOL)isDatabaseOpen
+{
+	return (db != nil);
+}
+
 - (void)setDatabaseToVersion:(int)majorVersion build:(int)minorVersion
 {
 	if (updateVersionStatement == nil) {
@@ -77,20 +86,32 @@ static sqlite3_stmt *updateVersionStatement = nil;
 	
 	if (sqlite3_step(updateVersionStatement) != SQLITE_DONE) {
 		NSLog(@"Error while updating: %s", sqlite3_errmsg(db));
-	
+		
 		sqlite3_reset(updateVersionStatement);
 		
 		return;
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark Public DatabaseAccess methods
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (BOOL)isDatabaseOpen
+- (int)prepareAndExecuteSQL:(NSString *)statement
 {
-	return (db != nil);
+	int result = SQLITE_ERROR;
+	
+	if ([statement length] > 0) {
+		sqlite3_stmt *preparedStatement;
+		
+		if ((result = sqlite3_prepare_v2(db, [statement UTF8String], -1, &preparedStatement, NULL)) != SQLITE_OK) {
+			NSLog(@"*** Error in prepareAndExecuteSQL: %@: %s", statement, sqlite3_errmsg(db));
+			
+			return result;
+		}
+		
+		result = sqlite3_step(preparedStatement);
+		
+		sqlite3_finalize(preparedStatement);
+	}
+	
+	return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

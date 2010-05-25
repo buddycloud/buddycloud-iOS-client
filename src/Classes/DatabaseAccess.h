@@ -10,7 +10,7 @@
 #import "sqlite3.h"
 
 @protocol DatabaseAccessDelegate
-@required
+@optional
 
 - (void)prepareDatabaseForVersion:(int)majorVersion build:(int)minorVersion;
 
@@ -20,7 +20,7 @@
 #pragma mark Public DatabaseAccess definition
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface DatabaseAccess : NSObject<DatabaseAccessDelegate> {
+@interface DatabaseAccess : NSObject <DatabaseAccessDelegate> {
 	sqlite3 *db;
 }
 
@@ -28,6 +28,8 @@
 
 - (BOOL)isDatabaseOpen;
 - (void)setDatabaseToVersion:(int)majorVersion build:(int)minorVersion;
+
+- (int)prepareAndExecuteSQL:(NSString *)statement;
 
 @end
 

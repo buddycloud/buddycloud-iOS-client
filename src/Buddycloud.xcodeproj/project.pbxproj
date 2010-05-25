@@ -28,6 +28,7 @@
 		57368152116CA838008DC56F /* FollowingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57368151116CA838008DC56F /* FollowingViewController.m */; };
 		5736819C116CABE6008DC56F /* Events.m in Sources */ = {isa = PBXBuildFile; fileRef = 5736819B116CABE6008DC56F /* Events.m */; };
 		573681E4116CB627008DC56F /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 573681E3116CB627008DC56F /* Icon.png */; };
+		577A11CC11A81388006B1701 /* PostItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 577A11CB11A81388006B1701 /* PostItem.m */; };
 		578B8AFC118313F000279015 /* FollowedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8AFB118313F000279015 /* FollowedItem.m */; };
 		578B8AFF118314D400279015 /* UserItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8AFE118314D400279015 /* UserItem.m */; };
 		578B8B091183156C00279015 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B081183156C00279015 /* Location.m */; };
@@ -101,6 +102,8 @@
 		5736819A116CABE6008DC56F /* Events.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Events.h; sourceTree = "<group>"; };
 		5736819B116CABE6008DC56F /* Events.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Events.m; sourceTree = "<group>"; };
 		573681E3116CB627008DC56F /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		577A11CA11A81388006B1701 /* PostItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostItem.h; sourceTree = "<group>"; };
+		577A11CB11A81388006B1701 /* PostItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostItem.m; sourceTree = "<group>"; };
 		578B8AFA118313F000279015 /* FollowedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowedItem.h; sourceTree = "<group>"; };
 		578B8AFB118313F000279015 /* FollowedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowedItem.m; sourceTree = "<group>"; };
 		578B8AFD118314D400279015 /* UserItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserItem.h; sourceTree = "<group>"; };
@@ -364,6 +367,8 @@
 				578B8B1D1183171000279015 /* ChannelItem.m */,
 				578B8B071183156C00279015 /* Location.h */,
 				578B8B081183156C00279015 /* Location.m */,
+				577A11CA11A81388006B1701 /* PostItem.h */,
+				577A11CB11A81388006B1701 /* PostItem.m */,
 			);
 			name = Concepts;
 			sourceTree = "<group>";
@@ -601,6 +606,7 @@
 				57A3AC6D11A2CCBC00E39894 /* PlacesDataModel.m in Sources */,
 				57A3AC7011A2CFB700E39894 /* DatabaseAccess.m in Sources */,
 				5791901311A3E6EF0089B853 /* ChannelCellController.m in Sources */,
+				577A11CC11A81388006B1701 /* PostItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

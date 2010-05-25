@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FollowingDataModel.h"
+#import "PostItem.h"
 
 @class XMPPStream;
 @class XMPPRoster;
@@ -30,13 +31,13 @@
 	
 	bool isConnectionCold;
 	bool isPubsubAddedToRoster;
-	int lastItemIdReceived;
+	superlong lastItemIdReceived;
 }
 
 @property(nonatomic, retain) XMPPStream *xmppStream;
 @property(nonatomic, retain) XMPPRoster *xmppRoster;
 @property(nonatomic, retain) NSString *password;
-@property(readonly) int lastItemIdReceived;
+@property(readonly) superlong lastItemIdReceived;
 
 - (void)connect;
 - (void)disconnect;

@@ -17,6 +17,7 @@
 #import "UserItem.h"
 #import "ChannelItem.h"
 #import "Location.h"
+#import "PostItem.h"
 #import "Events.h"
 
 NSString *applicationVersion = @"iPhone-0.1.01";
@@ -61,7 +62,7 @@ NSString *discoFeatures[] = {
 		isConnectionCold = YES;
 		
 		// Load XMPPEngine settings
-		if ((lastItemIdReceived = [[NSUserDefaults standardUserDefaults] integerForKey: @"lastItemIdReceived"]) == 0) {
+		if ((lastItemIdReceived = [[[NSUserDefaults standardUserDefaults] stringForKey: @"lastItemIdReceived"] longLongValue]) == 0) {
 			lastItemIdReceived = 1;
 		}
 		
@@ -80,7 +81,7 @@ NSString *discoFeatures[] = {
 		// Disconnect from server
 		isConnectionCold = YES;
 		
-		[[NSUserDefaults standardUserDefaults] setInteger: lastItemIdReceived forKey: @"lastItemIdReceived"];
+		[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat: @"%qi", lastItemIdReceived] forKey: @"lastItemIdReceived"];
 		
 		[xmppStream disconnect];
 	}
@@ -710,6 +711,34 @@ NSString *discoFeatures[] = {
 		
 		if (publishedElement = [item elementForName: @"entry" xmlns: @"http://www.w3.org/2005/Atom"]) {
 			// Published item is channel entry
+			PostItem *post = [[PostItem alloc] initWithNode: node];
+			[post setContent: [[publishedElement elementForName: @"content"] stringValue]];
+						
+			if ([[post content] length] > 0) {
+				// Only continue if the entry has some content
+				NSXMLElement *authorElement = [publishedElement elementForName: @"author"];
+				NSXMLElement *geolocElement = [publishedElement elementForName: @"geoloc" xmlns: @"http://jabber.org/protocol/geoloc"];
+				
+				if (authorElement) {
+					// Set author data
+					[post setAuthorName: [[authorElement elementForName: @"name"] stringValue]];
+					[post setAuthorJid: [[authorElement elementForName: @"jid" xmlns: @"http://buddycloud.com/atom-elements-0"] stringValue]];
+					[post setAuthorAffiliation: [ChannelItem affiliationFromString: [[authorElement elementForName: @"affiliation" xmlns: @"http://buddycloud.com/atom-elements-0"] stringValue]]];
+				}
+				
+				if (geolocElement) {
+					// Set geoloc data
+					[post setLocation: [[geolocElement elementForName: @"text"] stringValue]];
+				}
+			
+				[post setPostTimeFromString: [[publishedElement elementForName: @"updated"] stringValue]];
+				[post setCommentId: [[[[publishedElement elementForName: @"thr:in-reply-to"] attributeForName: @"ref"] stringValue] longLongValue]];
+				[post setEntryId: [[[item attributeForName: @"id"] stringValue] longLongValue]];
+				
+				[self insertPost: post];
+			}
+			
+			[post release];			
 		}
 		else if (publishedElement = [item elementForName: @"geoloc" xmlns: @"http://jabber.org/protocol/geoloc"]) {
 			// Published item is geolocation
@@ -750,6 +779,8 @@ NSString *discoFeatures[] = {
 					
 					notifyObservers = YES;
 				}
+				
+				[geoloc release];
 			}
 		}
 		else if (publishedElement = [item elementForName: @"mood" xmlns: @"http://jabber.org/protocol/mood"]) {

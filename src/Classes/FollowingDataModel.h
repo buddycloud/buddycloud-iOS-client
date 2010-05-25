@@ -7,11 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DatabaseAccess.h"
+
+@class PostItem;
 @class FollowedItem;
 
-@interface FollowingDataModel : NSObject {
+@interface FollowingDataModel : DatabaseAccess {
 	NSMutableDictionary *followingData;
 }
+
+- (void)prepareDatabaseForVersion:(int)majorVersion build:(int)minorVersion;
+
+- (BOOL)insertPost:(PostItem *)post;
+
+
 
 - (NSArray *)unorderedKeys;
 - (NSArray *)orderKeysByUpdated;
@@ -20,12 +29,5 @@
 - (FollowedItem *)getItemByIdent:(NSString *)ident;
 
 - (void)followItem:(NSString *)item;
-
-@end
-
-@interface FollowingDataModel (PrivateAPI)
-
-- (void)readDataFromStorage;
-- (void)writeDataToStorage;
 
 @end
