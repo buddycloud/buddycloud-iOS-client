@@ -29,6 +29,11 @@
 		5736819C116CABE6008DC56F /* Events.m in Sources */ = {isa = PBXBuildFile; fileRef = 5736819B116CABE6008DC56F /* Events.m */; };
 		573681E4116CB627008DC56F /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 573681E3116CB627008DC56F /* Icon.png */; };
 		577A11CC11A81388006B1701 /* PostItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 577A11CB11A81388006B1701 /* PostItem.m */; };
+		577A13DA11AD4E76006B1701 /* PostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 577A13D811AD4E76006B1701 /* PostsViewController.m */; };
+		577A13DB11AD4E76006B1701 /* PostsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A13D911AD4E76006B1701 /* PostsViewController.xib */; };
+		577A141D11AD82F6006B1701 /* PostCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 577A141C11AD82F6006B1701 /* PostCellController.m */; };
+		577A142011AD84DB006B1701 /* PostTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A141F11AD84DB006B1701 /* PostTopicCell.xib */; };
+		577A148E11AE76EB006B1701 /* PostCommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A148D11AE76EB006B1701 /* PostCommentCell.xib */; };
 		578B8AFC118313F000279015 /* FollowedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8AFB118313F000279015 /* FollowedItem.m */; };
 		578B8AFF118314D400279015 /* UserItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8AFE118314D400279015 /* UserItem.m */; };
 		578B8B091183156C00279015 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B081183156C00279015 /* Location.m */; };
@@ -104,6 +109,13 @@
 		573681E3116CB627008DC56F /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		577A11CA11A81388006B1701 /* PostItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostItem.h; sourceTree = "<group>"; };
 		577A11CB11A81388006B1701 /* PostItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostItem.m; sourceTree = "<group>"; };
+		577A13D711AD4E76006B1701 /* PostsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostsViewController.h; sourceTree = "<group>"; };
+		577A13D811AD4E76006B1701 /* PostsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostsViewController.m; sourceTree = "<group>"; };
+		577A13D911AD4E76006B1701 /* PostsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PostsViewController.xib; path = Classes/PostsViewController.xib; sourceTree = "<group>"; };
+		577A141B11AD82F6006B1701 /* PostCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostCellController.h; sourceTree = "<group>"; };
+		577A141C11AD82F6006B1701 /* PostCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostCellController.m; sourceTree = "<group>"; };
+		577A141F11AD84DB006B1701 /* PostTopicCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PostTopicCell.xib; sourceTree = "<group>"; };
+		577A148D11AE76EB006B1701 /* PostCommentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PostCommentCell.xib; sourceTree = "<group>"; };
 		578B8AFA118313F000279015 /* FollowedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowedItem.h; sourceTree = "<group>"; };
 		578B8AFB118313F000279015 /* FollowedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowedItem.m; sourceTree = "<group>"; };
 		578B8AFD118314D400279015 /* UserItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserItem.h; sourceTree = "<group>"; };
@@ -252,15 +264,18 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				28AD73870D9D96C1002E5188 /* MainWindow.xib */,
+				577A13D911AD4E76006B1701 /* PostsViewController.xib */,
+				5731B0731170EF5000F97613 /* FollowerCell.xib */,
+				F42611F011A18C84003DE867 /* TopicCell.xib */,
 				5711299F11A3CE5800921B1D /* database.sql */,
 				57A180B8119951BE00DFFD42 /* channel.png */,
 				57A180B6119951B300DFFD42 /* contact.png */,
 				573681E3116CB627008DC56F /* Icon.png */,
-				28AD73870D9D96C1002E5188 /* MainWindow.xib */,
 				5731AF301170BD2100F97613 /* Settings.bundle */,
-				5731B0731170EF5000F97613 /* FollowerCell.xib */,
-				F42611F011A18C84003DE867 /* TopicCell.xib */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				577A141F11AD84DB006B1701 /* PostTopicCell.xib */,
+				577A148D11AE76EB006B1701 /* PostCommentCell.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -312,6 +327,10 @@
 				57A183A0119ED30400DFFD42 /* TextFieldAlertView.m */,
 				5791901111A3E6EF0089B853 /* ChannelCellController.h */,
 				5791901211A3E6EF0089B853 /* ChannelCellController.m */,
+				577A13D711AD4E76006B1701 /* PostsViewController.h */,
+				577A13D811AD4E76006B1701 /* PostsViewController.m */,
+				577A141B11AD82F6006B1701 /* PostCellController.h */,
+				577A141C11AD82F6006B1701 /* PostCellController.m */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -553,6 +572,9 @@
 				57A180B9119951BE00DFFD42 /* channel.png in Resources */,
 				F42611F111A18C84003DE867 /* TopicCell.xib in Resources */,
 				571129A011A3CE5800921B1D /* database.sql in Resources */,
+				577A13DB11AD4E76006B1701 /* PostsViewController.xib in Resources */,
+				577A142011AD84DB006B1701 /* PostTopicCell.xib in Resources */,
+				577A148E11AE76EB006B1701 /* PostCommentCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -607,6 +629,8 @@
 				57A3AC7011A2CFB700E39894 /* DatabaseAccess.m in Sources */,
 				5791901311A3E6EF0089B853 /* ChannelCellController.m in Sources */,
 				577A11CC11A81388006B1701 /* PostItem.m in Sources */,
+				577A13DA11AD4E76006B1701 /* PostsViewController.m in Sources */,
+				577A141D11AD82F6006B1701 /* PostCellController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

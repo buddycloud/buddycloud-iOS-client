@@ -31,11 +31,8 @@
 @synthesize window;
 @synthesize tabBarController;
 @synthesize navigationController;
-@synthesize followingTableView;
-@synthesize placesTableView;
-@synthesize channelsTableView;
-@synthesize settingsController;
-@synthesize followingController;
+@synthesize followingTableView, postsTableView;
+@synthesize followingController, settingsController;
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
@@ -80,6 +77,11 @@
 	[window release];
 	
 	[super dealloc];
+}
+
+- (FollowingDataModel *)followingDataModel
+{
+	return xmppEngine;
 }
 
 @end

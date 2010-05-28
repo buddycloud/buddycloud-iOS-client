@@ -42,4 +42,6 @@
 - (NSString *)dbFilePathFromName:(NSString *)fileName;
 - (BOOL)checkAndCreateDatabase:(NSString *)databasePath;
 
++ (NSString *)stringFromUTF8ColumnText:(const unsigned char *)text;
+
 @end

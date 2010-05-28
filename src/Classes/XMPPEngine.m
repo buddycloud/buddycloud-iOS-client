@@ -87,22 +87,6 @@ NSString *discoFeatures[] = {
 	}
 }
 
-- (ChannelItem *)getChannelItemForFollowedItem:(FollowedItem *)item
-{
-	ChannelItem *channelItem = nil;
-	
-	if(item) {
-		if([item isKindOfClass: [UserItem class]]) {
-			channelItem = [(UserItem *)item channel];
-		}
-		else {
-			channelItem = (ChannelItem *)item;
-		}
-	}
-
-	return channelItem;
-}
-
 - (void)sendPresenceToPubsubWithLastItemId:(int)itemId
 {
 	// Build & send presence to pubsub server
@@ -711,7 +695,7 @@ NSString *discoFeatures[] = {
 		
 		if (publishedElement = [item elementForName: @"entry" xmlns: @"http://www.w3.org/2005/Atom"]) {
 			// Published item is channel entry
-			PostItem *post = [[PostItem alloc] initWithNode: node];
+			PostItem *post = [[[PostItem alloc] initWithNode: node] autorelease];
 			[post setContent: [[publishedElement elementForName: @"content"] stringValue]];
 						
 			if ([[post content] length] > 0) {
@@ -732,19 +716,33 @@ NSString *discoFeatures[] = {
 				}
 			
 				[post setPostTimeFromString: [[publishedElement elementForName: @"updated"] stringValue]];
-				[post setCommentId: [[[[publishedElement elementForName: @"thr:in-reply-to"] attributeForName: @"ref"] stringValue] longLongValue]];
-				[post setEntryId: [[[item attributeForName: @"id"] stringValue] longLongValue]];
 				
+				// Set entry/comment data
+				long long entryId = [[[item attributeForName: @"id"] stringValue] longLongValue];
+				long long commentId = [[[[publishedElement elementForName: @"thr:in-reply-to"] attributeForName: @"ref"] stringValue] longLongValue];
+				
+				if (commentId == 0) {
+					// Post is a new topic
+					[post setEntryId: entryId];
+				}
+				else {
+					// Post is a comment to a topic
+					[post setEntryId: commentId];
+					[post setCommentId: entryId];
+				}
+				
+//				[post setCommentId: [[[[publishedElement elementForName: @"thr:in-reply-to"] attributeForName: @"ref"] stringValue] longLongValue]];
+//				[post setEntryId: [[[item attributeForName: @"id"] stringValue] longLongValue]];
+				
+				// Insert post item
 				[self insertPost: post];
 			}
-			
-			[post release];			
 		}
 		else if (publishedElement = [item elementForName: @"geoloc" xmlns: @"http://jabber.org/protocol/geoloc"]) {
 			// Published item is geolocation
 			if ([followedItem isKindOfClass: [UserItem class]]) {
 				UserItem *userItem = (UserItem *)followedItem;
-				GeoLocation *geoloc = [[GeoLocation alloc] initFromXML: publishedElement];
+				GeoLocation *geoloc = [[[GeoLocation alloc] initFromXML: publishedElement] autorelease];
 				
 				if ([node hasSuffix: @"/geo/previous"] && ![[userItem geoPrevious] compare: geoloc]) {
 					// Users previous geolocation is updated
@@ -779,8 +777,6 @@ NSString *discoFeatures[] = {
 					
 					notifyObservers = YES;
 				}
-				
-				[geoloc release];
 			}
 		}
 		else if (publishedElement = [item elementForName: @"mood" xmlns: @"http://jabber.org/protocol/mood"]) {

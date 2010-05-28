@@ -143,4 +143,15 @@ static sqlite3_stmt *updateVersionStatement = nil;
 	return result;
 }
 
++ (NSString *)stringFromUTF8ColumnText:(const unsigned char *)text
+{
+	NSString *result = nil;
+	
+	if (text != NULL) {
+		result = [NSString stringWithUTF8String: (char *)text];
+	}
+	
+	return result;
+}
+
 @end

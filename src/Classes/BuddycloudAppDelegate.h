@@ -22,6 +22,7 @@
 
 @class XMPPEngine;
 @class PlaceEngine;
+@class FollowingDataModel;
 @class FollowingViewController;
 #import "SettingsViewController.h" 
 
@@ -30,7 +31,9 @@
 	UIWindow *window;
 	UITabBarController *tabBarController;
 	UINavigationController *navigationController;
-	UITableView *followingTableView, *placesTableView, *channelsTableView;
+	
+	UITableView *followingTableView;
+	UITableView *postsTableView;
 	
 	XMPPEngine *xmppEngine;
 	PlaceEngine *placeEngine;
@@ -43,9 +46,10 @@
 @property(nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 @property(nonatomic, retain) IBOutlet UINavigationController *navigationController;
 @property(nonatomic, retain) IBOutlet UITableView *followingTableView;
-@property(nonatomic, retain) IBOutlet UITableView *placesTableView;
-@property(nonatomic, retain) IBOutlet UITableView *channelsTableView;
+@property(nonatomic, retain) IBOutlet UITableView *postsTableView;
 @property(nonatomic, retain) SettingsViewController *settingsController;
 @property(nonatomic, retain) FollowingViewController *followingController;
+
+- (FollowingDataModel *)followingDataModel;
 
 @end

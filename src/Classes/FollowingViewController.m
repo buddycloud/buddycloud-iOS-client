@@ -14,6 +14,7 @@
 #import "UserItem.h"
 #import "ChannelItem.h"
 #import "TextFieldAlertView.h"
+#import "PostsViewController.h"
 
 @implementation FollowingViewController
 @synthesize orderedKeys;
@@ -92,7 +93,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return [self.orderedKeys count];
+	return [orderedKeys count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -105,13 +106,16 @@
 		if ([item isKindOfClass: [UserItem class]]) {
 			FollowerCellController *controller = [[FollowerCellController alloc] initWithNibName:@"FollowerCell" bundle:[NSBundle mainBundle]];
 			
-			// Set table cell
-			cell = (UITableViewCell *)controller.view;
-			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			
 			// Set cell data
 			UserItem *userItem = (UserItem *)item;
 			
+			// Set table cell
+			cell = (UITableViewCell *)controller.view;
+			
+			if ([userItem channel]) {
+				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			}
+				
 			[[controller titleLabel] setText: [userItem title]];
 			
 			// Adjust & set description
@@ -181,15 +185,21 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+//	[tableView deselectRowAtIndexPath:indexPath animated:YES];
     // Navigation logic may go here. Create and push another view controller.
-	/*
-	 <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-	 [self.navigationController pushViewController:detailViewController animated:YES];
-	 [detailViewController release];
-	 */
+	
+	FollowedItem *item = [followingList getItemByKey: [orderedKeys objectAtIndex: indexPath.row]];
+	ChannelItem *channel = [followingList getChannelItemForFollowedItem: item];
+	
+	if (channel) {
+		PostsViewController *postsViewController = [[PostsViewController alloc] initWithNode: [channel ident] andTitle: [item title]];
+		
+		[self.navigationController pushViewController: postsViewController animated:YES];
+		[postsViewController release];
+	}
+	else {
+		[tableView deselectRowAtIndexPath: indexPath animated: YES];
+	}
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

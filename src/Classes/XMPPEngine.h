@@ -50,8 +50,6 @@
 
 @interface XMPPEngine (PrivateAPI)
 
-- (ChannelItem *)getChannelItemForFollowedItem:(FollowedItem *)item;
-
 - (void)sendPresenceToPubsubWithLastItemId:(int)itemId;
 
 - (void)sendPingResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId;
