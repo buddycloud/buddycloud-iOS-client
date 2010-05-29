@@ -26,6 +26,8 @@
 		self.navigationItem.title = title;
 
 		followingData = [[(BuddycloudAppDelegate *) [[UIApplication sharedApplication] delegate] followingDataModel] retain];
+		[followingData addDelegate: self];
+		
 		postedItems = [[NSMutableArray arrayWithArray: [followingData selectPostsForNode: node]] retain];
 	}
 	
@@ -33,11 +35,17 @@
 }
 
 - (void)dealloc {
+	[followingData removeDelegate: self];
 	[followingData release];
+	
 	[node release];
 	[postedItems release];
 	
     [super dealloc];
+}
+
+- (void)addTopic
+{
 }
 
 - (void)addComment:(id)sender
@@ -48,36 +56,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	// self.navigationItem.title = node;
-
-    // Uncomment the following line to preserve selection between presentations.
-    //self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	// Add post topic button
+	UIBarButtonItem *topicButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCompose 
+																			   target: self 
+																			   action: @selector(addTopic)];
+	
+	self.navigationItem.rightBarButtonItem = topicButton;
 }
 
-
-/*
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-*/
-/*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
-/*
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-}
-*/
-/*
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-}
-*/
 /*
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -114,6 +100,8 @@
 		if ([postItem commentId] == 0) {
 			// Topic
 			controller = [[PostTopicCellController alloc] initWithNibName: @"PostTopicCell" bundle: [NSBundle mainBundle]];
+		
+			[[controller addCommentButton] setTag: [postItem entryId]];
 		}
 		else {
 			// Comment
@@ -124,7 +112,17 @@
 		cell = (UITableViewCell *)controller.view;
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		
-		[[controller contentLabel] setText: [postItem content]];
+		if ([[postItem content] hasPrefix: @"/me "]) {
+			[[controller contentLabel] setText: [[postItem content] 
+												 stringByReplacingOccurrencesOfString: @"/me" 
+												 withString: [[postItem authorJid] substringToIndex: [[postItem authorJid] rangeOfString: @"@"].location]]];
+		
+			[[controller contentLabel] setFont: [UIFont fontWithName: @"Helvetica-Oblique" size: 12.0f]];
+		}
+		else {
+			[[controller contentLabel] setText: [postItem content]];
+		}
+		
 		[[controller authorLabel] setText: [postItem authorJid]];
 		
 		[controller release];
@@ -212,6 +210,38 @@
 - (void)viewDidUnload {
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark FollowingDataModel delegate implementation
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)followingDataModel:(FollowingDataModel *)model didInsertPost:(PostItem *)post
+{
+	// Handle insertion of new post
+	if ([node isEqualToString: [post node]]) {
+		for (int i = 0; i < [postedItems count]; i++) {
+			PostItem *storedPost = [postedItems objectAtIndex: i];
+			
+			if ([post entryId] > [storedPost entryId] || [post entryId] == [storedPost entryId]) {
+				while ([post entryId] == [storedPost entryId]) {
+					// Find insertion index for comment
+					i++;
+					
+					storedPost = [postedItems objectAtIndex: i];
+				}
+				
+				// Insert post into postedItems
+				[postedItems insertObject: post atIndex: i];
+				
+				// Notify table that a cell needs inserting
+				[[self tableView] insertRowsAtIndexPaths: [NSArray arrayWithObject: [NSIndexPath indexPathForRow: i inSection: 0]] 
+										withRowAnimation: ([post commentId] == 0 ? UITableViewRowAnimationLeft : UITableViewRowAnimationRight)];
+				
+				break;
+			}
+		}
+	}
 }
 
 

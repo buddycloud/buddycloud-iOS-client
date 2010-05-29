@@ -48,5 +48,6 @@
 @optional
 
 - (void)followingDataModel:(FollowingDataModel *)model didInsertPost:(PostItem *)post;
+- (void)followingDataModel:(FollowingDataModel *)model didRemovePost:(PostItem *)post;
 
 @end

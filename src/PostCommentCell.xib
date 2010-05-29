@@ -47,7 +47,7 @@
 						<int key="NSvFlags">256</int>
 						<object class="NSMutableArray" key="NSSubviews">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBUIView" id="83833099">
+							<object class="IBUIView" id="77547979">
 								<reference key="NSNextResponder" ref="245664997"/>
 								<int key="NSvFlags">256</int>
 								<string key="NSFrame">{{28, 2}, {284, 48}}</string>
@@ -95,6 +95,7 @@
 								</object>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">1</int>
+								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 								<float key="IBUIMinimumFontSize">10</float>
 								<int key="IBUINumberOfLines">0</int>
 								<int key="IBUILineBreakMode">0</int>
@@ -121,6 +122,7 @@
 								</object>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">1</int>
+								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 								<float key="IBUIMinimumFontSize">10</float>
 							</object>
 						</object>
@@ -214,7 +216,7 @@
 							<reference ref="579770610"/>
 							<reference ref="776028064"/>
 							<reference ref="1020230117"/>
-							<reference ref="83833099"/>
+							<reference ref="77547979"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -237,7 +239,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">12</int>
-						<reference key="object" ref="83833099"/>
+						<reference key="object" ref="77547979"/>
 						<reference key="parent" ref="104841693"/>
 					</object>
 				</object>
