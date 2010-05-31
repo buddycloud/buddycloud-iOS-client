@@ -25,11 +25,13 @@
 	int currentPlaceId;
 	NSString *currentPlaceTitle;
 	CLLocationCoordinate2D currentCoordinates;
+	
+	NSString *currentBroadLocation;
 }
 
 @property(nonatomic, retain) XMPPStream *xmppStream;
 @property(nonatomic, retain) NSString *serverName;
-@property(nonatomic, retain) NSString *currentPlaceTitle;
+@property(nonatomic, retain) NSString *currentPlaceTitle, *currentBroadLocation;
 @property(nonatomic) int currentPlaceId;
 @property(nonatomic) CLLocationCoordinate2D currentCoordinates;
 

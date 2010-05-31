@@ -27,6 +27,7 @@
 
 - (BOOL)insertPost:(PostItem *)post;
 - (NSArray *)selectPostsForNode:(NSString *)node;
+- (BOOL)doesTopicPostExist:(long long)entryId forNode:(NSString *)node;
 
 
 

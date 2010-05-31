@@ -9,13 +9,16 @@
 #import <UIKit/UIKit.h>
 
 @class FollowingDataModel;
+@class XMPPEngine;
 
 @interface PostsViewController : UITableViewController {
 	FollowingDataModel *followingData;
+	XMPPEngine *xmppEngine;
 	
 	NSMutableArray *postedItems;
 	
 	NSString *node;
+	long long selectedEntryId;
 }
 
 @property(nonatomic, retain) NSString *node;

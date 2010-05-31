@@ -16,7 +16,7 @@
 #import "BuddyRequestDelegate.h"
 #import "UserItem.h"
 #import "ChannelItem.h"
-#import "Location.h"
+#import "Geolocation.h"
 #import "PostItem.h"
 #import "Events.h"
 
@@ -51,6 +51,12 @@ NSString *discoFeatures[] = {
 		// Initialize XMPPPubsub
 		xmppPubsub = [[XMPPPubsub alloc] initWithStream: xmppStream toServer: @"pubsub-bridge@broadcaster.buddycloud.com"];
 		[xmppPubsub addDelegate: self];
+		
+		// Set notification observers
+		[[NSNotificationCenter defaultCenter] addObserver: self
+												 selector: @selector(onBroadLocationChanged:)
+													 name: [Events BROAD_LOCATION_CHANGED]
+												   object: nil];
 	}
 	
 	return self;
@@ -85,6 +91,71 @@ NSString *discoFeatures[] = {
 		
 		[xmppStream disconnect];
 	}
+}
+
+- (void)onBroadLocationChanged:(NSNotification *)notification
+{
+	// Store users new broad location
+	[usersBroadLocation release];
+	usersBroadLocation = [(NSString *)[notification object] retain];
+	
+	// Resend presence to XMPP server
+	[self sendPresence];
+}
+
+- (BOOL)postChannelText:(NSString *)text toNode:(NSString *)node
+{
+	return [self postChannelText: text toNode: node inReplyTo: 0];
+}
+
+- (BOOL)postChannelText:(NSString *)text toNode:(NSString *)node inReplyTo:(long long)entryId
+{
+	NSXMLElement *contentElement = [NSXMLElement elementWithName: @"content" stringValue: text];
+	[contentElement addAttributeWithName: @"type" stringValue: @"text"];
+
+	NSXMLElement *entryElement = [NSXMLElement elementWithName: @"entry" xmlns: @"http://www.w3.org/2005/Atom"];
+	[entryElement addAttributeWithName: @"xmlns:thr" stringValue: @"http://purl.org/syndication/thread/1.0"];
+	[entryElement addChild: contentElement];
+	
+	if (entryId > 0) {
+		// Set in-reply-to element
+		NSXMLElement *inReplyToElement = [NSXMLElement elementWithName: @"thr:in-reply-to"];
+		[inReplyToElement addAttributeWithName: @"ref" stringValue: [NSString stringWithFormat: @"%qi", entryId]];
+		
+		[entryElement addChild: inReplyToElement];
+	}
+	
+	if ([usersBroadLocation length] > 0) {
+		// Set geoloc element
+		NSXMLElement *geolocElement = [NSXMLElement elementWithName: @"geoloc" xmlns: @"http://jabber.org/protocol/geoloc"];
+		[geolocElement addChild: [NSXMLElement elementWithName: @"text" stringValue: usersBroadLocation]];
+		
+		[entryElement addChild: geolocElement];
+	}
+	
+	NSXMLElement *itemElement = [NSXMLElement elementWithName: @"item"];
+	[itemElement addChild: entryElement];
+	
+	[xmppPubsub publishItemToNode: node withItem: itemElement];
+	
+	return YES;
+}
+
+- (void)sendPresence
+{
+	// Build & send presence to XMPP server
+	NSXMLElement *capsElement = [NSXMLElement elementWithName: @"c" xmlns: @"http://jabber.org/protocol/caps"];
+	[capsElement addAttributeWithName: @"node" stringValue: @"http://buddycloud.com/caps"];
+	[capsElement addAttributeWithName: @"ver" stringValue: applicationVersion];
+	
+	NSXMLElement *presenceStanza = [NSXMLElement elementWithName: @"presence"];
+	[presenceStanza addChild: capsElement];
+	
+	if ([usersBroadLocation length] > 0) {
+		[presenceStanza addChild: [NSXMLElement elementWithName: @"status" stringValue: usersBroadLocation]];
+	}
+	
+	[xmppStream sendElement: presenceStanza];	
 }
 
 - (void)sendPresenceToPubsubWithLastItemId:(int)itemId
@@ -180,15 +251,8 @@ NSString *discoFeatures[] = {
 	// Fetch roster
 	[xmppRoster fetchRoster];
 	
-	// Build & send presence with caps stanza
-	NSXMLElement *capsElement = [NSXMLElement elementWithName: @"c" xmlns: @"http://jabber.org/protocol/caps"];
-	[capsElement addAttributeWithName: @"node" stringValue: @"http://buddycloud.com/caps"];
-	[capsElement addAttributeWithName: @"ver" stringValue: applicationVersion];
-	
-	NSXMLElement *presenceStanza = [NSXMLElement elementWithName: @"presence"];
-	[presenceStanza addChild: capsElement];
-	
-	[xmppStream sendElement: presenceStanza];
+	// Send presence
+	[self sendPresence];
 	
 	if (isPubsubAddedToRoster) {
 		// Collect users node subscriptions
@@ -324,6 +388,23 @@ NSString *discoFeatures[] = {
 	NSString *ownChannelNode = [NSString stringWithFormat: @"/user/%@/channel", [[xmppStream myJID] bare]];
 	NSMutableDictionary *oldFollowingData = [[NSMutableDictionary alloc] initWithDictionary: followingData];
 	
+	// Add own item if necessary
+	if (!push) {
+		UserItem *storedItem = [followingData objectForKey: ownChannelNode];
+		
+		if (!storedItem) {
+			storedItem = [[UserItem alloc] init];
+			[storedItem setIdent: [[xmppStream myJID] bare]];
+			[storedItem setTitle: [[xmppStream myJID] bare]];
+			[storedItem setSubscription: PRESSUB_BOTH];
+			
+			[followingData setObject: storedItem forKey: ownChannelNode];
+		}
+				
+		[oldFollowingData removeObjectForKey: ownChannelNode];
+	}
+	
+	// Iterate through received items
 	for (NSXMLElement *item in itemElements) {
 		NSString *itemJid = [[item attributeForName: @"jid"] stringValue];
 		PresenceSubscription itemType = [UserItem subscriptionFromString: [[item attributeForName: @"subscription"] stringValue]];
@@ -377,7 +458,7 @@ NSString *discoFeatures[] = {
 					// Item has been removed
 					[followingData removeObjectForKey: itemKey];
 				}
-			}			
+			}
 		}
 	}
 	
@@ -731,11 +812,12 @@ NSString *discoFeatures[] = {
 					[post setCommentId: entryId];
 				}
 				
-//				[post setCommentId: [[[[publishedElement elementForName: @"thr:in-reply-to"] attributeForName: @"ref"] stringValue] longLongValue]];
-//				[post setEntryId: [[[item attributeForName: @"id"] stringValue] longLongValue]];
-				
 				// Insert post item
-				[self insertPost: post];
+				if ([self insertPost: post] && ![post isRead]) {
+					[followedItem setLastUpdated: [NSDate date]];
+					
+					notifyObservers = YES;
+				}
 			}
 		}
 		else if (publishedElement = [item elementForName: @"geoloc" xmlns: @"http://jabber.org/protocol/geoloc"]) {
@@ -757,11 +839,14 @@ NSString *discoFeatures[] = {
 					
 					if ([[userItem ident] isEqualToString: [[xmppStream myJID] bare]]) {
 						// User's own location has changed
+						[[NSNotificationCenter defaultCenter] postNotificationName: [Events GEOLOCATION_CHANGED] object: [userItem geoCurrent]];
+
+						// Check future location
 						if ([userItem geoFuture] && [[[userItem geoFuture] text] length] > 0 &&
 							[[[userItem geoFuture] text] rangeOfString: [[userItem geoCurrent] text]].location == 0) {
 						
 							// Arrived at future location
-							[[NSNotificationCenter defaultCenter] postNotificationName: [Events ARRIVED_AT_FUTURE_LOCATION] object: geoloc];
+							[[NSNotificationCenter defaultCenter] postNotificationName: [Events AT_FUTURE_GEOLOCATION] object: [userItem geoCurrent]];
 						}
 					}
 					

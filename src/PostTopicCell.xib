@@ -195,15 +195,6 @@
 					<int key="connectionID">17</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">addComment:</string>
-						<reference key="source" ref="258609640"/>
-						<reference key="destination" ref="975951072"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">18</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">contentLabel</string>
 						<reference key="source" ref="372490531"/>
@@ -218,6 +209,15 @@
 						<reference key="destination" ref="717613809"/>
 					</object>
 					<int key="connectionID">20</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">addComment:</string>
+						<reference key="source" ref="258609640"/>
+						<reference key="destination" ref="975951072"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">21</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -299,7 +299,7 @@
 					<string>PostTopicCellController</string>
 					<string>UIResponder</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>{{340, 340}, {320, 64}}</string>
+					<string>{{386, 264}, {320, 64}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -322,7 +322,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">20</int>
+			<int key="maxID">21</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

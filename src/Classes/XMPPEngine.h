@@ -32,6 +32,8 @@
 	bool isConnectionCold;
 	bool isPubsubAddedToRoster;
 	superlong lastItemIdReceived;
+	
+	NSString *usersBroadLocation;
 }
 
 @property(nonatomic, retain) XMPPStream *xmppStream;
@@ -42,6 +44,9 @@
 - (void)connect;
 - (void)disconnect;
 
+- (BOOL)postChannelText:(NSString *)text toNode:(NSString *)node;
+- (BOOL)postChannelText:(NSString *)text toNode:(NSString *)node inReplyTo:(long long)entryId;
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +55,7 @@
 
 @interface XMPPEngine (PrivateAPI)
 
+- (void)sendPresence;
 - (void)sendPresenceToPubsubWithLastItemId:(int)itemId;
 
 - (void)sendPingResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId;

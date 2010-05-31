@@ -12,6 +12,7 @@
 #import "XMPPStream.h"
 #import "NSXMLElementAdditions.h"
 #import "Events.h"
+#import "Geolocation.h"
 
 typedef enum {
 	kIqId_setNextLocation = 256,
@@ -19,9 +20,9 @@ typedef enum {
 } placeIQIdTypes;
 
 @implementation PlaceEngine
-@synthesize xmppStream;
-@synthesize serverName;
+@synthesize xmppStream, serverName;
 @synthesize currentPlaceId, currentPlaceTitle, currentCoordinates;
+@synthesize currentBroadLocation;
 
 - (PlaceEngine *) initWithStream:(XMPPStream *)aXmppStream toServer:(NSString *)aServerName {
 	if (self = [super init]) {
@@ -36,10 +37,15 @@ typedef enum {
 		xmppStream = aXmppStream;
 		[xmppStream addDelegate: self];
 		
-		// Add observer to future location arrival
+		// Set notification observers
 		[[NSNotificationCenter defaultCenter] addObserver: self
-												 selector: @selector(onFutureLocationArrival:)
-													 name: [Events ARRIVED_AT_FUTURE_LOCATION]
+												 selector: @selector(onGeolocationChanged:)
+													 name: [Events GEOLOCATION_CHANGED]
+												   object: nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver: self
+												 selector: @selector(onAtFutureGeolocation:)
+													 name: [Events AT_FUTURE_GEOLOCATION]
 												   object: nil];
 	}
 	
@@ -52,13 +58,35 @@ typedef enum {
 	[serverName release];
 	[locationEngine release];	
 	[currentPlaceTitle release];
+	[currentBroadLocation release];
 	
 	[dataModel release];
 	
 	[super dealloc];
 }
 
-- (void)onFutureLocationArrival:(id)object
+- (void)onGeolocationChanged:(NSNotification *)notification
+{
+	GeoLocation *geoloc = (GeoLocation *)[notification object];
+	
+	// Format broad location
+	NSMutableString *broadLocation = [NSMutableString stringWithString: [geoloc locality]];
+	
+	if ([broadLocation length] > 0 && [[geoloc country] length] > 0) {
+		[broadLocation appendString: @", "];
+	}
+	
+	[broadLocation appendString: [geoloc country]];
+	
+	// Update & notify broad location change
+	if (![broadLocation isEqualToString: currentBroadLocation]) {
+		[self setCurrentBroadLocation: broadLocation];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:[Events BROAD_LOCATION_CHANGED] object: currentBroadLocation];
+	}
+}
+
+- (void)onAtFutureGeolocation:(id)object
 {
 	[self setFutureGeolocationText: @"" withPlaceId: nil];
 }
@@ -125,14 +153,13 @@ typedef enum {
 		if (locationElement) {
 			// Update place data
 			NSString *newPlaceLabel = [[locationElement attributeForName: @"label"] stringValue];
-			
 			currentPlaceId = [[[locationElement attributeForName: @"placeid"] stringValue] intValue];
 			
 			if (![newPlaceLabel isEqualToString: currentPlaceTitle]) {
 				[self setCurrentPlaceTitle: newPlaceLabel];
 				
 				// Notification of location update
-				[[NSNotificationCenter defaultCenter] postNotificationName:[Events LOCATION_CHANGED] object:self];
+				[[NSNotificationCenter defaultCenter] postNotificationName:[Events PLACE_CHANGED] object:self];
 			}
 			
 			return YES;

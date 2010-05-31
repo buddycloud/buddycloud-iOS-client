@@ -10,7 +10,9 @@
 #import "PostCellController.h"
 #import "BuddycloudAppDelegate.h"
 #import "FollowingDataModel.h"
+#import "XMPPEngine.h"
 #import "PostItem.h"
+#import "TextFieldAlertView.h"
 
 @implementation PostsViewController
 @synthesize node;
@@ -24,8 +26,11 @@
 		[self setNode: _node];
 		
 		self.navigationItem.title = title;
+		
+		BuddycloudAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+		followingData = [[appDelegate followingDataModel] retain];
+		xmppEngine = [[appDelegate xmppEngine] retain];
 
-		followingData = [[(BuddycloudAppDelegate *) [[UIApplication sharedApplication] delegate] followingDataModel] retain];
 		[followingData addDelegate: self];
 		
 		postedItems = [[NSMutableArray arrayWithArray: [followingData selectPostsForNode: node]] retain];
@@ -36,20 +41,58 @@
 
 - (void)dealloc {
 	[followingData removeDelegate: self];
-	[followingData release];
 	
-	[node release];
 	[postedItems release];
+	[node release];
+	
+	[followingData release];
+	[xmppEngine release];
 	
     [super dealloc];
 }
 
 - (void)addTopic
 {
+	selectedEntryId = 0;
+	
+	TextFieldAlertView *followView = [[TextFieldAlertView alloc] initWithTitle: NSLocalizedString(@"New topic", @"")  
+																	   message: NSLocalizedString(@"Your awesome topic post text", @"") 
+																	  delegate: self 
+															 cancelButtonTitle: NSLocalizedString(@"Cancel", @"")
+																 okButtonTitle:  NSLocalizedString(@"Post", @"")];
+	
+//	[[followView textField] setAutocapitalizationType: UITextAutocapitalizationTypeNone];
+//	[[followView textField] setKeyboardType: UIKeyboardTypeASCIICapable];
+	
+	[followView show];
+	[followView release];
 }
 
-- (void)addComment:(id)sender
+- (void)addComment:(UIButton *)sender
 {
+	NSIndexPath *indexPath = [[self tableView] indexPathForCell: (UITableViewCell *)[[sender superview] superview]];
+	PostItem *postItem = [postedItems objectAtIndex: indexPath.row];
+	
+	if (postItem) {	
+		selectedEntryId = [postItem entryId];
+		
+		TextFieldAlertView *followView = [[TextFieldAlertView alloc] initWithTitle: NSLocalizedString(@"Your comment", @"")  
+																		   message: NSLocalizedString(@"Comment on this post", @"") 
+																		  delegate: self 
+																 cancelButtonTitle: NSLocalizedString(@"Cancel", @"")
+																	 okButtonTitle:  NSLocalizedString(@"Comment", @"")];
+		
+		[followView show];
+		[followView release];		
+	}		
+}
+
+- (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex != [alertView cancelButtonIndex]) {
+		// Post new topic to channel
+		[xmppEngine postChannelText: [(TextFieldAlertView *)alertView enteredText] toNode: node inReplyTo: selectedEntryId];
+	}
 }
 
 
@@ -101,7 +144,7 @@
 			// Topic
 			controller = [[PostTopicCellController alloc] initWithNibName: @"PostTopicCell" bundle: [NSBundle mainBundle]];
 		
-			[[controller addCommentButton] setTag: [postItem entryId]];
+//			[[controller addCommentButton] addTarget: self action: @selector(addComment:) forControlEvents: UIControlEventTouchUpInside];
 		}
 		else {
 			// Comment
@@ -220,15 +263,12 @@
 {
 	// Handle insertion of new post
 	if ([node isEqualToString: [post node]]) {
-		for (int i = 0; i < [postedItems count]; i++) {
+		for (int i = ([postedItems count] - 1); i >= 0; i--) {
 			PostItem *storedPost = [postedItems objectAtIndex: i];
 			
-			if ([post entryId] > [storedPost entryId] || [post entryId] == [storedPost entryId]) {
-				while ([post entryId] == [storedPost entryId]) {
-					// Find insertion index for comment
+			if ([post entryId] < [storedPost entryId] || [post entryId] == [storedPost entryId]) {
+				if ([post entryId] == [storedPost entryId]) {
 					i++;
-					
-					storedPost = [postedItems objectAtIndex: i];
 				}
 				
 				// Insert post into postedItems
@@ -238,9 +278,16 @@
 				[[self tableView] insertRowsAtIndexPaths: [NSArray arrayWithObject: [NSIndexPath indexPathForRow: i inSection: 0]] 
 										withRowAnimation: ([post commentId] == 0 ? UITableViewRowAnimationLeft : UITableViewRowAnimationRight)];
 				
-				break;
+				return;
 			}
 		}
+		
+		// Add post into postedItems
+		[postedItems insertObject: post atIndex: 0];
+		
+		// Notify table that a cell needs inserting
+		[[self tableView] insertRowsAtIndexPaths: [NSArray arrayWithObject: [NSIndexPath indexPathForRow: 0 inSection: 0]] 
+								withRowAnimation: ([post commentId] == 0 ? UITableViewRowAnimationLeft : UITableViewRowAnimationRight)];
 	}
 }
 

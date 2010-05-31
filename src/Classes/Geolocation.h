@@ -13,10 +13,14 @@
 @interface GeoLocation : NSObject {
 	NSString *text;
 	NSString *uri;
+	NSString *locality;
+	NSString *country;
 }
 
 @property(nonatomic, retain) NSString *text;
 @property(nonatomic, retain) NSString *uri;
+@property(nonatomic, retain) NSString *locality;
+@property(nonatomic, retain) NSString *country;
 
 - (GeoLocation *)initFromXML:(NSXMLElement *)geolocElement;
 

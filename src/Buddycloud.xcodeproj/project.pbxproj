@@ -36,7 +36,7 @@
 		577A148E11AE76EB006B1701 /* PostCommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A148D11AE76EB006B1701 /* PostCommentCell.xib */; };
 		578B8AFC118313F000279015 /* FollowedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8AFB118313F000279015 /* FollowedItem.m */; };
 		578B8AFF118314D400279015 /* UserItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8AFE118314D400279015 /* UserItem.m */; };
-		578B8B091183156C00279015 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B081183156C00279015 /* Location.m */; };
+		578B8B091183156C00279015 /* Geolocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B081183156C00279015 /* Geolocation.m */; };
 		578B8B1E1183171000279015 /* ChannelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B1D1183171000279015 /* ChannelItem.m */; };
 		578B8B6511831A7100279015 /* FollowingDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 578B8B6411831A7100279015 /* FollowingDataModel.m */; };
 		5791901311A3E6EF0089B853 /* ChannelCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5791901211A3E6EF0089B853 /* ChannelCellController.m */; };
@@ -120,8 +120,8 @@
 		578B8AFB118313F000279015 /* FollowedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowedItem.m; sourceTree = "<group>"; };
 		578B8AFD118314D400279015 /* UserItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserItem.h; sourceTree = "<group>"; };
 		578B8AFE118314D400279015 /* UserItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserItem.m; sourceTree = "<group>"; };
-		578B8B071183156C00279015 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
-		578B8B081183156C00279015 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		578B8B071183156C00279015 /* Geolocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geolocation.h; sourceTree = "<group>"; };
+		578B8B081183156C00279015 /* Geolocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Geolocation.m; sourceTree = "<group>"; };
 		578B8B1C1183171000279015 /* ChannelItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelItem.h; sourceTree = "<group>"; };
 		578B8B1D1183171000279015 /* ChannelItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelItem.m; sourceTree = "<group>"; };
 		578B8B6311831A7100279015 /* FollowingDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowingDataModel.h; sourceTree = "<group>"; };
@@ -384,8 +384,8 @@
 				578B8AFE118314D400279015 /* UserItem.m */,
 				578B8B1C1183171000279015 /* ChannelItem.h */,
 				578B8B1D1183171000279015 /* ChannelItem.m */,
-				578B8B071183156C00279015 /* Location.h */,
-				578B8B081183156C00279015 /* Location.m */,
+				578B8B071183156C00279015 /* Geolocation.h */,
+				578B8B081183156C00279015 /* Geolocation.m */,
 				577A11CA11A81388006B1701 /* PostItem.h */,
 				577A11CB11A81388006B1701 /* PostItem.m */,
 			);
@@ -598,7 +598,7 @@
 				579397CB117DD98200D340F1 /* XMPPPubsub.m in Sources */,
 				578B8AFC118313F000279015 /* FollowedItem.m in Sources */,
 				578B8AFF118314D400279015 /* UserItem.m in Sources */,
-				578B8B091183156C00279015 /* Location.m in Sources */,
+				578B8B091183156C00279015 /* Geolocation.m in Sources */,
 				578B8B1E1183171000279015 /* ChannelItem.m in Sources */,
 				578B8B6511831A7100279015 /* FollowingDataModel.m in Sources */,
 				57DD026F1185D7A100CC00D1 /* DDXMLDocument.m in Sources */,

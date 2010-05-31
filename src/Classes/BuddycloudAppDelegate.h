@@ -50,6 +50,8 @@
 @property(nonatomic, retain) SettingsViewController *settingsController;
 @property(nonatomic, retain) FollowingViewController *followingController;
 
+- (XMPPEngine *)xmppEngine;
+
 - (FollowingDataModel *)followingDataModel;
 
 @end

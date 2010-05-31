@@ -79,6 +79,11 @@
 	[super dealloc];
 }
 
+- (XMPPEngine *)xmppEngine
+{
+	return xmppEngine;
+}
+
 - (FollowingDataModel *)followingDataModel
 {
 	return xmppEngine;

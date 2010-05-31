@@ -6,11 +6,11 @@
 //  Copyright 2010 buddycloud. All rights reserved.
 //
 
-#import "Location.h"
+#import "Geolocation.h"
 #import "NSXMLElementAdditions.h"
 
 @implementation GeoLocation
-@synthesize text, uri;
+@synthesize text, uri, locality, country;
 
 - (GeoLocation *)initFromXML:(NSXMLElement *)geolocElement
 {
@@ -18,6 +18,8 @@
 		// TODO: Parse geoloc element
 		[self setText: [[geolocElement elementForName: @"text"] stringValue]];
 		[self setUri: [[geolocElement elementForName: @"uri"] stringValue]];
+		[self setLocality: [[geolocElement elementForName: @"locality"] stringValue]];
+		[self setCountry: [[geolocElement elementForName: @"country"] stringValue]];
 	}
 	
 	return self;
@@ -27,6 +29,8 @@
 {
 	[text release];
 	[uri release];
+	[locality release];
+	[country release];
 	
 	[super dealloc];
 }
