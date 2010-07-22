@@ -50,7 +50,9 @@
 //	[dateFormatter setTimeZone:[NSTimeZone timeZoneWithName: @"UTC"]];
 	[dateFormatter setDateFormat: @"yyyy-MM-dd'T'HH:mm:ss"];
 	
-	[self setPostTime: [dateFormatter dateFromString: [formattedDate stringByReplacingOccurrencesOfString: @"Z" withString: @"-0000"]]];
+	NSDate *pt = [dateFormatter dateFromString: [formattedDate stringByReplacingOccurrencesOfString: @"Z" withString: @"-0000"]];
+	[pt retain];
+	[self setPostTime: pt];
 }
 
 @end

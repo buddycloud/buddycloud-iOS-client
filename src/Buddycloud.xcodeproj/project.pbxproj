@@ -71,6 +71,12 @@
 		57DD02D61185D8AF00CC00D1 /* TURNSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD02B21185D8AF00CC00D1 /* TURNSocket.m */; };
 		57DD02D71185D8AF00CC00D1 /* XMPPTransports.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DD02B51185D8AF00CC00D1 /* XMPPTransports.m */; };
 		57E0706A116B89EE00FDB70C /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57E07069116B89EE00FDB70C /* libidn.a */; };
+		B543CC1F11F8A2B700BFC3AF /* tabbar-browse.png in Resources */ = {isa = PBXBuildFile; fileRef = B543CC1B11F8A2B700BFC3AF /* tabbar-browse.png */; };
+		B543CC2011F8A2B700BFC3AF /* tabbar-following.png in Resources */ = {isa = PBXBuildFile; fileRef = B543CC1C11F8A2B700BFC3AF /* tabbar-following.png */; };
+		B543CC2111F8A2B700BFC3AF /* tabbar-places.png in Resources */ = {isa = PBXBuildFile; fileRef = B543CC1D11F8A2B700BFC3AF /* tabbar-places.png */; };
+		B543CC2211F8A2B700BFC3AF /* tabbar-settings.png in Resources */ = {isa = PBXBuildFile; fileRef = B543CC1E11F8A2B700BFC3AF /* tabbar-settings.png */; };
+		B5731EE111F878E100A4A82A /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = B5731EE011F878E100A4A82A /* Util.m */; };
+		B5731FCC11F88EF200A4A82A /* CORBEL.TTF in Resources */ = {isa = PBXBuildFile; fileRef = B5731FCB11F88EF200A4A82A /* CORBEL.TTF */; };
 		F42611F111A18C84003DE867 /* TopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F42611F011A18C84003DE867 /* TopicCell.xib */; };
 /* End PBXBuildFile section */
 
@@ -193,6 +199,13 @@
 		57DD02B51185D8AF00CC00D1 /* XMPPTransports.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPTransports.m; sourceTree = "<group>"; };
 		57E07069116B89EE00FDB70C /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libidn.a; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B543CC1B11F8A2B700BFC3AF /* tabbar-browse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar-browse.png"; sourceTree = "<group>"; };
+		B543CC1C11F8A2B700BFC3AF /* tabbar-following.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar-following.png"; sourceTree = "<group>"; };
+		B543CC1D11F8A2B700BFC3AF /* tabbar-places.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar-places.png"; sourceTree = "<group>"; };
+		B543CC1E11F8A2B700BFC3AF /* tabbar-settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar-settings.png"; sourceTree = "<group>"; };
+		B5731EDF11F878E100A4A82A /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
+		B5731EE011F878E100A4A82A /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
+		B5731FCB11F88EF200A4A82A /* CORBEL.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = CORBEL.TTF; sourceTree = "<group>"; };
 		F42611F011A18C84003DE867 /* TopicCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -225,6 +238,8 @@
 				57763E29118EBC230005AE99 /* Data Models */,
 				5736814F116CA80F008DC56F /* UI */,
 				57763DED1187529D0005AE99 /* XMPP Adaptions */,
+				B5731EE011F878E100A4A82A /* Util.m */,
+				B5731EDF11F878E100A4A82A /* Util.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -264,9 +279,14 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B543CC1B11F8A2B700BFC3AF /* tabbar-browse.png */,
+				B543CC1C11F8A2B700BFC3AF /* tabbar-following.png */,
+				B543CC1D11F8A2B700BFC3AF /* tabbar-places.png */,
+				B543CC1E11F8A2B700BFC3AF /* tabbar-settings.png */,
+				B5731FCB11F88EF200A4A82A /* CORBEL.TTF */,
 				28AD73870D9D96C1002E5188 /* MainWindow.xib */,
-				577A13D911AD4E76006B1701 /* PostsViewController.xib */,
 				5731B0731170EF5000F97613 /* FollowerCell.xib */,
+				577A13D911AD4E76006B1701 /* PostsViewController.xib */,
 				F42611F011A18C84003DE867 /* TopicCell.xib */,
 				5711299F11A3CE5800921B1D /* database.sql */,
 				57A180B8119951BE00DFFD42 /* channel.png */,
@@ -575,6 +595,11 @@
 				577A13DB11AD4E76006B1701 /* PostsViewController.xib in Resources */,
 				577A142011AD84DB006B1701 /* PostTopicCell.xib in Resources */,
 				577A148E11AE76EB006B1701 /* PostCommentCell.xib in Resources */,
+				B5731FCC11F88EF200A4A82A /* CORBEL.TTF in Resources */,
+				B543CC1F11F8A2B700BFC3AF /* tabbar-browse.png in Resources */,
+				B543CC2011F8A2B700BFC3AF /* tabbar-following.png in Resources */,
+				B543CC2111F8A2B700BFC3AF /* tabbar-places.png in Resources */,
+				B543CC2211F8A2B700BFC3AF /* tabbar-settings.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,6 +656,7 @@
 				577A11CC11A81388006B1701 /* PostItem.m in Sources */,
 				577A13DA11AD4E76006B1701 /* PostsViewController.m in Sources */,
 				577A141D11AD82F6006B1701 /* PostCellController.m in Sources */,
+				B5731EE111F878E100A4A82A /* Util.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -641,6 +667,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -653,6 +680,8 @@
 					"\"$(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/usr/lib\"",
 				);
 				PRODUCT_NAME = Buddycloud;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos4.0;
 			};
 			name = Debug;
 		};
@@ -683,6 +712,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.1.3;
 				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/libidn/${PLATFORM_NAME}\"";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -691,7 +721,7 @@
 				);
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos3.2;
+				SDKROOT = iphoneos4.0;
 			};
 			name = Debug;
 		};

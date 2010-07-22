@@ -26,6 +26,7 @@
 #import "PlaceEngine.h"
 
 #import "FollowingViewController.h"
+#import "Util.h"
 
 @implementation BuddycloudAppDelegate
 @synthesize window;
@@ -56,9 +57,13 @@
 	// View controllers
 	self.followingController = [[[FollowingViewController alloc] initWithStyle: UITableViewStylePlain andDataModel: (FollowingDataModel *)xmppEngine] autorelease];
 	UINavigationController *ncFollowing = [[[UINavigationController alloc] initWithRootViewController:followingController] autorelease];
+	ncFollowing.tabBarItem.image = [Util imageWithImage:[UIImage imageNamed:@"tabbar-following.png"] scaledToSize:CGSizeMake(30, 30)];
 	
 	self.settingsController = [[[SettingsViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
 	UINavigationController *settingsNavigationController = [[[UINavigationController alloc] initWithRootViewController:self.settingsController] autorelease];
+	settingsNavigationController.tabBarItem.image = [Util imageWithImage:[UIImage imageNamed:@"tabbar-settings.png"] scaledToSize:CGSizeMake(30, 30)];
+	settingsNavigationController.tabBarItem.title = @"Settings";
+
 	
 	// Set up tab bar
 	self.tabBarController = [[UITabBarController alloc] init];

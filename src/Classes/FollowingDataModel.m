@@ -101,7 +101,7 @@ static sqlite3_stmt *selectTopicPostStatement = nil;
 		sqlite3_bind_text(insertPostStatement, 1, [[post node] UTF8String], -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int64(insertPostStatement, 2, [post entryId]);
 		sqlite3_bind_int64(insertPostStatement, 3, [post commentId]);
-		sqlite3_bind_double(insertPostStatement, 4, [[post postTime] timeIntervalSince1970]);
+		sqlite3_bind_int64(insertPostStatement, 4, [[post postTime] timeIntervalSince1970]);
 		sqlite3_bind_text(insertPostStatement, 5, [[post authorName] UTF8String], -1, SQLITE_TRANSIENT);
 		sqlite3_bind_text(insertPostStatement, 6, [[post authorJid] UTF8String], -1, SQLITE_TRANSIENT);
 		sqlite3_bind_int(insertPostStatement, 7, [post authorAffiliation]);
@@ -143,7 +143,7 @@ static sqlite3_stmt *selectTopicPostStatement = nil;
 		
 		[post setEntryId: sqlite3_column_int64(selectPostsForNodeStatement, 0)];
 		[post setCommentId: sqlite3_column_int64(selectPostsForNodeStatement, 1)];
-		[post setPostTime: [NSDate dateWithTimeIntervalSince1970: sqlite3_column_double(selectPostsForNodeStatement, 2)]];
+		[post setPostTime: [NSDate dateWithTimeIntervalSince1970: sqlite3_column_int64(selectPostsForNodeStatement, 2)]];
 		[post setAuthorJid: [DatabaseAccess stringFromUTF8ColumnText: sqlite3_column_text(selectPostsForNodeStatement, 3)]];
 		[post setAuthorAffiliation: sqlite3_column_int(selectPostsForNodeStatement, 4)];
 		[post setLocation: [DatabaseAccess stringFromUTF8ColumnText: sqlite3_column_text(selectPostsForNodeStatement, 5)]];

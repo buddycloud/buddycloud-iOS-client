@@ -13,6 +13,7 @@
 #import "XMPPEngine.h"
 #import "PostItem.h"
 #import "TextFieldAlertView.h"
+#import "Util.h"
 
 @implementation PostsViewController
 @synthesize node;
@@ -22,6 +23,9 @@
 
 - (PostsViewController *)initWithNode:(NSString *)_node andTitle:(NSString *)title
 {
+	[self tableView].backgroundColor = [UIColor colorWithRed:243.0/255.0 green:241.0/255.0 blue:229.0/255.0 alpha:1.0];
+	[self tableView].separatorStyle = UITableViewCellSeparatorStyleNone;
+
 	if (self = [super initWithNibName:@"PostsViewController" bundle: [NSBundle mainBundle]]) {
 		[self setNode: _node];
 		
@@ -160,13 +164,41 @@
 												 stringByReplacingOccurrencesOfString: @"/me" 
 												 withString: [[postItem authorJid] substringToIndex: [[postItem authorJid] rangeOfString: @"@"].location]]];
 		
-			[[controller contentLabel] setFont: [UIFont fontWithName: @"Helvetica-Oblique" size: 12.0f]];
 		}
 		else {
 			[[controller contentLabel] setText: [postItem content]];
 		}
+		[[controller contentLabel] setFont: [Util fontContent]];
+		[[controller authorLabel] setFont: [Util fontLocationTime]];
 		
-		[[controller authorLabel] setText: [postItem authorJid]];
+		NSMutableString *sb = [NSMutableString stringWithString:@""];
+		if ([postItem location] != nil) {
+			[sb appendString:[postItem location]];
+			[sb appendString:@" | "];
+		}
+		double ti = -(double)[postItem.postTime timeIntervalSinceNow];
+		if (ti < 10) {
+			[sb appendString:@"A few seconds ago"];
+		} else if (ti < 60) {
+			[sb appendString:@"Less than a minute ago"];
+		} else if (ti < 60*60) {
+			[sb appendFormat:@"%i minutes ago", (int)(ti / 60)];
+		} else if (ti < 24*60*60) {
+			[sb appendFormat:@"%i hours ago", (int)(ti / 3600)];
+		} else if (ti < 7*24*60*60) {
+			NSDateFormatter *df = [[NSDateFormatter alloc] init];
+			[df setDateFormat:@"EEE 'at' HH:mm"];
+			[sb appendString:[df stringFromDate:postItem.postTime]];
+		} else if (ti < 365*24*60*60) {
+			NSDateFormatter *df = [[NSDateFormatter alloc] init];
+			[df setDateFormat:@"dd.MM HH:mm"];
+			[sb appendString:[df stringFromDate:postItem.postTime]];
+		} else {
+			NSDateFormatter *df = [[NSDateFormatter alloc] init];
+			[df setDateFormat:@"dd.MM.yy HH:mm"];
+			[sb appendString:[df stringFromDate:postItem.postTime]];
+		}
+		[[controller authorLabel] setText: sb];
 		
 		[controller release];
 	}
@@ -233,11 +265,24 @@
 {
 	PostItem *postItem = [postedItems objectAtIndex: indexPath.row];
 	
-	if ([postItem commentId] != 0) {
-		return 52.0f;
+	int ret = 0;
+	if ([postItem commentId] == 0) {
+		CGSize maxSize = CGSizeMake([self view].bounds.size.width - 50, 1000);
+		CGSize textSize = [[postItem content] sizeWithFont:[Util fontContent]
+										 constrainedToSize:maxSize 
+											 lineBreakMode:UILineBreakModeWordWrap];
+		ret = textSize.height + 35;
+		if (ret < 54) ret = 54;
+	} else {
+		CGSize maxSize = CGSizeMake([self view].bounds.size.width - 90, 1000);
+		CGSize textSize = [[postItem content] sizeWithFont:[Util fontContent]
+										 constrainedToSize:maxSize 
+											 lineBreakMode:UILineBreakModeWordWrap];
+		ret = textSize.height + 30;
+		if (ret < 42) ret = 42;
 	}
 	
-	return 64.0f;
+	return ret;
 }
 
 #pragma mark -
