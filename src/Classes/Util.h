@@ -15,6 +15,8 @@
 
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 
++ (NSString*) getPrettyDate:(NSDate*)date;
+
 + (NSUInteger) loadFonts;
 + (UIFont*) fontContent;
 + (UIFont*) fontLocationTime;

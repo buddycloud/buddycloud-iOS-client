@@ -48,11 +48,11 @@
 	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
 //	[dateFormatter setFormatterBehavior: NSDateFormatterBehavior10_4];
 //	[dateFormatter setTimeZone:[NSTimeZone timeZoneWithName: @"UTC"]];
-	[dateFormatter setDateFormat: @"yyyy-MM-dd'T'HH:mm:ss"];
+	[dateFormatter setDateFormat: @"yyyy-MM-dd'T'HH:mm:ssZ"];
 	
-	NSDate *pt = [dateFormatter dateFromString: [formattedDate stringByReplacingOccurrencesOfString: @"Z" withString: @"-0000"]];
-	[pt retain];
-	[self setPostTime: pt];
+	NSDate *pt = [[dateFormatter dateFromString: [formattedDate stringByReplacingOccurrencesOfString: @"Z" withString: @"-0000"]] retain];
+	[self setPostTime:pt];
+	[pt release];
 }
 
 @end

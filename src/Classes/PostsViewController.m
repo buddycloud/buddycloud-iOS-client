@@ -15,11 +15,14 @@
 #import "TextFieldAlertView.h"
 #import "Util.h"
 
+#import <QuartzCore/QuartzCore.h>
+
 @implementation PostsViewController
 @synthesize node;
 
-#pragma mark -
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark View lifecycle
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (PostsViewController *)initWithNode:(NSString *)_node andTitle:(NSString *)title
 {
@@ -28,7 +31,6 @@
 
 	if (self = [super initWithNibName:@"PostsViewController" bundle: [NSBundle mainBundle]]) {
 		[self setNode: _node];
-		
 		self.navigationItem.title = title;
 		
 		BuddycloudAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
@@ -111,29 +113,14 @@
 	self.navigationItem.rightBarButtonItem = topicButton;
 }
 
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
-
-
-#pragma mark -
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Table view data source
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
-    return 1;
-}
-
-
+// Return the number of rows in the section.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
     return [postedItems count];
 }
-
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -143,62 +130,39 @@
 	
 	if (postItem) {	
 		PostCellController *controller;
-		
+
+		// Is this a topic or a comment6 cell?
 		if ([postItem commentId] == 0) {
-			// Topic
 			controller = [[PostTopicCellController alloc] initWithNibName: @"PostTopicCell" bundle: [NSBundle mainBundle]];
-		
-//			[[controller addCommentButton] addTarget: self action: @selector(addComment:) forControlEvents: UIControlEventTouchUpInside];
-		}
-		else {
-			// Comment
+		} else {
 			controller = [[PostCellController alloc] initWithNibName: @"PostCommentCell" bundle: [NSBundle mainBundle]];
 		}
 		
 		// Set table cell
 		cell = (UITableViewCell *)controller.view;
 		cell.accessoryType = UITableViewCellAccessoryNone;
+		if ([postItem commentId] != 0) {
+			controller.contentContainer.layer.cornerRadius = 4;
+		}
 		
+		// Add basic content
 		if ([[postItem content] hasPrefix: @"/me "]) {
 			[[controller contentLabel] setText: [[postItem content] 
 												 stringByReplacingOccurrencesOfString: @"/me" 
 												 withString: [[postItem authorJid] substringToIndex: [[postItem authorJid] rangeOfString: @"@"].location]]];
 		
-		}
-		else {
+		} else {
 			[[controller contentLabel] setText: [postItem content]];
 		}
 		[[controller contentLabel] setFont: [Util fontContent]];
 		[[controller authorLabel] setFont: [Util fontLocationTime]];
 		
-		NSMutableString *sb = [NSMutableString stringWithString:@""];
+		// Add location and time
 		if ([postItem location] != nil) {
-			[sb appendString:[postItem location]];
-			[sb appendString:@" | "];
-		}
-		double ti = -(double)[postItem.postTime timeIntervalSinceNow];
-		if (ti < 10) {
-			[sb appendString:@"A few seconds ago"];
-		} else if (ti < 60) {
-			[sb appendString:@"Less than a minute ago"];
-		} else if (ti < 60*60) {
-			[sb appendFormat:@"%i minutes ago", (int)(ti / 60)];
-		} else if (ti < 24*60*60) {
-			[sb appendFormat:@"%i hours ago", (int)(ti / 3600)];
-		} else if (ti < 7*24*60*60) {
-			NSDateFormatter *df = [[NSDateFormatter alloc] init];
-			[df setDateFormat:@"EEE 'at' HH:mm"];
-			[sb appendString:[df stringFromDate:postItem.postTime]];
-		} else if (ti < 365*24*60*60) {
-			NSDateFormatter *df = [[NSDateFormatter alloc] init];
-			[df setDateFormat:@"dd.MM HH:mm"];
-			[sb appendString:[df stringFromDate:postItem.postTime]];
+			[[controller authorLabel] setText: [NSString stringWithFormat:@"%@ | %@", [postItem location], [Util getPrettyDate:[postItem postTime]]]];
 		} else {
-			NSDateFormatter *df = [[NSDateFormatter alloc] init];
-			[df setDateFormat:@"dd.MM.yy HH:mm"];
-			[sb appendString:[df stringFromDate:postItem.postTime]];
+			[[controller authorLabel] setText: [NSString stringWithFormat:@"%@", [Util getPrettyDate:[postItem postTime]]]];
 		}
-		[[controller authorLabel] setText: sb];
 		
 		[controller release];
 	}
@@ -207,60 +171,11 @@
 }
 
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-
-#pragma mark -
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Table view delegate
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here. Create and push another view controller.
-	/*
-	 <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-	 [self.navigationController pushViewController:detailViewController animated:YES];
-	 [detailViewController release];
-	 */
-}
-
+// Cell sizes depend on the content length.
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	PostItem *postItem = [postedItems objectAtIndex: indexPath.row];
@@ -285,8 +200,9 @@
 	return ret;
 }
 
-#pragma mark -
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Memory management
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.

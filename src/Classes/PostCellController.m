@@ -10,6 +10,7 @@
 
 
 @implementation PostCellController
+@synthesize contentContainer;
 @synthesize authorLabel, contentLabel;
 @synthesize iconImage;
 

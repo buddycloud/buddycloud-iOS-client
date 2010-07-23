@@ -12,11 +12,13 @@
 @interface PostCellController : UIViewController {
 	UILabel *authorLabel;
 	UILabel *contentLabel;
+	UIView *contentContainer;
 	
 	UIImageView *iconImage;
 }
 
 @property(nonatomic, retain) IBOutlet UILabel *authorLabel, *contentLabel;
+@property(nonatomic, retain) IBOutlet UIView *contentContainer;
 @property(nonatomic, retain) IBOutlet UIImageView *iconImage;
 
 @end
