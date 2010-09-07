@@ -78,6 +78,7 @@
 		B5731EE111F878E100A4A82A /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = B5731EE011F878E100A4A82A /* Util.m */; };
 		B5731FCC11F88EF200A4A82A /* CORBEL.TTF in Resources */ = {isa = PBXBuildFile; fileRef = B5731FCB11F88EF200A4A82A /* CORBEL.TTF */; };
 		F42611F111A18C84003DE867 /* TopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F42611F011A18C84003DE867 /* TopicCell.xib */; };
+		F4CCD3E21236AEA000411288 /* PostInfo.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4CCD3E11236AEA000411288 /* PostInfo.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -207,6 +208,7 @@
 		B5731EE011F878E100A4A82A /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
 		B5731FCB11F88EF200A4A82A /* CORBEL.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = CORBEL.TTF; sourceTree = "<group>"; };
 		F42611F011A18C84003DE867 /* TopicCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicCell.xib; sourceTree = "<group>"; };
+		F4CCD3E11236AEA000411288 /* PostInfo.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PostInfo.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -295,6 +297,7 @@
 				5731AF301170BD2100F97613 /* Settings.bundle */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				577A141F11AD84DB006B1701 /* PostTopicCell.xib */,
+				F4CCD3E11236AEA000411288 /* PostInfo.xib */,
 				577A148D11AE76EB006B1701 /* PostCommentCell.xib */,
 			);
 			name = Resources;
@@ -600,6 +603,7 @@
 				B543CC2011F8A2B700BFC3AF /* tabbar-following.png in Resources */,
 				B543CC2111F8A2B700BFC3AF /* tabbar-places.png in Resources */,
 				B543CC2211F8A2B700BFC3AF /* tabbar-settings.png in Resources */,
+				F4CCD3E21236AEA000411288 /* PostInfo.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
