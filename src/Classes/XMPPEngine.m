@@ -62,6 +62,18 @@ NSString *discoFeatures[] = {
 	return self;
 }
 
+- (void) dealloc {
+	[xmppStream removeDelegate: self];
+	[xmppRoster removeDelegate: self];
+	[xmppPubsub removeDelegate: self];
+	
+	[xmppStream release];
+	[xmppRoster release];	
+	[xmppPubsub release];
+	
+	[super dealloc];
+}
+
 - (void)connect
 {	
 	if (![xmppStream isConnected]) {
