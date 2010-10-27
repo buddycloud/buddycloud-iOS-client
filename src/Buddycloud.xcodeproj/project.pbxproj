@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -78,6 +78,7 @@
 		B5731EE111F878E100A4A82A /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = B5731EE011F878E100A4A82A /* Util.m */; };
 		B5731FCC11F88EF200A4A82A /* CORBEL.TTF in Resources */ = {isa = PBXBuildFile; fileRef = B5731FCB11F88EF200A4A82A /* CORBEL.TTF */; };
 		F42611F111A18C84003DE867 /* TopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F42611F011A18C84003DE867 /* TopicCell.xib */; };
+		F46C2B731278CD4C002E8BF6 /* post_details.xib in Resources */ = {isa = PBXBuildFile; fileRef = F46C2B721278CD4C002E8BF6 /* post_details.xib */; };
 		F4CCD3E21236AEA000411288 /* PostInfo.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4CCD3E11236AEA000411288 /* PostInfo.xib */; };
 /* End PBXBuildFile section */
 
@@ -208,6 +209,7 @@
 		B5731EE011F878E100A4A82A /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
 		B5731FCB11F88EF200A4A82A /* CORBEL.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = CORBEL.TTF; sourceTree = "<group>"; };
 		F42611F011A18C84003DE867 /* TopicCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopicCell.xib; sourceTree = "<group>"; };
+		F46C2B721278CD4C002E8BF6 /* post_details.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = post_details.xib; sourceTree = "<group>"; };
 		F4CCD3E11236AEA000411288 /* PostInfo.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PostInfo.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -281,6 +283,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F46C2B721278CD4C002E8BF6 /* post_details.xib */,
 				B543CC1B11F8A2B700BFC3AF /* tabbar-browse.png */,
 				B543CC1C11F8A2B700BFC3AF /* tabbar-following.png */,
 				B543CC1D11F8A2B700BFC3AF /* tabbar-places.png */,
@@ -571,8 +574,15 @@
 				ORGANIZATIONNAME = buddycloud;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Buddycloud" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* Buddycloud */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -604,6 +614,7 @@
 				B543CC2111F8A2B700BFC3AF /* tabbar-places.png in Resources */,
 				B543CC2211F8A2B700BFC3AF /* tabbar-settings.png in Resources */,
 				F4CCD3E21236AEA000411288 /* PostInfo.xib in Resources */,
+				F46C2B731278CD4C002E8BF6 /* post_details.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -671,7 +682,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Simon Tennant (NJ8C32UG7Z)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -684,8 +695,8 @@
 					"\"$(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/usr/lib\"",
 				);
 				PRODUCT_NAME = Buddycloud;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos4.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A4C7C25A-F443-4A41-8A71-548971144C95";
+				SDKROOT = iphoneos4.1;
 			};
 			name = Debug;
 		};
@@ -693,6 +704,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Simon Tennant (NJ8C32UG7Z)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Buddycloud_Prefix.pch;
@@ -703,6 +715,8 @@
 					"\"$(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/usr/lib\"",
 				);
 				PRODUCT_NAME = Buddycloud;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "A4C7C25A-F443-4A41-8A71-548971144C95";
+				SDKROOT = iphoneos4.1;
 			};
 			name = Release;
 		};
@@ -725,7 +739,7 @@
 				);
 				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos4.1;
 			};
 			name = Debug;
 		};
@@ -738,7 +752,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = iphoneos2.2.1;
+				SDKROOT = iphoneos4.1;
 			};
 			name = Release;
 		};
