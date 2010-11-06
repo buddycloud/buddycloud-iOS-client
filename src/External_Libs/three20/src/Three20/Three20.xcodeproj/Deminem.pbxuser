@@ -1,0 +1,69 @@
+// !$*UTF8*$!
+{
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeTarget = BEF31F390F352DF5000DE5D2 /* Three20 */;
+		codeSenseManager = 6C97190E127E6E2D000F2998 /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					364,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 310275621;
+			PBXWorkspaceStateSaveDate = 310275621;
+		};
+		sourceControlManager = 6C97190D127E6E2D000F2998 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	665A55C6126521740032D0BE /* Three20-Xcode3.2.5 */ = {
+		activeExec = 0;
+	};
+	665A55DF126521740032D0BE /* Three20UnitTests-Xcode3.2.5 */ = {
+		activeExec = 0;
+	};
+	66FE8EFF1265E968001E0674 /* Three20-Xcode3.2.2 */ = {
+		activeExec = 0;
+	};
+	66FE8F181265E968001E0674 /* Three20UnitTests-Xcode3.2.2 */ = {
+		activeExec = 0;
+	};
+	6C97190D127E6E2D000F2998 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	6C97190E127E6E2D000F2998 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	BEF31F390F352DF5000DE5D2 /* Three20 */ = {
+		activeExec = 0;
+	};
+	EB9E6C6110B6A8F800DE563C /* Three20UnitTests */ = {
+		activeExec = 0;
+	};
+}
