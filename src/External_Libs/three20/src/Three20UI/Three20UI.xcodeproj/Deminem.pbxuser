@@ -1,0 +1,120 @@
+// !$*UTF8*$!
+{
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Release;
+		activeTarget = BEF31F390F352DF5000DE5D2 /* Three20UI */;
+		breakpoints = (
+		);
+		codeSenseManager = 6C6ED8EF127E442B0005AFA1 /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					682,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 310718011;
+			PBXWorkspaceStateSaveDate = 310718011;
+		};
+		perUserProjectItems = {
+			6C6ED906127E45650005AFA1 = 6C6ED906127E45650005AFA1 /* PBXTextBookmark */;
+			6C6ED9DB127E632B0005AFA1 = 6C6ED9DB127E632B0005AFA1 /* PBXTextBookmark */;
+			6C9718FE127E6D8E000F2998 = 6C9718FE127E6D8E000F2998 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 6C6ED8EE127E442B0005AFA1 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	66FC2AB51264E3A400F56B19 /* Three20UI-Xcode3.2.5 */ = {
+		activeExec = 0;
+	};
+	66FC2BC91264E3A500F56B19 /* Three20UIUnitTests-Xcode3.2.5 */ = {
+		activeExec = 0;
+	};
+	66FE8CCB1264E960001E0674 /* Three20UI-Xcode3.2.2 */ = {
+		activeExec = 0;
+	};
+	66FE8DDF1264E960001E0674 /* Three20UIUnitTests-Xcode3.2.2 */ = {
+		activeExec = 0;
+	};
+	6C6ED8EE127E442B0005AFA1 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	6C6ED8EF127E442B0005AFA1 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	6C6ED906127E45650005AFA1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6E6455531184D4C500F08CB1 /* TTYouTubeView.h */;
+		name = "TTYouTubeView.h: 27";
+		rLen = 9;
+		rLoc = 772;
+		rType = 0;
+		vrLen = 975;
+		vrLoc = 0;
+	};
+	6C6ED9DB127E632B0005AFA1 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6E64567C1184D4DA00F08CB1 /* TTYouTubeView.m */;
+		name = "TTYouTubeView.m: 29";
+		rLen = 542;
+		rLoc = 844;
+		rType = 0;
+		vrLen = 1437;
+		vrLoc = 268;
+	};
+	6C9718FE127E6D8E000F2998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6E64567C1184D4DA00F08CB1 /* TTYouTubeView.m */;
+		name = "TTYouTubeView.m: 26";
+		rLen = 0;
+		rLoc = 807;
+		rType = 0;
+		vrLen = 1566;
+		vrLoc = 639;
+	};
+	6E6455531184D4C500F08CB1 /* TTYouTubeView.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {672, 516}}";
+			sepNavSelRange = "{772, 9}";
+			sepNavVisRange = "{0, 975}";
+		};
+	};
+	6E64567C1184D4DA00F08CB1 /* TTYouTubeView.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {860, 1287}}";
+			sepNavSelRange = "{3189, 0}";
+			sepNavVisRange = "{1896, 1367}";
+		};
+	};
+	BEF31F390F352DF5000DE5D2 /* Three20UI */ = {
+		activeExec = 0;
+	};
+	EB9E6C6110B6A8F800DE563C /* Three20UIUnitTests */ = {
+		activeExec = 0;
+	};
+}
