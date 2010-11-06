@@ -1,0 +1,83 @@
+//
+// Copyright 2009-2010 Facebook
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#include "Paths.xcconfig"
+
+OBJC_LIBRARY      = -ObjC
+OBJC_ALLLOAD      = -all_load
+
+// stdlib / libSystem
+
+STDLIB_HEADERS    = /usr/include
+STDLIB_LIBRARY    = /usr/lib
+
+// ObjC Runtime
+
+OBJC_LIB          = -lobjc
+
+// Common build settings
+
+ALWAYS_SEARCH_USER_PATHS = NO
+
+//
+// Three20 Modules
+//
+
+THREE20CORE_LIB         = -force_load "$(CONFIGURATION_BUILD_DIR)/libThree20Core.a"
+THREE20NETWORK_LIB      = -force_load "$(CONFIGURATION_BUILD_DIR)/libThree20Network.a"
+THREE20STYLE_LIB        = -force_load "$(CONFIGURATION_BUILD_DIR)/libThree20Style.a"
+THREE20UICOMMON_LIB     = -force_load "$(CONFIGURATION_BUILD_DIR)/libThree20UICommon.a"
+THREE20UINAVIGATOR_LIB  = -force_load "$(CONFIGURATION_BUILD_DIR)/libThree20UINavigator.a"
+THREE20UI_LIB           = -force_load "$(CONFIGURATION_BUILD_DIR)/libThree20UI.a"
+THREE20_LIB             = -force_load "$(CONFIGURATION_BUILD_DIR)/libThree20.a"
+
+//
+// Three20 Extensions
+//
+
+EXTTHREE20CSSSTYLE_LIB    = -force_load "$(CONFIGURATION_BUILD_DIR)/libextThree20CSSStyle.a"
+EXTTHREE20XML_LIB         = -force_load "$(CONFIGURATION_BUILD_DIR)/libextThree20XML.a"
+EXTTHREE20JSONSBJSON_LIB  = -force_load "$(CONFIGURATION_BUILD_DIR)/libextThree20JSON+SBJSON.a"
+EXTTHREE20JSONYAJL_LIB    = -force_load "$(CONFIGURATION_BUILD_DIR)/libextThree20JSON+YAJL.a"
+
+//
+// Frameworks
+//
+
+AVFOUNDATION_FX         = -framework AVFoundation
+ADDRESSBOOK_FX          = -framework AddressBook
+ADDRESSBOOKUI_FX        = -framework AddressBookUI
+CFNETWORK_FX            = -framework CFNetwork
+COREDATA_FX             = -framework CoreData
+COREFOUNDATION_FX       = -framework CoreFoundation
+COREGRAPHICS_FX         = -framework CoreGraphics
+CORELOCATION_FX         = -framework CoreLocation
+FOUNDATION_FX           = -framework Foundation
+GAMEKIT_FX              = -framework GameKit
+MAPKIT_FX               = -framework MapKit
+MEDIAPLAYER_FX          = -framework MediaPlayer
+MESSAGEUI_FX            = -framework MessageUI
+MOBILECORESERVICES_FX   = -framework MobileCoreServices
+OPENGLES_FX             = -framework OpenGLES
+QUARTZCORE_FX           = -framework QuartzCore
+SECURITY_FX             = -framework Security
+STOREKIT_FX             = -framework StoreKit
+SYSTEMCONFIGURATION_FX  = -framework SystemConfiguration
+UIKIT_FX                = -framework UIKit
+
+// Unit Tests
+
+SENTESTINGKIT_FX        = -framework SenTestingKit
