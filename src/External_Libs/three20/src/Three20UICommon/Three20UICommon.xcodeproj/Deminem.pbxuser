@@ -1,0 +1,100 @@
+// !$*UTF8*$!
+{
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Release;
+		activeTarget = BEF31F390F352DF5000DE5D2 /* Three20UICommon */;
+		codeSenseManager = 6CDCDB85127D693100635A16 /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					364,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 310728607;
+			PBXWorkspaceStateSaveDate = 310728607;
+		};
+		perUserProjectItems = {
+			6C97191C127E6E41000F2998 /* PBXTextBookmark */ = 6C97191C127E6E41000F2998 /* PBXTextBookmark */;
+			6CAEA406128557EA00304DEB /* PBXTextBookmark */ = 6CAEA406128557EA00304DEB /* PBXTextBookmark */;
+		};
+		sourceControlManager = 6CDCDB84127D693100635A16 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	665A53601264D54B0032D0BE /* Three20UICommon-Xcode3.2.5 */ = {
+		activeExec = 0;
+	};
+	665A53771264D54B0032D0BE /* Three20UICommonUnitTests-Xcode3.2.5 */ = {
+		activeExec = 0;
+	};
+	665A53D01264D6550032D0BE /* Three20UICommon-Xcode3.2.2 */ = {
+		activeExec = 0;
+	};
+	665A53E71264D6550032D0BE /* Three20UICommonUnitTests-Xcode3.2.2 */ = {
+		activeExec = 0;
+	};
+	6C97191C127E6E41000F2998 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6E3C3780118C94FC0079637E /* TTGlobalUICommon.m */;
+		name = "TTGlobalUICommon.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 219;
+		vrLoc = 0;
+	};
+	6CAEA406128557EA00304DEB /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6E3C3780118C94FC0079637E /* TTGlobalUICommon.m */;
+		name = "TTGlobalUICommon.m: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 746;
+		vrLoc = 0;
+	};
+	6CDCDB84127D693100635A16 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	6CDCDB85127D693100635A16 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	6E3C3780118C94FC0079637E /* TTGlobalUICommon.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {542, 2431}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 746}";
+		};
+	};
+	BEF31F390F352DF5000DE5D2 /* Three20UICommon */ = {
+		activeExec = 0;
+	};
+	EB9E6C6110B6A8F800DE563C /* Three20UICommonUnitTests */ = {
+		activeExec = 0;
+	};
+}
