@@ -1,0 +1,205 @@
+// !$*UTF8*$!
+{
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeTarget = BEF31F390F352DF5000DE5D2 /* Three20Style */;
+		codeSenseManager = 6CDCDB91127D695200635A16 /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					364,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 310208820;
+			PBXWorkspaceStateSaveDate = 310208820;
+		};
+		perUserProjectItems = {
+			6CDCDBA4127D6AF900635A16 /* PBXTextBookmark */ = 6CDCDBA4127D6AF900635A16 /* PBXTextBookmark */;
+			6CDCDBA5127D6AF900635A16 /* PBXTextBookmark */ = 6CDCDBA5127D6AF900635A16 /* PBXTextBookmark */;
+			6CDCDBA6127D6AF900635A16 /* PBXTextBookmark */ = 6CDCDBA6127D6AF900635A16 /* PBXTextBookmark */;
+			6CDCDBA7127D6AF900635A16 /* PBXTextBookmark */ = 6CDCDBA7127D6AF900635A16 /* PBXTextBookmark */;
+			6CDCDBA8127D6AF900635A16 /* PBXTextBookmark */ = 6CDCDBA8127D6AF900635A16 /* PBXTextBookmark */;
+			6CDCDBA9127D6AF900635A16 /* PBXTextBookmark */ = 6CDCDBA9127D6AF900635A16 /* PBXTextBookmark */;
+			6CDCDBAA127D6AF900635A16 /* PBXTextBookmark */ = 6CDCDBAA127D6AF900635A16 /* PBXTextBookmark */;
+			6CDCDBAB127D6AF900635A16 /* PBXTextBookmark */ = 6CDCDBAB127D6AF900635A16 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 6CDCDB90127D695200635A16 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	66313A7D1267B4E800C09C9F /* Three20Style_Prefix.pch */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {670, 311}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 206}";
+		};
+	};
+	66846BED12639EE5001D2CF9 /* Three20Style-Xcode3.2.2 */ = {
+		activeExec = 0;
+	};
+	66846C8112639F29001D2CF9 /* Three20StyleUnitTests-Xcode3.2.2 */ = {
+		activeExec = 0;
+	};
+	66C16B6012639E2700A7825A /* Three20Style-Xcode3.2.5 */ = {
+		activeExec = 0;
+	};
+	66C16BEC12639E4500A7825A /* Three20StyleUnitTests-Xcode3.2.5 */ = {
+		activeExec = 0;
+	};
+	6CDCDB90127D695200635A16 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	6CDCDB91127D695200635A16 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	6CDCDBA4127D6AF900635A16 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6EE738C11184AE4A00A35176 /* Three20Style.h */;
+		name = "Three20Style.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 743;
+		vrLoc = 0;
+	};
+	6CDCDBA5127D6AF900635A16 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6E64548F1184D3BC00F08CB1 /* Three20Style+Additions.h */;
+		name = "Three20Style+Additions.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 782;
+		vrLoc = 0;
+	};
+	6CDCDBA6127D6AF900635A16 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 66313A7D1267B4E800C09C9F /* Three20Style_Prefix.pch */;
+		name = "Three20Style_Prefix.pch: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 206;
+		vrLoc = 0;
+	};
+	6CDCDBA7127D6AF900635A16 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6EE7370A1184A38F00A35176 /* TTGlobalStyle.h */;
+		name = "TTGlobalStyle.h: 19";
+		rLen = 0;
+		rLoc = 654;
+		rType = 0;
+		vrLen = 593;
+		vrLoc = 3;
+	};
+	6CDCDBA8127D6AF900635A16 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6EE739981184B9CE00A35176 /* StyleAdditionTests.m */;
+		name = "StyleAdditionTests.m: 48";
+		rLen = 22;
+		rLoc = 1715;
+		rType = 0;
+		vrLen = 584;
+		vrLoc = 1428;
+	};
+	6CDCDBA9127D6AF900635A16 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6EE737071184A38F00A35176 /* TTDefaultStyleSheet.h */;
+		name = "TTDefaultStyleSheet.h: 29";
+		rLen = 22;
+		rLoc = 991;
+		rType = 0;
+		vrLen = 697;
+		vrLoc = 661;
+	};
+	6CDCDBAA127D6AF900635A16 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6EE737891184A39B00A35176 /* TTDefaultStyleSheet.m */;
+		rLen = 22;
+		rLoc = 31891;
+		rType = 0;
+	};
+	6CDCDBAB127D6AF900635A16 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 6EE737891184A39B00A35176 /* TTDefaultStyleSheet.m */;
+		name = "TTDefaultStyleSheet.m: 739";
+		rLen = 22;
+		rLoc = 31891;
+		rType = 0;
+		vrLen = 378;
+		vrLoc = 31744;
+	};
+	6E64548F1184D3BC00F08CB1 /* Three20Style+Additions.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {542, 312}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 782}";
+		};
+	};
+	6EE737071184A38F00A35176 /* TTDefaultStyleSheet.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {542, 1326}}";
+			sepNavSelRange = "{991, 22}";
+			sepNavVisRange = "{661, 697}";
+		};
+	};
+	6EE7370A1184A38F00A35176 /* TTGlobalStyle.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {542, 780}}";
+			sepNavSelRange = "{654, 0}";
+			sepNavVisRange = "{3, 593}";
+		};
+	};
+	6EE737891184A39B00A35176 /* TTDefaultStyleSheet.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {705, 15457}}";
+			sepNavSelRange = "{31891, 22}";
+			sepNavVisRange = "{31744, 378}";
+		};
+	};
+	6EE738C11184AE4A00A35176 /* Three20Style.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {542, 1183}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 743}";
+		};
+	};
+	6EE739981184B9CE00A35176 /* StyleAdditionTests.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1419, 1183}}";
+			sepNavSelRange = "{1715, 22}";
+			sepNavVisRange = "{1428, 584}";
+		};
+	};
+	BEF31F390F352DF5000DE5D2 /* Three20Style */ = {
+		activeExec = 0;
+	};
+	EB9E6C6110B6A8F800DE563C /* Three20StyleUnitTests */ = {
+		activeExec = 0;
+	};
+}
