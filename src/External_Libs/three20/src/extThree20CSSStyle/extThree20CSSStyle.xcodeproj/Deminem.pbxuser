@@ -1,0 +1,72 @@
+// !$*UTF8*$!
+{
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeTarget = BEF31F390F352DF5000DE5D2 /* extThree20CSSStyle */;
+		codeSenseManager = 6CAEA5D91285D98A00304DEB /* Code sense */;
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					364,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 310761865;
+			PBXWorkspaceStateSaveDate = 310761865;
+		};
+		sourceControlManager = 6CAEA5D81285D98A00304DEB /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	66C34B0412661C0500489E9A /* extThree20CSSStyle-Xcode3.2.5 */ = {
+		activeExec = 0;
+	};
+	66C34B1E12661C0600489E9A /* extThree20CSSStyleUnitTests-Xcode3.2.5 */ = {
+		activeExec = 0;
+	};
+	66D90E6612661CBB009AFDE6 /* extThree20CSSStyle-Xcode3.2.2 */ = {
+		activeExec = 0;
+	};
+	66D90E8012661CBB009AFDE6 /* extThree20CSSStyleUnitTests-Xcode3.2.2 */ = {
+		activeExec = 0;
+	};
+	6CAEA5D81285D98A00304DEB /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	6CAEA5D91285D98A00304DEB /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	6E083B2C11B6113900B99C32 /* Grammar */ = {
+		activeExec = 0;
+	};
+	BEF31F390F352DF5000DE5D2 /* extThree20CSSStyle */ = {
+		activeExec = 0;
+	};
+	EB9E6C6110B6A8F800DE563C /* extThree20CSSStyleUnitTests */ = {
+		activeExec = 0;
+	};
+}
