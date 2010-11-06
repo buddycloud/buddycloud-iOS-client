@@ -1,0 +1,29 @@
+/* 
+   Localizable.strings
+   Buddycloud
+
+   Created by Adnan U - [Deminem] on 10/31/10.
+   Copyright 2010 buddycloud. All rights reserved.
+   
+   English Version!
+ */
+
+"browse" = "Browse";
+"buddycloud" = "Buddycloud";
+
+"channel" = "Channel";
+
+"following" = "Following";
+
+"places" = "Places";
+
+"settings" = "Settings";
+
+"welcome" = "Welcome";
+"welcomeMsg" = "Buddycloud let's you create your own channels, follow other channels and share your location online.";
+
+
+
+//Buttons
+"exploreBtnLabel" = "Explore";
+"joinBtnLabel" = "Join";
