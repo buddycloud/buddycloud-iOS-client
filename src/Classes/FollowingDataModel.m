@@ -139,7 +139,7 @@ static sqlite3_stmt *selectTopicPostStatement = nil;
 	sqlite3_bind_text(selectPostsForNodeStatement, 1, [node UTF8String], -1, SQLITE_STATIC);
 	
 	while (sqlite3_step(selectPostsForNodeStatement) == SQLITE_ROW) {
-		PostItem *post = [[PostItem alloc] initWithNode: node];
+		PostItem *post = [[PostItem alloc] initWithChannelNode: node];
 		
 		[post setEntryId: sqlite3_column_int64(selectPostsForNodeStatement, 0)];
 		[post setCommentId: sqlite3_column_int64(selectPostsForNodeStatement, 1)];
@@ -227,6 +227,10 @@ static sqlite3_stmt *selectTopicPostStatement = nil;
 	}
 	
 	return nil;
+}
+
+- (void)followItem:(NSString *)item {
+	
 }
 
 @end

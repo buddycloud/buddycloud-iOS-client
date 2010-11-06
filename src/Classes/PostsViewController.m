@@ -24,18 +24,26 @@
 #pragma mark View lifecycle
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (PostsViewController *)initWithNode:(NSString *)_node andTitle:(NSString *)title
+- (id)initWithNode:(NSString* )_node query:(NSDictionary*)query {
+
+	if (self = [self initWithNode:_node andTitle:[query valueForKey:@"title"]]) {
+		
+	}
+	
+	return self; 
+}
+
+- (id)initWithNode:(NSString *)_node andTitle:(NSString *)title
 {
 	[self tableView].backgroundColor = [UIColor colorWithRed:243.0/255.0 green:241.0/255.0 blue:229.0/255.0 alpha:1.0];
 	[self tableView].separatorStyle = UITableViewCellSeparatorStyleNone;
 
 	if (self = [super initWithNibName:@"PostsViewController" bundle: [NSBundle mainBundle]]) {
-		[self setNode: _node];
 		self.navigationItem.title = title;
+		[self setNode: _node];
 		
-		BuddycloudAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-		followingData = [[appDelegate followingDataModel] retain];
-		xmppEngine = [[appDelegate xmppEngine] retain];
+		followingData = [[[BuddycloudAppDelegate sharedAppDelegate] followingDataModel] retain];
+		xmppEngine = [[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine] retain];
 
 		[followingData addDelegate: self];
 		

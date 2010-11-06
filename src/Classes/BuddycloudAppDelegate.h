@@ -19,36 +19,42 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <Three20/Three20.h>
+
+#import "TabBarController.h"
+#import "SettingsViewController.h" 
+#import "MenuController.h" 
+#import "WelcomeViewController.h"
+#import "PostsViewController.h"
 
 @class XMPPEngine;
 @class PlaceEngine;
 @class FollowingDataModel;
 @class FollowingViewController;
-#import "SettingsViewController.h" 
 
-@interface BuddycloudAppDelegate: NSObject
+
+@interface BuddycloudAppDelegate: NSObject <UIApplicationDelegate>
 {
 	UIWindow *window;
-	UITabBarController *tabBarController;
-	UINavigationController *navigationController;
-	
+
 	UITableView *followingTableView;
 	UITableView *postsTableView;
 	
 	XMPPEngine *xmppEngine;
 	PlaceEngine *placeEngine;
 	
-	FollowingViewController *followingController;	
-	SettingsViewController *settingsController;
 }
 
 @property(nonatomic, retain) IBOutlet UIWindow *window;
-@property(nonatomic, retain) IBOutlet UITabBarController *tabBarController;
-@property(nonatomic, retain) IBOutlet UINavigationController *navigationController;
 @property(nonatomic, retain) IBOutlet UITableView *followingTableView;
 @property(nonatomic, retain) IBOutlet UITableView *postsTableView;
 @property(nonatomic, retain) SettingsViewController *settingsController;
 @property(nonatomic, retain) FollowingViewController *followingController;
+
+- (void)initializeUI;
+- (void)loadAllMappedUrls;
+
++ (BuddycloudAppDelegate *)sharedAppDelegate;
 
 - (XMPPEngine *)xmppEngine;
 

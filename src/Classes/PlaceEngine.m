@@ -31,7 +31,7 @@ typedef enum {
 		dataModel = [[PlacesDataModel alloc] init];
 		
 		// Initialize LocationEngine
-		locationEngine = [[LocationEngine alloc] initWithDelegate: self];
+		locationEngine = [[LocationEngine alloc] initWithLocDelegate: self];
 		
 		// Initialize XMPPStream
 		xmppStream = aXmppStream;

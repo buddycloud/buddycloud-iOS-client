@@ -30,8 +30,6 @@
 
 @implementation BuddycloudAppDelegate
 @synthesize window;
-@synthesize tabBarController;
-@synthesize navigationController;
 @synthesize followingTableView, postsTableView;
 @synthesize followingController, settingsController;
 
@@ -48,27 +46,15 @@
 
 - (BOOL)application: (UIApplication*)application didFinishLaunchingWithOptions: (NSDictionary*)launchOptions
 {
+	
 	// Engines
 	xmppEngine = [[XMPPEngine alloc] init];
-	[xmppEngine setPassword: @"iphone"];
+	[xmppEngine setPassword: XMPP_TEMP_DEFAULT_PASSWORD];
+		
+	placeEngine = [[PlaceEngine alloc] initWithStream: [xmppEngine xmppStream] toServer: PLACE_ENGINE_SERVER];
 	
-	placeEngine = [[PlaceEngine alloc] initWithStream: [xmppEngine xmppStream] toServer: @"butler.buddycloud.com"];
-	
-	// View controllers
-	self.followingController = [[[FollowingViewController alloc] initWithStyle: UITableViewStylePlain andDataModel: (FollowingDataModel *)xmppEngine] autorelease];
-	UINavigationController *ncFollowing = [[[UINavigationController alloc] initWithRootViewController:followingController] autorelease];
-	ncFollowing.tabBarItem.image = [Util imageWithImage:[UIImage imageNamed:@"tabbar-following.png"] scaledToSize:CGSizeMake(30, 30)];
-	
-	self.settingsController = [[[SettingsViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
-	UINavigationController *settingsNavigationController = [[[UINavigationController alloc] initWithRootViewController:self.settingsController] autorelease];
-	settingsNavigationController.tabBarItem.image = [Util imageWithImage:[UIImage imageNamed:@"tabbar-settings.png"] scaledToSize:CGSizeMake(30, 30)];
-	settingsNavigationController.tabBarItem.title = @"Settings";
-
-	
-	// Set up tab bar
-	self.tabBarController = [[UITabBarController alloc] init];
-	[self.tabBarController setViewControllers:[NSArray arrayWithObjects:ncFollowing, settingsNavigationController, nil]];
-	[window addSubview:tabBarController.view];
+	//Initialize the UI Settings.
+	[self initializeUI];
 	
 	// Start connection
 	[xmppEngine connect];
@@ -76,12 +62,75 @@
 	return YES;
 }
 
+- (void)connectXMPPEngine {
+	@try {
+		
+	}
+	@catch (NSException * e) {
+		NSLog(@"Exception : %@", [e description]);
+	}
+}
+
+- (void)initializeUI {
+	
+	@try {
+		TTDefaultCSSStyleSheet* styleSheet = [[TTDefaultCSSStyleSheet alloc] init];
+		[styleSheet addStyleSheetFromDisk:TTPathForBundleResource(@"stylesheet.css")];
+		[TTStyleSheet setGlobalStyleSheet:styleSheet];
+		TT_RELEASE_SAFELY(styleSheet);
+		
+		//Load all the mapping urls.
+		[self loadAllMappedUrls];
+		
+		// Before opening the tab bar, we see if the controller history was persisted the last time
+		if (![[TTNavigator navigator] restoreViewControllers]) {
+			// This is the first launch, so we just start with the tab bar
+			[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kAppRootURLPath]];
+		}
+	}
+	@catch (NSException * e) {
+		NSLog(@"Exception : %@", [e description]);
+	}
+}
+
+/*
+ * Load all the url map.
+ */
+- (void)loadAllMappedUrls {
+	
+	TTNavigator* navigator = [TTNavigator navigator];
+	navigator.persistenceMode = TTNavigatorPersistenceModeAll;
+	navigator.window = [[[UIWindow alloc] initWithFrame:TTScreenBounds()] autorelease];
+	
+	TTURLMap* map = navigator.URLMap;
+	
+	// Any URL that doesn't match will fall back on this one, and open in the web browser
+	[map from:@"*" toViewController:[TTWebController class]];
+	
+	// Application welcome screen
+	[map from:kAppRootURLPath toSharedViewController:[WelcomeViewController class]];
+	
+	// The tab bar controller is shared, meaning there will only ever be one created.  Loading
+	// This URL will make the existing tab bar controller appear if it was not visible.
+	[map from:kTabBarURLPath toModalViewController:[TabBarController class]];
+	
+	// Check the post against node.
+	[map from:kPostURLPath toViewController:[PostsViewController class]];
+}
+
 - (void)dealloc
 {
-	[tabBarController release];
 	[window release];
 	
 	[super dealloc];
+}
+
+/*
+ * Shared App Delegate.
+ */
++ (BuddycloudAppDelegate *)sharedAppDelegate {
+
+	return (BuddycloudAppDelegate *)[UIApplication sharedApplication].delegate;
 }
 
 - (XMPPEngine *)xmppEngine

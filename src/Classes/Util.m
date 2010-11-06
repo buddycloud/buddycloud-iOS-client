@@ -86,4 +86,72 @@
 	return ret;
 }
 
+/*
+ * This method will generate the url query string with dictionary params.
+ */
++ (NSURL*) generateURL:(NSString*)baseURL params:(NSDictionary*)params {
+	if (params) {
+		NSMutableArray* pairs = [NSMutableArray array];
+		for (NSString* key in params.keyEnumerator) {
+			NSString* value = [params objectForKey:key];
+			NSString* val = [value stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			NSString* pair = [NSString stringWithFormat:@"%@=%@", key, val];
+			[pairs addObject:pair];
+		}
+		
+		NSString* query = [pairs componentsJoinedByString:@"&"];
+		NSString* url = [NSString stringWithFormat:@"%@?%@", baseURL, query];
+		return [NSURL URLWithString:url];
+	} else {
+		return [NSURL URLWithString:baseURL];
+	}
+}
+
+/*
+ * This method will find the params in url query string and parse all the params as key/value binding in dictionaary.
+ */
++ (NSMutableDictionary*) getQueryPramsDict:(NSString*)urlQueryString {
+	NSMutableDictionary *paramsDict = nil;
+	
+	if (urlQueryString != nil && ![urlQueryString isEmptyOrWhitespace]) {
+		NSRange range = [urlQueryString rangeOfString:@"?" options:NSLiteralSearch];
+		NSString *query = (range.location != NSNotFound) ? [urlQueryString substringFromIndex:(range.location + 1)] : nil;
+						 
+		if ([query length] > 0) {
+			NSArray *keyValueParams = [query componentsSeparatedByString:@"&"];
+			paramsDict = [[[NSMutableDictionary alloc] initWithCapacity:[keyValueParams count]] autorelease];
+			
+			for (NSString *params in keyValueParams) {
+				NSRange paramRange = [params rangeOfString:@"=" options:NSLiteralSearch];
+				
+				if (paramRange.location != NSNotFound) {
+					[paramsDict setObject:[params substringFromIndex:(paramRange.location + 1)] 
+								   forKey:[params substringToIndex:paramRange.location]];
+				}
+			}
+		}
+	}
+	
+	return paramsDict;
+}
+
+
+
+//- (NSMutableDictionary *) getDictionaryPrams:(NSArray*)params {
+//	NSMutableDictionary *paramsList = [[[NSMutableDictionary alloc] init] autorelease];
+//	@try {
+//		if ([params count] > 0) {
+//			for (int i=0; i < [params count]; i++) {
+//				NSArray *subParams= [(NSString*)[params objectAtIndex:i] componentsSeparatedByString:@"="];
+//				[paramsList setObject:[subParams objectAtIndex:1] forKey:[subParams objectAtIndex:0]];
+//			}//for
+//		}//if
+//	}//try
+//	@catch(NSException *ex) {
+//		NSLog(@"getDictionaryPrams method TTNavigationCenter exception :%@",ex);
+//	}//catch
+//	@finally {
+//		return paramsList;
+//	}//finally
+//}
 @end

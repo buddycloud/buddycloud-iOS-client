@@ -22,7 +22,7 @@
 @synthesize location, content;
 @synthesize isRead;
 
-- (id)initWithNode:(NSString *)aNode
+- (id)initWithChannelNode:(NSString *)aNode
 {
 	if (self = [super init]) {
 		[self setNode: aNode];

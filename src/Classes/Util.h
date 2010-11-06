@@ -13,12 +13,15 @@
 
 }
 
-+ (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
++ (UIImage *) imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 
 + (NSString*) getPrettyDate:(NSDate*)date;
 
 + (NSUInteger) loadFonts;
 + (UIFont*) fontContent;
 + (UIFont*) fontLocationTime;
+
++ (NSURL*) generateURL:(NSString*)baseURL params:(NSDictionary*)params;
++ (NSMutableDictionary*) getQueryPramsDict:(NSString*)urlQueryString;
 
 @end

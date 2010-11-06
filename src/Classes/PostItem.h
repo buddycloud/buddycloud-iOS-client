@@ -42,7 +42,7 @@ typedef long long superlong;
 @property(nonatomic, retain) NSString *location, *content;
 @property(nonatomic) BOOL isRead;
 
-- (id)initWithNode:(NSString *)node;
+- (id)initWithChannelNode:(NSString *)node;
 
 - (void)setPostTimeFromString:(NSString *)formattedDate;
 

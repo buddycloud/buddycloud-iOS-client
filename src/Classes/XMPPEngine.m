@@ -20,8 +20,6 @@
 #import "PostItem.h"
 #import "Events.h"
 
-NSString *applicationVersion = @"iPhone-0.1.01";
-
 NSString *discoFeatures[] = {
 	@"http://jabber.org/protocol/pubsub",
 	@"http://jabber.org/protocol/geoloc",
@@ -40,16 +38,16 @@ NSString *discoFeatures[] = {
 		// Initialize the XMPPStream
 		xmppStream = [[XMPPStream alloc] init];	
 		[xmppStream addDelegate: self];
-		[xmppStream setHostName: @"jabber.buddycloud.com"];
-		[xmppStream setHostPort: 5222];
-		[xmppStream setMyJID: [XMPPJID jidWithString: @"iphone2@buddycloud.com/iPhone/bcloud"]];
+		[xmppStream setHostName: XMPP_ENGINE_SERVER];
+		[xmppStream setHostPort: XMPP_ENGINE_SERVER_PORT];
+		[xmppStream setMyJID: [XMPPJID jidWithString: XMPP_TEMP_DEFAULT_JID]];
 		
 		// Initialize XMPPRoster
 		xmppRoster = [[XMPPRoster alloc] initWithStream: xmppStream];
 		[xmppRoster addDelegate: self];
 		
 		// Initialize XMPPPubsub
-		xmppPubsub = [[XMPPPubsub alloc] initWithStream: xmppStream toServer: @"pubsub-bridge@broadcaster.buddycloud.com"];
+		xmppPubsub = [[XMPPPubsub alloc] initWithStream: xmppStream toServer: XMPP_PUBSUB_SERVER];
 		[xmppPubsub addDelegate: self];
 		
 		// Set notification observers
@@ -788,7 +786,7 @@ NSString *discoFeatures[] = {
 		
 		if (publishedElement = [item elementForName: @"entry" xmlns: @"http://www.w3.org/2005/Atom"]) {
 			// Published item is channel entry
-			PostItem *post = [[[PostItem alloc] initWithNode: node] autorelease];
+			PostItem *post = [[[PostItem alloc] initWithChannelNode: node] autorelease];
 			[post setContent: [[publishedElement elementForName: @"content"] stringValue]];
 						
 			if ([[post content] length] > 0) {

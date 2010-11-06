@@ -22,8 +22,7 @@
 
 - (id)initWithStyle:(UITableViewStyle)style andDataModel:(FollowingDataModel *)dataModel {
     if(self = [super initWithStyle:style]) {
-		self.navigationItem.title = @"Following";
-		
+
 		followingList = [dataModel retain];
 		[self setOrderedKeys: [followingList orderKeysByUpdated]];
 		
@@ -38,12 +37,13 @@
 
 - (void)viewDidLoad
 {	
-	UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAdd 
-																			   target: self 
-																			   action: @selector(onAddButton)];
+	[super viewDidLoad];
+
+}
+
+- (void)viewDidAppear:(BOOL)animated {
 	
-	self.title = @"Following";
-	self.navigationItem.rightBarButtonItem = addButton;
+	
 }
 
 - (void)dealloc
@@ -185,17 +185,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath 
 {
-//	[tableView deselectRowAtIndexPath:indexPath animated:YES];
     // Navigation logic may go here. Create and push another view controller.
-	
 	FollowedItem *item = [followingList getItemByKey: [orderedKeys objectAtIndex: indexPath.row]];
 	ChannelItem *channel = [followingList getChannelItemForFollowedItem: item];
 	
 	if (channel) {
-		PostsViewController *postsViewController = [[PostsViewController alloc] initWithNode: [channel ident] andTitle: [item title]];
+		//NSLog(@"Channel : %@ and title = %@", [channel ident], [item title]);
+		NSLog(@"URL : %@",[NSString stringWithFormat:kPostWithNodeAndTitleURLPath, [channel ident], [item title]] );
 		
-		[self.navigationController pushViewController: postsViewController animated:YES];
-		[postsViewController release];
+		[[TTNavigator navigator] openURLAction:[[TTURLAction actionWithURLPath:[NSString stringWithFormat:kPostWithNodeAndTitleURLPath, [channel ident], [item title]]] 
+								 applyAnimated:YES]];
 	}
 	else {
 		[tableView deselectRowAtIndexPath: indexPath animated: YES];

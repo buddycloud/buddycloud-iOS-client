@@ -20,7 +20,7 @@
 	NSTimer *timer;
 }
 
-- (LocationEngine *)initWithDelegate:(id)delegate;
+- (LocationEngine *)initWithLocDelegate:(id)delegate;
 
 - (void)startReceivingLocation;
 - (void)stopReceivingLocation;

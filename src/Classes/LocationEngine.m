@@ -10,7 +10,7 @@
 
 @implementation LocationEngine
 
-- (LocationEngine *)initWithDelegate:(id)aDelegate
+- (LocationEngine *)initWithLocDelegate:(id)aDelegate
 {
 	if (self =[super init]) {	
 		delegate = aDelegate;
