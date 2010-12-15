@@ -56,7 +56,7 @@ static NSString *welcomeViewControllerNib = @"WelcomeViewcontroller";
 		XMPPEngine *xmppEngine = (XMPPEngine *)[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
 
 		// Start default anonyomous connection
-		[xmppEngine connect];
+		//[xmppEngine connect];
 		
 		[[TTNavigator navigator] removeAllViewControllers];
 		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kTabBarURLPath]];

@@ -80,5 +80,6 @@
 "alertPrompt" = "Alert";
 "authenticationFailed" = "Authentication failed";
 "authenticatonFailedError" = "The client could not authenticate with the Buddycloud server.";
+"noInternetConnError" = "Oops! Seems like your phone is not connected to the Internet. Please check your 3G/Edge/GPRS/WiFi and try again.";
 "userNameConflictError" = "The username you entered has already been registered.";
 "userNameLoggedInConflictError" = "The username you entered has already been logged in.";

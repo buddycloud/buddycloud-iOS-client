@@ -83,10 +83,12 @@
 		[self loadAllMappedUrls];
 		
 		// Before opening the tab bar, we see if the controller history was persisted the last time
-		if (![[TTNavigator navigator] restoreViewControllers]) {
-			// This is the first launch, so we just start with the tab bar
-			[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kAppRootURLPath]];
+		if ([[TTNavigator navigator] restoreViewControllers]) {
+			[[TTNavigator navigator] removeAllViewControllers];
 		}
+		
+		// This is the first launch, so we just start with the tab bar
+		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kAppRootURLPath]];
 	}
 	@catch (NSException * e) {
 		NSLog(@"Exception : %@", [e description]);
@@ -123,6 +125,8 @@
 	[window release];
 	[spiralLoadingView release];
 	
+	[internetReach release];
+	
 	[super dealloc];
 }
 
@@ -149,6 +153,83 @@
 - (FollowingDataModel *)followingDataModel
 {
 	return xmppEngine;
+}
+
+
+
+#pragma mark - APP WIFI/EDGE/GPRS/XMPP-Stream REACHIBILITY CHECK
+/* 
+ * Check Server Reachability.
+ */
+- (void) checkF2FReachability {
+	
+	[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(reachabilityChanged:) name: kReachabilityChangedNotification object: nil];
+	
+	internetReach = [[Reachability reachabilityForInternetConnection] retain];
+	[internetReach startNotifer];
+	[self updateReachability: internetReach];
+}
+
+/*
+ * Called by Reachability whenever status changes.  
+ */
+- (void) reachabilityChanged: (NSNotification* )note
+{
+	Reachability *curReach = [note object];
+	NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
+	[self updateReachability:curReach];
+	
+	if (!isInternetConAvailable){	
+		[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView showActivityTimerLabelInCenter:TTActivityLabelStyleBlackBox withText:NSLocalizedString(noInternetConnError, @"")];
+	}
+}
+
+/*
+ * Update the connection flags asap reachibility changes.  
+ */
+- (void) updateReachability:(Reachability *)curReach {
+	
+	NetworkStatus netStatus = [curReach currentReachabilityStatus];
+	BOOL connectionRequired = [curReach connectionRequired];
+	
+	if (curReach == internetReach) {
+		if (netStatus == ReachableViaWiFi && connectionRequired == NO)
+		{
+			isInternetConAvailable = YES;
+		}
+		else if (netStatus == ReachableViaWWAN && connectionRequired == NO)
+		{
+			isInternetConAvailable = YES;
+		}
+		else if (((netStatus == ReachableViaWiFi) || (netStatus == ReachableViaWWAN)) && connectionRequired == YES)
+		{
+			TTNetworkRequestStarted();
+			isInternetConAvailable = ([[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kReachibility_ping_uri] 
+																								cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20.0] delegate:self]) ? YES : NO;
+			
+			isInternetConAvailable = YES;
+			
+			TTNetworkRequestStopped();
+		}
+		else if ([xmppEngine.xmppStream isConnected]) {
+			isInternetConAvailable = YES;
+		}
+		else
+		{
+			isInternetConAvailable = NO;
+		}
+	}
+}
+
+/*
+ * Checks Reachability of Host Server.
+ */
+-(BOOL)isConnectionAvailable {
+	
+	if(isInternetConAvailable)
+		return YES;
+	else
+		return NO;
 }
 
 @end

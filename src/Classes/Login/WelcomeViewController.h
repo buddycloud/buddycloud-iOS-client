@@ -10,7 +10,6 @@
 #import <Foundation/Foundation.h>
 #import "TabBarController.h"
 #import "XMPPEngine.h"
-#import "XMPPInBandReg.h"
 #import "LoginServicesViewController.h"
 
 @interface WelcomeViewController : TTViewController {

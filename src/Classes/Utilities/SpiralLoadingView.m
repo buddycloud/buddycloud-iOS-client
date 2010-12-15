@@ -23,6 +23,22 @@
 																											  [UIScreen mainScreen].bounds.size.width, CENTERED_SCREEN_HEIGHT)];
 }
 
+- (void)showActivityTimerLabelInCenter:(TTActivityLabelStyle)style withText:(NSString *)sMsg {
+	//CGFloat msgBoxheight = collapseFeedStyledText.height + CELL_CONTENT_HEIGHT * 2;
+	//collapseFeedheight = MAX(collapseFeedheight, IMAGE_SIZE);
+	
+	[self showActivityLabelWithStyle:style withText:sMsg withTransparentSheet:NO withActivityFrame:CGRectMake(0.0, (([UIScreen mainScreen].applicationFrame.size.height - [TTNavigator navigator].topViewController.navigationController.navigationBar.height) - CENTERED_SCREEN_HEIGHT * 2) / 2, 
+																											  [UIScreen mainScreen].bounds.size.width, CENTERED_SCREEN_HEIGHT)];
+
+	//Automatically popups the alert after specific time 3.0 secs
+	[NSTimer scheduledTimerWithTimeInterval:3.0 
+									 target:self 
+								   selector:@selector(stopActivity) 
+								   userInfo:nil 
+									repeats:NO];
+	
+}
+
 - (void)showActivityLabelInCenter:(TTActivityLabelStyle)style withTransparentSheet:(BOOL)transparentSheet withText:(NSString *)sMsg {
 	[self showActivityLabelWithStyle:style withText:sMsg withTransparentSheet:transparentSheet withActivityFrame:CGRectMake(0.0, (([UIScreen mainScreen].applicationFrame.size.height - [TTNavigator navigator].topViewController.navigationController.navigationBar.height) - CENTERED_SCREEN_HEIGHT) / 2, 
 																											  [UIScreen mainScreen].bounds.size.width, CENTERED_SCREEN_HEIGHT)];

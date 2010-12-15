@@ -138,7 +138,7 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 	UIAlertView *alertView = nil;
 	
 	@try {
-		if ( (self.userNameTxtField.text != nil && ![self.userNameTxtField.text isEmptyOrWhitespace]) &&
+		if ( [[BuddycloudAppDelegate sharedAppDelegate] isConnectionAvailable] && (self.userNameTxtField.text != nil && ![self.userNameTxtField.text isEmptyOrWhitespace]) &&
 			(self.passwordTxtField.text != nil && ![self.passwordTxtField.text isEmptyOrWhitespace]) )
 		{
 			[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView showActivityLabelInCenter:TTActivityLabelStyleBlackBezel 
@@ -161,10 +161,10 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 			//Before disconnect, check if it's not the same username through which it's already login.
 			if(range.location != NSNotFound && range.length > 0) {
 				
-				//Stop the activity.
-				[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
-				
-				if ([[xmppEngine.xmppStream.myJID bare] isEqualToString:self.userNameTxtField.text]) {
+				if ([xmppEngine.xmppStream isConnected] && [[xmppEngine.xmppStream.myJID bare] isEqualToString:self.userNameTxtField.text]) {
+					
+					//Stop the activity.
+					[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
 					
 					alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
 															message:[NSString stringWithFormat:NSLocalizedString(userNameLoggedInConflictError, @""), NSLocalizedString(userName, @"")]
@@ -218,6 +218,9 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 											  otherButtonTitles:nil] autorelease];
 				[alertView show];
 				[alertView show];
+			}
+			else {
+				[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView showActivityTimerLabelInCenter:TTActivityLabelStyleBlackBox withText:NSLocalizedString(noInternetConnError, @"")];
 			}
 		}
 	}

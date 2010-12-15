@@ -114,7 +114,7 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 	UIAlertView *alertView = nil;
 	[self removeErrorMsg];
 	
-	if ( (self.userNameTxtField.text != nil && ![self.userNameTxtField.text isEmptyOrWhitespace]) &&
+	if ( [[BuddycloudAppDelegate sharedAppDelegate] isConnectionAvailable] && (self.userNameTxtField.text != nil && ![self.userNameTxtField.text isEmptyOrWhitespace]) &&
 		 (self.newPasswordTxtField.text != nil && ![self.newPasswordTxtField.text isEmptyOrWhitespace]) )
 	{
 		[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView showActivityLabelWithStyle:TTActivityLabelStyleBlackBezel 
@@ -129,7 +129,7 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 		
 		//Before disconnect, check if it's not the same username through which it's already login.
 		if(range.location != NSNotFound && range.length > 0) {
-			if ([[xmppEngine.xmppStream.myJID bare] isEqualToString:self.userNameTxtField.text]) {
+			if ([xmppEngine.xmppStream isConnected] && [[xmppEngine.xmppStream.myJID bare] isEqualToString:self.userNameTxtField.text]) {
 				
 				//Stop the activity.
 				[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
@@ -183,6 +183,11 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 			[alertView show];
 			[alertView show];
 		}
+		else {
+			[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView showActivityTimerLabelInCenter:TTActivityLabelStyleBlackBox withText:NSLocalizedString(noInternetConnError, @"")];
+
+		}
+
 		
 		NSLog(@"Something wrong with credentials...");
 	}

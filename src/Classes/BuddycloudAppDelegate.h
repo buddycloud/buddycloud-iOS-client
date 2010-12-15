@@ -30,6 +30,7 @@
 #import "LoginServicesViewController.h"
 #import "LoginViewController.h"
 #import "CreateNewUserAcctViewController.h"
+#import "Reachability.h"
 
 @class XMPPEngine;
 @class PlaceEngine;
@@ -42,6 +43,9 @@
 
 	UITableView *followingTableView;
 	UITableView *postsTableView;
+	
+	Reachability *internetReach;
+	BOOL isInternetConAvailable;
 	
 	XMPPEngine *xmppEngine;
 	PlaceEngine *placeEngine;
@@ -65,5 +69,9 @@
 - (XMPPEngine *)xmppEngine;
 
 - (FollowingDataModel *)followingDataModel;
+
+- (void)checkF2FReachability;
+- (BOOL)isConnectionAvailable;
+- (void)updateReachability:(Reachability *)curReach;
 
 @end

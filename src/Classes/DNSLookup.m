@@ -58,7 +58,7 @@ id refToSelf;
 
 #include <dns_sd.h>
 #include <unistd.h>
-#include <DNSServiceDiscovery/DNSServiceDiscovery.h> // include Mach API to ensure no conflicts exist
+//#include <DNSServiceDiscovery/DNSServiceDiscovery.h> // include Mach API to ensure no conflicts exist
 #include <CoreFoundation/CoreFoundation.h>
 #include <sys/types.h>
 #include <sys/socket.h>

@@ -135,6 +135,7 @@ NSString * wilcardCanNotBeEmpty = @"wilcardCanNotBeEmpty";
 NSString * alertPrompt = @"alertPrompt";
 NSString * authenticationFailed = @"authenticationFailed";
 NSString * authenticatonFailedError = @"authenticatonFailedError";
+NSString * noInternetConnError = @"noInternetConnError";
 NSString * userNameConflictError = @"userNameConflictError";
 NSString * userNameLoggedInConflictError = @"userNameLoggedInConflictError";
 

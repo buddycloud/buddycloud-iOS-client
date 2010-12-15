@@ -74,6 +74,8 @@
 		6C4323D6127813F60080B39D /* TopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C4323BC127813F60080B39D /* TopicCell.xib */; };
 		6C4323D7127813F60080B39D /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6C4323BD127813F60080B39D /* Settings.bundle */; };
 		6C466A6B127B9F2500540493 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C466A6A127B9F2500540493 /* libidn.a */; };
+		6C59485312BA2BFE0064D9DB /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C59485212BA2BFE0064D9DB /* Reachability.m */; };
+		6C59488E12BA3DC40064D9DB /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C59488D12BA3DC40064D9DB /* LoginViewController.xib */; };
 		6C67E4731284C14B000F6353 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C67E4721284C14B000F6353 /* MediaPlayer.framework */; };
 		6C6ED557127E132F0005AFA1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6C6ED555127E132F0005AFA1 /* Localizable.strings */; };
 		6C8CE0E4127E01F500273690 /* extThree20CSSStyle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6C8CE0E3127E01F500273690 /* extThree20CSSStyle.bundle */; };
@@ -82,7 +84,6 @@
 		6C943AAE12B43C0E001ED920 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C943AAD12B43C0E001ED920 /* LoginViewController.m */; };
 		6C943AB112B43C40001ED920 /* CreateNewUserAcctViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C943AB012B43C40001ED920 /* CreateNewUserAcctViewController.m */; };
 		6C943AB412B43C94001ED920 /* UserAccountMsgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C943AB312B43C94001ED920 /* UserAccountMsgViewController.m */; };
-		6C943B3C12B44CB4001ED920 /* LoginViewcontroller.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C943B3B12B44CB4001ED920 /* LoginViewcontroller.xib */; };
 		6C943B3F12B44DE1001ED920 /* lightgreyBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C943B3E12B44DE1001ED920 /* lightgreyBtn.png */; };
 		6C943B4612B44EAD001ED920 /* transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C943B4512B44EAD001ED920 /* transparent.png */; };
 		6C943C5012B46EF5001ED920 /* simpleBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C943C4F12B46EF5001ED920 /* simpleBtn.png */; };
@@ -622,6 +623,9 @@
 		6C4323BD127813F60080B39D /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		6C466A6A127B9F2500540493 /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libidn.a; path = External_Libs/XMPP/libidn.a; sourceTree = "<group>"; };
 		6C466A77127B9F8000540493 /* Three20.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Three20.xcodeproj; path = three20/src/Three20/Three20.xcodeproj; sourceTree = "<group>"; };
+		6C59485112BA2BFE0064D9DB /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		6C59485212BA2BFE0064D9DB /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		6C59488D12BA3DC40064D9DB /* LoginViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		6C67E4721284C14B000F6353 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		6C6ED556127E132F0005AFA1 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6C6ED558127E136E0005AFA1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -634,7 +638,6 @@
 		6C943AB012B43C40001ED920 /* CreateNewUserAcctViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateNewUserAcctViewController.m; sourceTree = "<group>"; };
 		6C943AB212B43C94001ED920 /* UserAccountMsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserAccountMsgViewController.h; sourceTree = "<group>"; };
 		6C943AB312B43C94001ED920 /* UserAccountMsgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserAccountMsgViewController.m; sourceTree = "<group>"; };
-		6C943B3B12B44CB4001ED920 /* LoginViewcontroller.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewcontroller.xib; sourceTree = "<group>"; };
 		6C943B3E12B44DE1001ED920 /* lightgreyBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lightgreyBtn.png; sourceTree = "<group>"; };
 		6C943B4512B44EAD001ED920 /* transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = transparent.png; sourceTree = "<group>"; };
 		6C943C4F12B46EF5001ED920 /* simpleBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = simpleBtn.png; sourceTree = "<group>"; };
@@ -755,6 +758,7 @@
 				1D3623250D0F684500981E51 /* BuddycloudAppDelegate.m */,
 				6CA2A8E712B9D20F00CF2A6B /* DNSLookup.h */,
 				6CA2A8E812B9D20F00CF2A6B /* DNSLookup.m */,
+				6C59485012BA2BFE0064D9DB /* Reachability */,
 				6C9D571A12B591DF00B4AE2B /* Utilities */,
 				578B8AF9118313D500279015 /* Concepts */,
 				57368095116C87A3008DC56F /* Engines */,
@@ -1185,9 +1189,9 @@
 		6C4323B3127813F60080B39D /* Nibs */ = {
 			isa = PBXGroup;
 			children = (
+				6C59488D12BA3DC40064D9DB /* LoginViewController.xib */,
 				6C9D5A0312B5D89F00B4AE2B /* UserAccountMsgViewController.xib */,
 				6C943D3012B485C5001ED920 /* CreateNewUserAcctViewController.xib */,
-				6C943B3B12B44CB4001ED920 /* LoginViewcontroller.xib */,
 				6C99325F12B3A01F0033CC66 /* LoginServicesViewController.xib */,
 				6CDCDA06127D4A5000635A16 /* WelcomeViewcontroller.xib */,
 				6C4323B4127813F60080B39D /* ChannelView.xib */,
@@ -1200,6 +1204,15 @@
 				6C4323BC127813F60080B39D /* TopicCell.xib */,
 			);
 			path = Nibs;
+			sourceTree = "<group>";
+		};
+		6C59485012BA2BFE0064D9DB /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				6C59485112BA2BFE0064D9DB /* Reachability.h */,
+				6C59485212BA2BFE0064D9DB /* Reachability.m */,
+			);
+			path = Reachability;
 			sourceTree = "<group>";
 		};
 		6C6ED554127E132F0005AFA1 /* Localizations */ = {
@@ -1834,7 +1847,6 @@
 				6C1D4ECE127FE66A00CBFC87 /* bc.png in Resources */,
 				6C1D4ECF127FE66A00CBFC87 /* darkgreyBtn.png in Resources */,
 				6C99326012B3A01F0033CC66 /* LoginServicesViewController.xib in Resources */,
-				6C943B3C12B44CB4001ED920 /* LoginViewcontroller.xib in Resources */,
 				6C943B3F12B44DE1001ED920 /* lightgreyBtn.png in Resources */,
 				6C943B4612B44EAD001ED920 /* transparent.png in Resources */,
 				6C943C5012B46EF5001ED920 /* simpleBtn.png in Resources */,
@@ -1842,6 +1854,7 @@
 				6C943D7512B48FB0001ED920 /* error.png in Resources */,
 				6C943D7612B48FB0001ED920 /* help.png in Resources */,
 				6C9D5A0412B5D89F00B4AE2B /* UserAccountMsgViewController.xib in Resources */,
+				6C59488E12BA3DC40064D9DB /* LoginViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1910,6 +1923,7 @@
 				6C9D571D12B591DF00B4AE2B /* Util.m in Sources */,
 				6C9D572312B591FB00B4AE2B /* SpiralLoadingView.m in Sources */,
 				6CA2A8E912B9D20F00CF2A6B /* DNSLookup.m in Sources */,
+				6C59485312BA2BFE0064D9DB /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

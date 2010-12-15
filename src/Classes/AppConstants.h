@@ -147,6 +147,7 @@ extern NSString * wilcardCanNotBeEmpty;
 extern NSString * alertPrompt;
 extern NSString * authenticationFailed;
 extern NSString * authenticatonFailedError;
+extern NSString * noInternetConnError;
 extern NSString * userNameConflictError;
 extern NSString * userNameLoggedInConflictError;
 
