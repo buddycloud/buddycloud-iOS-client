@@ -13,6 +13,7 @@
 @class XMPPStream;
 @class XMPPRoster;
 @class XMPPPubsub;
+
 @class XMPPJID;
 @class XMPPIQ;
 @class FollowedItem;
@@ -26,8 +27,9 @@
 	XMPPStream *xmppStream;
 	XMPPRoster *xmppRoster;
 	XMPPPubsub *xmppPubsub;
-	
+
 	NSString *password;
+	BOOL isNewUserRegisteration;
 	
 	bool isConnectionCold;
 	bool isPubsubAddedToRoster;
@@ -39,6 +41,7 @@
 @property(nonatomic, retain) XMPPStream *xmppStream;
 @property(nonatomic, retain) XMPPRoster *xmppRoster;
 @property(nonatomic, retain) NSString *password;
+@property(nonatomic) BOOL isNewUserRegisteration;
 @property(readonly) superlong lastItemIdReceived;
 
 - (void)connect;

@@ -9,5 +9,6 @@
 	#import "AppConstants.h"
 	#import <Three20/Three20+Additions.h>
 	#import "extThree20CSSStyle/extThree20CSSStyle.h"
-
+	#import "XMPP.h"
+	#import "Events.h"
 #endif

@@ -16,12 +16,15 @@
  * with Buddycloud for iPhone. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#import <UIKit/UIKit.h>
-#import <Three20/Three20.h>
+//#include "DNSDiscoveryClient.c"
+
+//#import <UIKit/UIKit.h>
+//#import <Three20/Three20.h>
 
 int main(int argc, char *argv[])
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
 	int ret = UIApplicationMain(argc, argv, nil, @"BuddycloudAppDelegate");
 	[pool release];
 	return ret;

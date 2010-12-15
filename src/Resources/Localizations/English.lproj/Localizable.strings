@@ -8,16 +8,41 @@
    English Version!
  */
 
+"authenticating" = "Authenticating...";
 "browse" = "Browse";
 "buddycloud" = "Buddycloud";
 
 "channel" = "Channel";
+"chooseAWildCard" = "Choose a %@";
+"connecting" = "Connecting...";
+"createAccount" = "Create Account";
+"createBuddyCloudId" = "Create Buddycloud ID";
 
 "following" = "Following";
+"forgetPassword" = "Forget your login";
+
+"loading" = "Loading...";
+"loginAutomatically" = "Login automatically";
+"loginMsgTitle" = "Join buddycloud using an existing account.";
+"loginServicesListTitle" = "No need to create a new account, just log-in using any number of existing accounts.\nHow do you want to register?";
+
+"network1Label" = "Gmail / Gtalk";
+"network2Label" = "gmx.de";
+"network3Label" = "Livejournal";
+
+"password" = "password";
+"passwordTip" = "The password is used to connect to google. We will <b>never</b> ask you to send it to buddycloud.";
 
 "places" = "Places";
 
+"registerAcctMsg" = "Register an account on Buddycloud to get started";
+"registrationSuccess" = "Your are all done.";
+"registrationSuccessDesc" = "<p>your username and channel name is \n<span class='tipText'><b>%@</b></span></p>";
+
 "settings" = "Settings";
+
+"userName" = "username";
+"userNameTip" = "<b>your username looks like</b>\nd3minem@gmail.com\njohn.smith@googlemail.com\nfaderik@xmppserver.org";
 
 "welcome" = "Welcome";
 "welcomeMsg" = "Buddycloud let's you create your own channels, follow other channels and share your location online.";
@@ -25,5 +50,35 @@
 
 
 //Buttons
-"exploreBtnLabel" = "Explore";
+"cancelBtnLabel" = "Cancel";
+"createBtnLabel" = "Create";
+"createNewAcctBtnLabel" = "Create new account";
+
+"exploreBtnLabel" = "Explore Buddycloud";
+"exploreChannelsBtnLabel" = "Show me some channels to follow."; 
+
+"registerBtnLabel" = "Register";
 "joinBtnLabel" = "Join";
+
+"loginBtnLabel" = "Login";
+
+"okButtonLabel" = "Ok";
+"otherXmppAcctBtnLabel" = "Other xmpp account";
+
+
+
+//Warnings
+"registerToAddTopic" = "Please register yourself before add the new topic.";
+"registerToFollowNewChannel" = "Please register yourself before follow any new channel.";
+"registerToPostNewComment" = "Please register yourself to post new comment.";
+
+"usernameIsNotValid" = "%@ is not valid.";
+"wilcardCanNotBeEmpty" = "%@ can not be empty.";
+
+
+//Error
+"alertPrompt" = "Alert";
+"authenticationFailed" = "Authentication failed";
+"authenticatonFailedError" = "The client could not authenticate with the Buddycloud server.";
+"userNameConflictError" = "The username you entered has already been registered.";
+"userNameLoggedInConflictError" = "The username you entered has already been logged in.";

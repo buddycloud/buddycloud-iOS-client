@@ -26,4 +26,16 @@
 // Fires when the broad location of the user changes
 + (NSString *) BROAD_LOCATION_CHANGED;
 
+// Fires when the new user registration is successfull.
++ (NSString *) USER_REGISTRATION_SUCCESS;
+
+// Fires when the new user registration is failed.
++ (NSString *) USER_REGISTRATION_FAILED;
+
+// Fires when the user successfully logged in.
++ (NSString *) USER_LOGGED_IN_SUCCESS;
+
+// Fires when the user logged in failed.
++ (NSString *) USER_LOGGED_IN_FAILED;
+
 @end

@@ -42,6 +42,9 @@
 		self.navigationItem.title = title;
 		[self setNode: _node];
 		
+		[[TTNavigator navigator].URLMap from:kcreateNewAcctURLPath
+					   toModalViewController:[BuddycloudAppDelegate sharedAppDelegate] selector:@selector(createNewAccount)];
+		
 		followingData = [[[BuddycloudAppDelegate sharedAppDelegate] followingDataModel] retain];
 		xmppEngine = [[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine] retain];
 
@@ -54,6 +57,7 @@
 }
 
 - (void)dealloc {
+	[[TTNavigator navigator].URLMap removeURL:kcreateNewAcctURLPath];
 	[followingData removeDelegate: self];
 	
 	[postedItems release];
@@ -67,6 +71,24 @@
 
 - (void)addTopic
 {
+	UIAlertView *alertView = nil;
+	
+	//Check if user trying to add the topic with default BC user, then show an alert to please register urself.
+	NSString *tempDefaultJID = [[XMPPJID jidWithUser:XMPP_TEMP_DEFAULT_JID domain:XMPP_BC_DOMAIN resource:XMPP_BC_IPHONE_RESOURCE] full];
+	NSRange range = [[xmppEngine.xmppStream.myJID full] rangeOfString:tempDefaultJID options:NSLiteralSearch];
+	
+	//Before disconnect, check if it's not the same username through which it's already login.
+	if(range.location != NSNotFound && range.length > 0) {
+		alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
+												message:NSLocalizedString(registerToAddTopic, @"")
+											   delegate:self
+									  cancelButtonTitle:NSLocalizedString(cancelBtnLabel, @"")
+									  otherButtonTitles:NSLocalizedString(registerBtnLabel, @""), nil] autorelease];
+		[alertView show];
+		
+		return;
+	}
+		
 	selectedEntryId = 0;
 	
 	TextFieldAlertView *followView = [[TextFieldAlertView alloc] initWithTitle: NSLocalizedString(@"New topic", @"")  
@@ -84,6 +106,24 @@
 
 - (void)addComment:(UIButton *)sender
 {
+	UIAlertView *alertView = nil;
+	
+	//Check if user trying to add the topic with default BC user, then show an alert to please register urself.
+	NSString *tempDefaultJID = [[XMPPJID jidWithUser:XMPP_TEMP_DEFAULT_JID domain:XMPP_BC_DOMAIN resource:XMPP_BC_IPHONE_RESOURCE] full];
+	NSRange range = [[xmppEngine.xmppStream.myJID full] rangeOfString:tempDefaultJID options:NSLiteralSearch];
+	
+	//Before disconnect, check if it's not the same username through which it's already login.
+	if(range.location != NSNotFound && range.length > 0) {
+		alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
+												message:NSLocalizedString(registerToPostNewComment, @"")
+											   delegate:self
+									  cancelButtonTitle:NSLocalizedString(cancelBtnLabel, @"")
+									  otherButtonTitles:NSLocalizedString(registerBtnLabel, @""), nil] autorelease];
+		[alertView show];
+		
+		return;
+	}
+	
 	NSIndexPath *indexPath = [[self tableView] indexPathForCell: (UITableViewCell *)[[sender superview] superview]];
 	PostItem *postItem = [postedItems objectAtIndex: indexPath.row];
 	
@@ -104,15 +144,29 @@
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
 {
 	if (buttonIndex != [alertView cancelButtonIndex]) {
-		// Post new topic to channel
-		[xmppEngine postChannelText: [(TextFieldAlertView *)alertView enteredText] toNode: node inReplyTo: selectedEntryId];
+		if ([alertView.message isEqualToString:NSLocalizedString(registerToAddTopic, @"")] || 
+			[alertView.message isEqualToString:NSLocalizedString(registerToPostNewComment, @"")] ) {
+			//Push the user to register screen.
+			[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kcreateNewAcctURLPath]];
+		}
+		else {
+			// Post new topic to channel
+			[xmppEngine postChannelText: [(TextFieldAlertView *)alertView enteredText] toNode: node inReplyTo: selectedEntryId];
+		}
 	}
 }
 
+- (void)viewWillAppear:(BOOL)flag {
+    [super viewWillAppear:flag];
+	
+
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	
+
+	self.tableView.frame = CGRectMake(0, 0, self.view.width, self.view.bottom - 200.0);
+
 	// Add post topic button
 	UIBarButtonItem *topicButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemCompose 
 																			   target: self 

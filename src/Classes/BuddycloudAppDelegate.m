@@ -32,6 +32,7 @@
 @synthesize window;
 @synthesize followingTableView, postsTableView;
 @synthesize followingController, settingsController;
+@synthesize spiralLoadingView;
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
@@ -46,11 +47,10 @@
 
 - (BOOL)application: (UIApplication*)application didFinishLaunchingWithOptions: (NSDictionary*)launchOptions
 {
-	
 	// Engines
 	xmppEngine = [[XMPPEngine alloc] init];
 	[xmppEngine setPassword: XMPP_TEMP_DEFAULT_PASSWORD];
-		
+
 	placeEngine = [[PlaceEngine alloc] initWithStream: [xmppEngine xmppStream] toServer: PLACE_ENGINE_SERVER];
 	
 	//Initialize the UI Settings.
@@ -59,17 +59,15 @@
 	// Start connection
 	[xmppEngine connect];
 	
+	
+	//DNSLookup *lookup = [[DNSLookup alloc] init];
+	//[lookup queryServiceNameDNSLookUp];
+
+	
+	
 	return YES;
 }
 
-- (void)connectXMPPEngine {
-	@try {
-		
-	}
-	@catch (NSException * e) {
-		NSLog(@"Exception : %@", [e description]);
-	}
-}
 
 - (void)initializeUI {
 	
@@ -78,6 +76,8 @@
 		[styleSheet addStyleSheetFromDisk:TTPathForBundleResource(@"stylesheet.css")];
 		[TTStyleSheet setGlobalStyleSheet:styleSheet];
 		TT_RELEASE_SAFELY(styleSheet);
+		
+		spiralLoadingView = [[SpiralLoadingView alloc] init];
 		
 		//Load all the mapping urls.
 		[self loadAllMappedUrls];
@@ -121,9 +121,17 @@
 - (void)dealloc
 {
 	[window release];
+	[spiralLoadingView release];
 	
 	[super dealloc];
 }
+
+
+- (UIViewController *)createNewAccount {
+	CreateNewUserAcctViewController *createNewUserAcctViewController = [[[CreateNewUserAcctViewController alloc] initWithTitle:NSLocalizedString(createAccount, @"")] autorelease];
+	return createNewUserAcctViewController;
+}
+
 
 /*
  * Shared App Delegate.

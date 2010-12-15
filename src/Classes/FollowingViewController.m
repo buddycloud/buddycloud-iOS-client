@@ -26,6 +26,9 @@
 		followingList = [dataModel retain];
 		[self setOrderedKeys: [followingList orderKeysByUpdated]];
 		
+		[[TTNavigator navigator].URLMap from:kcreateNewAcctURLPath
+					   toModalViewController:[BuddycloudAppDelegate sharedAppDelegate] selector:@selector(createNewAccount)];
+		
 		[[NSNotificationCenter defaultCenter] addObserver: self
 												 selector: @selector(onFollowingListUpdated)
 													 name: [Events FOLLOWINGLIST_UPDATED]
@@ -48,6 +51,7 @@
 
 - (void)dealloc
 {
+	[[TTNavigator navigator].URLMap removeURL:kcreateNewAcctURLPath];
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
 	
 	[followingList release];
@@ -58,6 +62,25 @@
 
 - (void)onAddButton
 {
+	XMPPEngine *xmppEngine = (XMPPEngine *)[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
+	UIAlertView *alertView = nil;
+	
+	//Check if user trying to add the topic with default BC user, then show an alert to please register urself.
+	NSString *tempDefaultJID = [[XMPPJID jidWithUser:XMPP_TEMP_DEFAULT_JID domain:XMPP_BC_DOMAIN resource:XMPP_BC_IPHONE_RESOURCE] full];
+	NSRange range = [[xmppEngine.xmppStream.myJID full] rangeOfString:tempDefaultJID options:NSLiteralSearch];
+	
+	//Before disconnect, check if it's not the same username through which it's already login.
+	if(range.location != NSNotFound && range.length > 0) {
+		alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
+												message:NSLocalizedString(registerToFollowNewChannel, @"")
+											   delegate:self
+									  cancelButtonTitle:NSLocalizedString(cancelBtnLabel, @"")
+									  otherButtonTitles:NSLocalizedString(registerBtnLabel, @""), nil] autorelease];
+		[alertView show];
+		
+		return;
+	}
+	
 	TextFieldAlertView *followView = [[TextFieldAlertView alloc] initWithTitle: NSLocalizedString(@"Add following", @"")  
 																	   message: NSLocalizedString(@"Enter Jabber or #Channel ID", @"") 
 																	  delegate: self 
@@ -74,8 +97,15 @@
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex
 {
 	if (buttonIndex != [alertView cancelButtonIndex]) {
-		// User adds an item to follow
-		[followingList followItem: [(TextFieldAlertView *)alertView enteredText]];
+		
+		if ([alertView.message isEqualToString:NSLocalizedString(registerToFollowNewChannel, @"")]) {
+			//Push the user to register screen.
+			[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kcreateNewAcctURLPath]];
+		}
+		else {
+			// User adds an item to follow
+			[followingList followItem: [(TextFieldAlertView *)alertView enteredText]];
+		}
 	}
 }
 

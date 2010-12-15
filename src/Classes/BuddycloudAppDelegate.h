@@ -24,14 +24,17 @@
 #import "TabBarController.h"
 #import "SettingsViewController.h" 
 #import "MenuController.h" 
+#import "SpiralLoadingView.h"
 #import "WelcomeViewController.h"
 #import "PostsViewController.h"
+#import "LoginServicesViewController.h"
+#import "LoginViewController.h"
+#import "CreateNewUserAcctViewController.h"
 
 @class XMPPEngine;
 @class PlaceEngine;
 @class FollowingDataModel;
 @class FollowingViewController;
-
 
 @interface BuddycloudAppDelegate: NSObject <UIApplicationDelegate>
 {
@@ -42,7 +45,7 @@
 	
 	XMPPEngine *xmppEngine;
 	PlaceEngine *placeEngine;
-	
+	SpiralLoadingView *spiralLoadingView;
 }
 
 @property(nonatomic, retain) IBOutlet UIWindow *window;
@@ -50,9 +53,12 @@
 @property(nonatomic, retain) IBOutlet UITableView *postsTableView;
 @property(nonatomic, retain) SettingsViewController *settingsController;
 @property(nonatomic, retain) FollowingViewController *followingController;
+@property(nonatomic, retain) SpiralLoadingView *spiralLoadingView;
 
 - (void)initializeUI;
 - (void)loadAllMappedUrls;
+- (UIViewController *)createNewAccount;
+
 
 + (BuddycloudAppDelegate *)sharedAppDelegate;
 

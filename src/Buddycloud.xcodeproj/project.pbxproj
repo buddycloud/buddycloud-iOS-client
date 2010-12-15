@@ -79,17 +79,35 @@
 		6C8CE0E4127E01F500273690 /* extThree20CSSStyle.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6C8CE0E3127E01F500273690 /* extThree20CSSStyle.bundle */; };
 		6C8CE0F7127E022700273690 /* libextThree20CSSStyle.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C8CE0D8127E01CA00273690 /* libextThree20CSSStyle.a */; };
 		6C8CE0FB127E029300273690 /* stylesheet.css in Resources */ = {isa = PBXBuildFile; fileRef = 6C8CE0FA127E029300273690 /* stylesheet.css */; };
+		6C943AAE12B43C0E001ED920 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C943AAD12B43C0E001ED920 /* LoginViewController.m */; };
+		6C943AB112B43C40001ED920 /* CreateNewUserAcctViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C943AB012B43C40001ED920 /* CreateNewUserAcctViewController.m */; };
+		6C943AB412B43C94001ED920 /* UserAccountMsgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C943AB312B43C94001ED920 /* UserAccountMsgViewController.m */; };
+		6C943B3C12B44CB4001ED920 /* LoginViewcontroller.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C943B3B12B44CB4001ED920 /* LoginViewcontroller.xib */; };
+		6C943B3F12B44DE1001ED920 /* lightgreyBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C943B3E12B44DE1001ED920 /* lightgreyBtn.png */; };
+		6C943B4612B44EAD001ED920 /* transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C943B4512B44EAD001ED920 /* transparent.png */; };
+		6C943C5012B46EF5001ED920 /* simpleBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C943C4F12B46EF5001ED920 /* simpleBtn.png */; };
+		6C943D3112B485C5001ED920 /* CreateNewUserAcctViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C943D3012B485C5001ED920 /* CreateNewUserAcctViewController.xib */; };
+		6C943D7512B48FB0001ED920 /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C943D7312B48FB0001ED920 /* error.png */; };
+		6C943D7612B48FB0001ED920 /* help.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C943D7412B48FB0001ED920 /* help.png */; };
+		6C992E6912B33C1A0033CC66 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C992E6812B33C1A0033CC66 /* WelcomeViewController.m */; };
+		6C992F1512B354920033CC66 /* TURNSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C992F1012B354920033CC66 /* TURNSocket.m */; };
+		6C992F1612B354920033CC66 /* XMPPTransports.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C992F1312B354920033CC66 /* XMPPTransports.m */; };
+		6C992F1A12B354CB0033CC66 /* XMPPPubsub.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C992F1912B354CB0033CC66 /* XMPPPubsub.m */; };
+		6C992F1F12B355390033CC66 /* XMPPInBandReg.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C992F1E12B355390033CC66 /* XMPPInBandReg.m */; };
+		6C99306D12B38A3D0033CC66 /* LoginServicesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C99306C12B38A3D0033CC66 /* LoginServicesViewController.m */; };
+		6C99326012B3A01F0033CC66 /* LoginServicesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C99325F12B3A01F0033CC66 /* LoginServicesViewController.xib */; };
+		6C9D571D12B591DF00B4AE2B /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D571C12B591DF00B4AE2B /* Util.m */; };
+		6C9D572312B591FB00B4AE2B /* SpiralLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C9D572212B591FB00B4AE2B /* SpiralLoadingView.m */; };
+		6C9D5A0412B5D89F00B4AE2B /* UserAccountMsgViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C9D5A0312B5D89F00B4AE2B /* UserAccountMsgViewController.xib */; };
+		6CA2A8E912B9D20F00CF2A6B /* DNSLookup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CA2A8E812B9D20F00CF2A6B /* DNSLookup.m */; };
 		6CB7F0C4127CF59000596CBC /* App.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6CB7F0C0127CF59000596CBC /* App.xcconfig */; };
 		6CB7F0C5127CF59000596CBC /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6CB7F0C1127CF59000596CBC /* Project.xcconfig */; };
 		6CB7F0C6127CF59000596CBC /* RelPath.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6CB7F0C2127CF59000596CBC /* RelPath.xcconfig */; };
 		6CB7F0C7127CF59000596CBC /* UnitTests.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6CB7F0C3127CF59000596CBC /* UnitTests.xcconfig */; };
 		6CDCDA07127D4A5000635A16 /* WelcomeViewcontroller.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CDCDA06127D4A5000635A16 /* WelcomeViewcontroller.xib */; };
-		6CDCDA0B127D510E00635A16 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CDCDA0A127D510E00635A16 /* WelcomeViewController.m */; };
 		6CF70C181276A160004874E4 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CF70C171276A160004874E4 /* libxml2.dylib */; };
 		6CF70C1A1276A174004874E4 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CF70C191276A174004874E4 /* libresolv.dylib */; };
-		6CF70C4D1276B64F004874E4 /* XMPPTransports.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C4C1276B64F004874E4 /* XMPPTransports.m */; };
 		6CF70C531276B67D004874E4 /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C501276B67D004874E4 /* DDNumber.m */; };
-		6CF70C541276B67D004874E4 /* TURNSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C521276B67D004874E4 /* TURNSocket.m */; };
 		6CF70C681276B6E5004874E4 /* XMPPElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C571276B6E5004874E4 /* XMPPElement.m */; };
 		6CF70C691276B6E5004874E4 /* XMPPIQ.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C591276B6E5004874E4 /* XMPPIQ.m */; };
 		6CF70C6A1276B6E5004874E4 /* XMPPJID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C5B1276B6E5004874E4 /* XMPPJID.m */; };
@@ -106,12 +124,10 @@
 		6CF70C811276B758004874E4 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C801276B758004874E4 /* AsyncSocket.m */; };
 		6CF70C831276B7A6004874E4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C821276B7A6004874E4 /* main.m */; };
 		6CF70C861276B7EA004874E4 /* XMPPRoster.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C851276B7EA004874E4 /* XMPPRoster.m */; };
-		6CF70C891276B816004874E4 /* XMPPPubsub.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C881276B816004874E4 /* XMPPPubsub.m */; };
 		6CF70CCF1276B8C7004874E4 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C901276B8C7004874E4 /* DDXMLDocument.m */; };
 		6CF70CD01276B8C7004874E4 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C921276B8C7004874E4 /* DDXMLElement.m */; };
 		6CF70CD11276B8C7004874E4 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C941276B8C7004874E4 /* DDXMLNode.m */; };
 		6CF70CD21276B8C7004874E4 /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF70C971276B8C7004874E4 /* NSStringAdditions.m */; };
-		B5731EE111F878E100A4A82A /* Util.m in Sources */ = {isa = PBXBuildFile; fileRef = B5731EE011F878E100A4A82A /* Util.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -612,22 +628,49 @@
 		6C8CE0C7127E01CA00273690 /* extThree20CSSStyle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = extThree20CSSStyle.xcodeproj; path = three20/src/extThree20CSSStyle/extThree20CSSStyle.xcodeproj; sourceTree = "<group>"; };
 		6C8CE0E3127E01F500273690 /* extThree20CSSStyle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = extThree20CSSStyle.bundle; path = three20/src/extThree20CSSStyle/Resources/extThree20CSSStyle.bundle; sourceTree = "<group>"; };
 		6C8CE0FA127E029300273690 /* stylesheet.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = stylesheet.css; path = Resources/stylesheet.css; sourceTree = SOURCE_ROOT; };
+		6C943AAC12B43C0E001ED920 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		6C943AAD12B43C0E001ED920 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		6C943AAF12B43C40001ED920 /* CreateNewUserAcctViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateNewUserAcctViewController.h; sourceTree = "<group>"; };
+		6C943AB012B43C40001ED920 /* CreateNewUserAcctViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateNewUserAcctViewController.m; sourceTree = "<group>"; };
+		6C943AB212B43C94001ED920 /* UserAccountMsgViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserAccountMsgViewController.h; sourceTree = "<group>"; };
+		6C943AB312B43C94001ED920 /* UserAccountMsgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserAccountMsgViewController.m; sourceTree = "<group>"; };
+		6C943B3B12B44CB4001ED920 /* LoginViewcontroller.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginViewcontroller.xib; sourceTree = "<group>"; };
+		6C943B3E12B44DE1001ED920 /* lightgreyBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lightgreyBtn.png; sourceTree = "<group>"; };
+		6C943B4512B44EAD001ED920 /* transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = transparent.png; sourceTree = "<group>"; };
+		6C943C4F12B46EF5001ED920 /* simpleBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = simpleBtn.png; sourceTree = "<group>"; };
+		6C943D3012B485C5001ED920 /* CreateNewUserAcctViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreateNewUserAcctViewController.xib; sourceTree = "<group>"; };
+		6C943D7312B48FB0001ED920 /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error.png; sourceTree = "<group>"; };
+		6C943D7412B48FB0001ED920 /* help.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help.png; sourceTree = "<group>"; };
+		6C992E6712B33C1A0033CC66 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
+		6C992E6812B33C1A0033CC66 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
+		6C992F0F12B354920033CC66 /* TURNSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TURNSocket.h; sourceTree = "<group>"; };
+		6C992F1012B354920033CC66 /* TURNSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TURNSocket.m; sourceTree = "<group>"; };
+		6C992F1212B354920033CC66 /* XMPPTransports.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPTransports.h; sourceTree = "<group>"; };
+		6C992F1312B354920033CC66 /* XMPPTransports.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPTransports.m; sourceTree = "<group>"; };
+		6C992F1812B354CB0033CC66 /* XMPPPubsub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPubsub.h; sourceTree = "<group>"; };
+		6C992F1912B354CB0033CC66 /* XMPPPubsub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPubsub.m; sourceTree = "<group>"; };
+		6C992F1D12B355390033CC66 /* XMPPInBandReg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPInBandReg.h; sourceTree = "<group>"; };
+		6C992F1E12B355390033CC66 /* XMPPInBandReg.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPInBandReg.m; sourceTree = "<group>"; };
+		6C99306B12B38A3D0033CC66 /* LoginServicesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginServicesViewController.h; sourceTree = "<group>"; };
+		6C99306C12B38A3D0033CC66 /* LoginServicesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginServicesViewController.m; sourceTree = "<group>"; };
+		6C99325F12B3A01F0033CC66 /* LoginServicesViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoginServicesViewController.xib; sourceTree = "<group>"; };
+		6C9D571B12B591DF00B4AE2B /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
+		6C9D571C12B591DF00B4AE2B /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
+		6C9D572112B591FB00B4AE2B /* SpiralLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpiralLoadingView.h; sourceTree = "<group>"; };
+		6C9D572212B591FB00B4AE2B /* SpiralLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpiralLoadingView.m; sourceTree = "<group>"; };
+		6C9D5A0312B5D89F00B4AE2B /* UserAccountMsgViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserAccountMsgViewController.xib; sourceTree = "<group>"; };
+		6CA2A8E712B9D20F00CF2A6B /* DNSLookup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DNSLookup.h; sourceTree = "<group>"; };
+		6CA2A8E812B9D20F00CF2A6B /* DNSLookup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DNSLookup.m; sourceTree = "<group>"; };
 		6CB7F0C0127CF59000596CBC /* App.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = App.xcconfig; sourceTree = "<group>"; };
 		6CB7F0C1127CF59000596CBC /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		6CB7F0C2127CF59000596CBC /* RelPath.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = RelPath.xcconfig; sourceTree = "<group>"; };
 		6CB7F0C3127CF59000596CBC /* UnitTests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = UnitTests.xcconfig; sourceTree = "<group>"; };
 		6CDCDA06127D4A5000635A16 /* WelcomeViewcontroller.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WelcomeViewcontroller.xib; sourceTree = "<group>"; };
-		6CDCDA09127D510E00635A16 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
-		6CDCDA0A127D510E00635A16 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
 		6CF70C171276A160004874E4 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		6CF70C191276A174004874E4 /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
-		6CF70C4B1276B64F004874E4 /* XMPPTransports.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPTransports.h; sourceTree = "<group>"; };
-		6CF70C4C1276B64F004874E4 /* XMPPTransports.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPTransports.m; sourceTree = "<group>"; };
 		6CF70C4E1276B67D004874E4 /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLog.h; sourceTree = "<group>"; };
 		6CF70C4F1276B67D004874E4 /* DDNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDNumber.h; sourceTree = "<group>"; };
 		6CF70C501276B67D004874E4 /* DDNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDNumber.m; sourceTree = "<group>"; };
-		6CF70C511276B67D004874E4 /* TURNSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TURNSocket.h; sourceTree = "<group>"; };
-		6CF70C521276B67D004874E4 /* TURNSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TURNSocket.m; sourceTree = "<group>"; };
 		6CF70C551276B6E5004874E4 /* XMPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPP.h; sourceTree = "<group>"; };
 		6CF70C561276B6E5004874E4 /* XMPPElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPElement.h; sourceTree = "<group>"; };
 		6CF70C571276B6E5004874E4 /* XMPPElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPElement.m; sourceTree = "<group>"; };
@@ -662,8 +705,6 @@
 		6CF70C821276B7A6004874E4 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
 		6CF70C841276B7EA004874E4 /* XMPPRoster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPRoster.h; path = External_Libs/XMPP/XMPPRoster.h; sourceTree = "<group>"; };
 		6CF70C851276B7EA004874E4 /* XMPPRoster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPRoster.m; path = External_Libs/XMPP/XMPPRoster.m; sourceTree = "<group>"; };
-		6CF70C871276B816004874E4 /* XMPPPubsub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPPubsub.h; path = XMPP/XMPPPubsub.h; sourceTree = "<group>"; };
-		6CF70C881276B816004874E4 /* XMPPPubsub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPPubsub.m; path = XMPP/XMPPPubsub.m; sourceTree = "<group>"; };
 		6CF70C8E1276B8C7004874E4 /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
 		6CF70C8F1276B8C7004874E4 /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
 		6CF70C901276B8C7004874E4 /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
@@ -674,8 +715,6 @@
 		6CF70C951276B8C7004874E4 /* DDXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLPrivate.h; sourceTree = "<group>"; };
 		6CF70C961276B8C7004874E4 /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSStringAdditions.h; sourceTree = "<group>"; };
 		6CF70C971276B8C7004874E4 /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSStringAdditions.m; sourceTree = "<group>"; };
-		B5731EDF11F878E100A4A82A /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
-		B5731EE011F878E100A4A82A /* Util.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Util.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -714,12 +753,14 @@
 			children = (
 				1D3623240D0F684500981E51 /* BuddycloudAppDelegate.h */,
 				1D3623250D0F684500981E51 /* BuddycloudAppDelegate.m */,
+				6CA2A8E712B9D20F00CF2A6B /* DNSLookup.h */,
+				6CA2A8E812B9D20F00CF2A6B /* DNSLookup.m */,
+				6C9D571A12B591DF00B4AE2B /* Utilities */,
 				578B8AF9118313D500279015 /* Concepts */,
 				57368095116C87A3008DC56F /* Engines */,
 				57763E29118EBC230005AE99 /* Data Models */,
 				5736814F116CA80F008DC56F /* UI */,
 				57763DED1187529D0005AE99 /* XMPP Adaptions */,
-				6CF70C8A1276B844004874E4 /* Util */,
 				6CF70C8B1276B891004874E4 /* App Constants */,
 			);
 			path = Classes;
@@ -794,6 +835,7 @@
 			isa = PBXGroup;
 			children = (
 				6C0681C9127BF99A0078530F /* Menu */,
+				6C992E6612B33C1A0033CC66 /* Login */,
 				57368150116CA838008DC56F /* FollowingViewController.h */,
 				57368151116CA838008DC56F /* FollowingViewController.m */,
 				5731AF991170E05800F97613 /* SettingsViewController.h */,
@@ -812,20 +854,8 @@
 				577A13D811AD4E76006B1701 /* PostsViewController.m */,
 				577A141B11AD82F6006B1701 /* PostCellController.h */,
 				577A141C11AD82F6006B1701 /* PostCellController.m */,
-				6CDCDA09127D510E00635A16 /* WelcomeViewController.h */,
-				6CDCDA0A127D510E00635A16 /* WelcomeViewController.m */,
 			);
 			name = UI;
-			sourceTree = "<group>";
-		};
-		57763CDB1185FC8B0005AE99 /* XEP-0060 */ = {
-			isa = PBXGroup;
-			children = (
-				6CF70C871276B816004874E4 /* XMPPPubsub.h */,
-				6CF70C881276B816004874E4 /* XMPPPubsub.m */,
-			);
-			name = "XEP-0060";
-			path = ..;
 			sourceTree = "<group>";
 		};
 		57763DED1187529D0005AE99 /* XMPP Adaptions */ = {
@@ -840,7 +870,8 @@
 		57763DEE118752B50005AE99 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				57763CDB1185FC8B0005AE99 /* XEP-0060 */,
+				6C992F1C12B355390033CC66 /* XEP-0077 */,
+				6C992F1712B354CB0033CC66 /* XEP-0060 */,
 			);
 			name = Extensions;
 			path = ../External_Libs/XMPP;
@@ -889,7 +920,7 @@
 		57DD027D1185D8AF00CC00D1 /* XMPP */ = {
 			isa = PBXGroup;
 			children = (
-				57DD02AC1185D8AF00CC00D1 /* Extensions */,
+				6C992F0A12B354920033CC66 /* Extensions */,
 				57DD028A1185D8AF00CC00D1 /* Core */,
 				57DD02831185D8AF00CC00D1 /* Utilities */,
 				57DD027E1185D8AF00CC00D1 /* Categories */,
@@ -924,6 +955,9 @@
 		57DD028A1185D8AF00CC00D1 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				6CF70C4E1276B67D004874E4 /* DDLog.h */,
+				6CF70C4F1276B67D004874E4 /* DDNumber.h */,
+				6CF70C501276B67D004874E4 /* DDNumber.m */,
 				6CF70C551276B6E5004874E4 /* XMPP.h */,
 				6CF70C561276B6E5004874E4 /* XMPPElement.h */,
 				6CF70C571276B6E5004874E4 /* XMPPElement.m */,
@@ -955,36 +989,6 @@
 			);
 			name = Roster;
 			path = ..;
-			sourceTree = "<group>";
-		};
-		57DD02AC1185D8AF00CC00D1 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				57DD02B31185D8AF00CC00D1 /* XEP-0100 */,
-				57DD02AD1185D8AF00CC00D1 /* XEP-0065 */,
-			);
-			name = Extensions;
-			sourceTree = "<group>";
-		};
-		57DD02AD1185D8AF00CC00D1 /* XEP-0065 */ = {
-			isa = PBXGroup;
-			children = (
-				6CF70C4E1276B67D004874E4 /* DDLog.h */,
-				6CF70C4F1276B67D004874E4 /* DDNumber.h */,
-				6CF70C501276B67D004874E4 /* DDNumber.m */,
-				6CF70C511276B67D004874E4 /* TURNSocket.h */,
-				6CF70C521276B67D004874E4 /* TURNSocket.m */,
-			);
-			name = "XEP-0065";
-			sourceTree = "<group>";
-		};
-		57DD02B31185D8AF00CC00D1 /* XEP-0100 */ = {
-			isa = PBXGroup;
-			children = (
-				6CF70C4B1276B64F004874E4 /* XMPPTransports.h */,
-				6CF70C4C1276B64F004874E4 /* XMPPTransports.m */,
-			);
-			name = "XEP-0100";
 			sourceTree = "<group>";
 		};
 		6C068008127BEE670078530F /* Three20 */ = {
@@ -1140,6 +1144,10 @@
 		6C4323A3127813F60080B39D /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				6C943D7212B48FB0001ED920 /* assets */,
+				6C943C4F12B46EF5001ED920 /* simpleBtn.png */,
+				6C943B4512B44EAD001ED920 /* transparent.png */,
+				6C943B3E12B44DE1001ED920 /* lightgreyBtn.png */,
 				6C1D4ECC127FE66A00CBFC87 /* bc.png */,
 				6C1D4ECD127FE66A00CBFC87 /* darkgreyBtn.png */,
 				6C4323A4127813F60080B39D /* channel.png */,
@@ -1177,6 +1185,10 @@
 		6C4323B3127813F60080B39D /* Nibs */ = {
 			isa = PBXGroup;
 			children = (
+				6C9D5A0312B5D89F00B4AE2B /* UserAccountMsgViewController.xib */,
+				6C943D3012B485C5001ED920 /* CreateNewUserAcctViewController.xib */,
+				6C943B3B12B44CB4001ED920 /* LoginViewcontroller.xib */,
+				6C99325F12B3A01F0033CC66 /* LoginServicesViewController.xib */,
 				6CDCDA06127D4A5000635A16 /* WelcomeViewcontroller.xib */,
 				6C4323B4127813F60080B39D /* ChannelView.xib */,
 				6C4323B5127813F60080B39D /* FollowerCell.xib */,
@@ -1220,6 +1232,90 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6C943D7212B48FB0001ED920 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				6C943D7312B48FB0001ED920 /* error.png */,
+				6C943D7412B48FB0001ED920 /* help.png */,
+			);
+			path = assets;
+			sourceTree = "<group>";
+		};
+		6C992E6612B33C1A0033CC66 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				6C992E6712B33C1A0033CC66 /* WelcomeViewController.h */,
+				6C992E6812B33C1A0033CC66 /* WelcomeViewController.m */,
+				6C99306B12B38A3D0033CC66 /* LoginServicesViewController.h */,
+				6C99306C12B38A3D0033CC66 /* LoginServicesViewController.m */,
+				6C943AAC12B43C0E001ED920 /* LoginViewController.h */,
+				6C943AAD12B43C0E001ED920 /* LoginViewController.m */,
+				6C943AAF12B43C40001ED920 /* CreateNewUserAcctViewController.h */,
+				6C943AB012B43C40001ED920 /* CreateNewUserAcctViewController.m */,
+				6C943AB212B43C94001ED920 /* UserAccountMsgViewController.h */,
+				6C943AB312B43C94001ED920 /* UserAccountMsgViewController.m */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		6C992F0A12B354920033CC66 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6C992F0E12B354920033CC66 /* XEP-0065 */,
+				6C992F1112B354920033CC66 /* XEP-0100 */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		6C992F0E12B354920033CC66 /* XEP-0065 */ = {
+			isa = PBXGroup;
+			children = (
+				6C992F0F12B354920033CC66 /* TURNSocket.h */,
+				6C992F1012B354920033CC66 /* TURNSocket.m */,
+			);
+			path = "XEP-0065";
+			sourceTree = "<group>";
+		};
+		6C992F1112B354920033CC66 /* XEP-0100 */ = {
+			isa = PBXGroup;
+			children = (
+				6C992F1212B354920033CC66 /* XMPPTransports.h */,
+				6C992F1312B354920033CC66 /* XMPPTransports.m */,
+			);
+			path = "XEP-0100";
+			sourceTree = "<group>";
+		};
+		6C992F1712B354CB0033CC66 /* XEP-0060 */ = {
+			isa = PBXGroup;
+			children = (
+				6C992F1812B354CB0033CC66 /* XMPPPubsub.h */,
+				6C992F1912B354CB0033CC66 /* XMPPPubsub.m */,
+			);
+			name = "XEP-0060";
+			path = "Extensions/XEP-0060";
+			sourceTree = "<group>";
+		};
+		6C992F1C12B355390033CC66 /* XEP-0077 */ = {
+			isa = PBXGroup;
+			children = (
+				6C992F1D12B355390033CC66 /* XMPPInBandReg.h */,
+				6C992F1E12B355390033CC66 /* XMPPInBandReg.m */,
+			);
+			name = "XEP-0077";
+			path = "Extensions/XEP-0077";
+			sourceTree = "<group>";
+		};
+		6C9D571A12B591DF00B4AE2B /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				6C9D571B12B591DF00B4AE2B /* Util.h */,
+				6C9D571C12B591DF00B4AE2B /* Util.m */,
+				6C9D572112B591FB00B4AE2B /* SpiralLoadingView.h */,
+				6C9D572212B591FB00B4AE2B /* SpiralLoadingView.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		6CB7F0BF127CF59000596CBC /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
@@ -1230,15 +1326,6 @@
 			);
 			name = Configurations;
 			path = three20/Configurations;
-			sourceTree = "<group>";
-		};
-		6CF70C8A1276B844004874E4 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				B5731EDF11F878E100A4A82A /* Util.h */,
-				B5731EE011F878E100A4A82A /* Util.m */,
-			);
-			name = Util;
 			sourceTree = "<group>";
 		};
 		6CF70C8B1276B891004874E4 /* App Constants */ = {
@@ -1316,6 +1403,7 @@
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Buddycloud" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -1745,6 +1833,15 @@
 				6C6ED557127E132F0005AFA1 /* Localizable.strings in Resources */,
 				6C1D4ECE127FE66A00CBFC87 /* bc.png in Resources */,
 				6C1D4ECF127FE66A00CBFC87 /* darkgreyBtn.png in Resources */,
+				6C99326012B3A01F0033CC66 /* LoginServicesViewController.xib in Resources */,
+				6C943B3C12B44CB4001ED920 /* LoginViewcontroller.xib in Resources */,
+				6C943B3F12B44DE1001ED920 /* lightgreyBtn.png in Resources */,
+				6C943B4612B44EAD001ED920 /* transparent.png in Resources */,
+				6C943C5012B46EF5001ED920 /* simpleBtn.png in Resources */,
+				6C943D3112B485C5001ED920 /* CreateNewUserAcctViewController.xib in Resources */,
+				6C943D7512B48FB0001ED920 /* error.png in Resources */,
+				6C943D7612B48FB0001ED920 /* help.png in Resources */,
+				6C9D5A0412B5D89F00B4AE2B /* UserAccountMsgViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1777,10 +1874,7 @@
 				577A11CC11A81388006B1701 /* PostItem.m in Sources */,
 				577A13DA11AD4E76006B1701 /* PostsViewController.m in Sources */,
 				577A141D11AD82F6006B1701 /* PostCellController.m in Sources */,
-				B5731EE111F878E100A4A82A /* Util.m in Sources */,
-				6CF70C4D1276B64F004874E4 /* XMPPTransports.m in Sources */,
 				6CF70C531276B67D004874E4 /* DDNumber.m in Sources */,
-				6CF70C541276B67D004874E4 /* TURNSocket.m in Sources */,
 				6CF70C681276B6E5004874E4 /* XMPPElement.m in Sources */,
 				6CF70C691276B6E5004874E4 /* XMPPIQ.m in Sources */,
 				6CF70C6A1276B6E5004874E4 /* XMPPJID.m in Sources */,
@@ -1797,7 +1891,6 @@
 				6CF70C811276B758004874E4 /* AsyncSocket.m in Sources */,
 				6CF70C831276B7A6004874E4 /* main.m in Sources */,
 				6CF70C861276B7EA004874E4 /* XMPPRoster.m in Sources */,
-				6CF70C891276B816004874E4 /* XMPPPubsub.m in Sources */,
 				6CF70CCF1276B8C7004874E4 /* DDXMLDocument.m in Sources */,
 				6CF70CD01276B8C7004874E4 /* DDXMLElement.m in Sources */,
 				6CF70CD11276B8C7004874E4 /* DDXMLNode.m in Sources */,
@@ -1805,7 +1898,18 @@
 				6C43221C1277FA9A0080B39D /* AppConstants.m in Sources */,
 				6C0681CC127BF9C50078530F /* TabBarController.m in Sources */,
 				6C068472127C154E0078530F /* MenuController.m in Sources */,
-				6CDCDA0B127D510E00635A16 /* WelcomeViewController.m in Sources */,
+				6C992E6912B33C1A0033CC66 /* WelcomeViewController.m in Sources */,
+				6C992F1512B354920033CC66 /* TURNSocket.m in Sources */,
+				6C992F1612B354920033CC66 /* XMPPTransports.m in Sources */,
+				6C992F1A12B354CB0033CC66 /* XMPPPubsub.m in Sources */,
+				6C992F1F12B355390033CC66 /* XMPPInBandReg.m in Sources */,
+				6C99306D12B38A3D0033CC66 /* LoginServicesViewController.m in Sources */,
+				6C943AAE12B43C0E001ED920 /* LoginViewController.m in Sources */,
+				6C943AB112B43C40001ED920 /* CreateNewUserAcctViewController.m in Sources */,
+				6C943AB412B43C94001ED920 /* UserAccountMsgViewController.m in Sources */,
+				6C9D571D12B591DF00B4AE2B /* Util.m in Sources */,
+				6C9D572312B591FB00B4AE2B /* SpiralLoadingView.m in Sources */,
+				6CA2A8E912B9D20F00CF2A6B /* DNSLookup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1940,7 +2044,7 @@
 				QUARTZCORE_FX = "-framework QuartzCore";
 				REPO_ROOT_PATH = "$(SRCROOT)/../..";
 				ROOT_SOURCE_PATH = "$(REPO_ROOT_PATH)/src";
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphonesimulator4.1;
 				SECURITY_FX = "-framework Security";
 				SENTESTINGKIT_FX = "-framework SenTestingKit";
 				STDLIB_HEADERS = /usr/include;
@@ -2017,7 +2121,7 @@
 				QUARTZCORE_FX = "-framework QuartzCore";
 				REPO_ROOT_PATH = "$(SRCROOT)/../..";
 				ROOT_SOURCE_PATH = "$(REPO_ROOT_PATH)/src";
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos4.1;
 				SECURITY_FX = "-framework Security";
 				SENTESTINGKIT_FX = "-framework SenTestingKit";
 				STDLIB_HEADERS = /usr/include;
@@ -2096,7 +2200,7 @@
 				QUARTZCORE_FX = "-framework QuartzCore";
 				REPO_ROOT_PATH = "$(SRCROOT)/../..";
 				ROOT_SOURCE_PATH = "$(REPO_ROOT_PATH)/src";
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphonesimulator4.1;
 				SECURITY_FX = "-framework Security";
 				SENTESTINGKIT_FX = "-framework SenTestingKit";
 				STDLIB_HEADERS = /usr/include;
@@ -2174,7 +2278,7 @@
 				QUARTZCORE_FX = "-framework QuartzCore";
 				REPO_ROOT_PATH = "$(SRCROOT)/../..";
 				ROOT_SOURCE_PATH = "$(REPO_ROOT_PATH)/src";
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos4.1;
 				SECURITY_FX = "-framework Security";
 				SENTESTINGKIT_FX = "-framework SenTestingKit";
 				STDLIB_HEADERS = /usr/include;

@@ -30,6 +30,7 @@ NSString *discoFeatures[] = {
 @synthesize xmppStream;
 @synthesize xmppRoster;
 @synthesize password;
+@synthesize isNewUserRegisteration;
 @synthesize lastItemIdReceived;
 
 // Basic constructor
@@ -40,7 +41,7 @@ NSString *discoFeatures[] = {
 		[xmppStream addDelegate: self];
 		[xmppStream setHostName: XMPP_ENGINE_SERVER];
 		[xmppStream setHostPort: XMPP_ENGINE_SERVER_PORT];
-		[xmppStream setMyJID: [XMPPJID jidWithString: XMPP_TEMP_DEFAULT_JID]];
+		[xmppStream setMyJID: [XMPPJID jidWithUser:XMPP_TEMP_DEFAULT_JID domain:XMPP_BC_DOMAIN resource:XMPP_BC_IPHONE_RESOURCE]];
 		
 		// Initialize XMPPRoster
 		xmppRoster = [[XMPPRoster alloc] initWithStream: xmppStream];
@@ -55,6 +56,9 @@ NSString *discoFeatures[] = {
 												 selector: @selector(onBroadLocationChanged:)
 													 name: [Events BROAD_LOCATION_CHANGED]
 												   object: nil];
+		
+		//Intially assumed new user registration flag would be Off.
+		isNewUserRegisteration = NO;
 	}
 	
 	return self;
@@ -87,6 +91,9 @@ NSString *discoFeatures[] = {
 		
 		if (![xmppStream connect: &error]) {
 			NSLog(@"ERR [XMPPEngine connect] %@", error);
+
+			//Server is down.
+			[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_LOGGED_IN_FAILED] object: error];
 		}
 	}
 }
@@ -246,39 +253,69 @@ NSString *discoFeatures[] = {
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
-	UIAlertView *alert = [[UIAlertView alloc]
-						  initWithTitle: NSLocalizedString(@"Authentication failed", @"")
-						  message: NSLocalizedString(@"The client could not authenticate with the Buddycloud server", @"")
-						  delegate: self
-						  cancelButtonTitle: NSLocalizedString(@"Ok", @"")
-						  otherButtonTitles: nil];
-	[alert show];
-	[alert release];
+	NSError * err = nil;
+	
+	//NOTE: Check if not authenticate because atteempting to register for new account.
+	if(isNewUserRegisteration) {
+		if (![[self xmppStream] registerWithPassword:password error:&err]) {
+			
+			//Reset the state of 'isNewUserRegisteration', as registration process has been done.
+			isNewUserRegisteration = NO;
+			[self disconnect];	//disconnect the last connection for registration process.
+			
+			NSLog(@"Error registering: %@", err);
+			NSXMLElement *errorElement = [error elementForName: @"error"];
+			NSInteger errorCode = ([[errorElement attributeForName: @"code"] stringValue]) ? [[[errorElement attributeForName: @"code"] stringValue] integerValue] : kreg_unknwonError;
+			
+			NSLog(@">>>> didNotRegister : %@", [error stringValue]);	
+			[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_FAILED] object: [NSNumber numberWithInteger:errorCode]];
+		}
+	}
+	else {
+
+		//User not able to logged-in coz of some error.
+		[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_LOGGED_IN_FAILED] object: [NSNumber numberWithInteger:kreg_userAuthenticationError]];
+	}
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {	
-	// Fetch roster
-	[xmppRoster fetchRoster];
+	if (!isNewUserRegisteration) {
 	
-	// Send presence
-	[self sendPresence];
-	
-	if (isPubsubAddedToRoster) {
-		// Collect users node subscriptions
-		if (isConnectionCold) {
-			[xmppPubsub fetchOwnSubscriptions];
-		}
-		else {
-			// Send initial pubsub presence
-			[self sendPresenceToPubsubWithLastItemId: lastItemIdReceived];
-			
-			// WA: Reset pubsub presence (google)
-			if (lastItemIdReceived > 0) {
-				[self sendPresenceToPubsubWithLastItemId: -1];
+		//User successfully logged-in.
+		[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_LOGGED_IN_SUCCESS] object: sender];
+		
+		// Fetch roster
+		[xmppRoster fetchRoster];
+		
+		// Send presence
+		[self sendPresence];
+		
+		if (isPubsubAddedToRoster) {
+			// Collect users node subscriptions
+			if (isConnectionCold) {
+				[xmppPubsub fetchOwnSubscriptions];
+			}
+			else {
+				// Send initial pubsub presence
+				[self sendPresenceToPubsubWithLastItemId: lastItemIdReceived];
+				
+				// WA: Reset pubsub presence (google)
+				if (lastItemIdReceived > 0) {
+					[self sendPresenceToPubsubWithLastItemId: -1];
+				}
 			}
 		}
-	}	
+	}
+	else {
+		
+		NSLog(@"User Registration process >> user authenticate means already exist this account - conflict state!!");
+		//Reset the state of 'isNewUserRegisteration', as registration process has been done.
+		isNewUserRegisteration = NO;
+		[self disconnect];	//disconnect the last connection for registration process.
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_FAILED] object: [NSNumber numberWithInteger:kreg_userNameConflictError]];
+	}
 }
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
@@ -387,6 +424,36 @@ NSString *discoFeatures[] = {
 	[iqStanza addChild: queryElement];
 	
 	[xmppStream sendElement: iqStanza];
+}
+
+/**
+ * This method is called after registration of a new user has successfully finished.
+ * If registration fails for some reason, the xmppStream:didNotRegister: method will be called instead.
+ **/
+- (void)xmppStreamDidRegister:(XMPPStream *)sender {
+	NSLog(@">>>> xmppStreamDidRegister");
+	
+	//Reset the state of 'isNewUserRegisteration', as registration process has been done.
+	isNewUserRegisteration = NO;
+	[self disconnect];	//disconnect the last connection for registration process.
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_SUCCESS] object: sender];
+}
+
+/**
+ * This method is called if registration fails.
+ **/
+- (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)error {
+
+	NSLog(@">>>> didNotRegister : %@", [error stringValue]);	
+
+	//Reset the state of 'isNewUserRegisteration', as registration process has been done.
+	isNewUserRegisteration = NO;
+	[self disconnect];	//disconnect the last connection for registration process.
+	
+	NSXMLElement *errorElement = [error elementForName: @"error"];
+	NSInteger errorCode = ([[errorElement attributeForName: @"code"] stringValue]) ? [[[errorElement attributeForName: @"code"] stringValue] integerValue] : kreg_unknwonError;
+	[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_FAILED] object: [NSNumber numberWithInteger:errorCode]];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

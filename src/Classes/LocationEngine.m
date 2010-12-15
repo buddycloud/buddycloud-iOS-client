@@ -28,6 +28,10 @@
 	[locationManager stopUpdatingLocation];
 	[locationManager release];
 	
+	if ([timer isValid]) {
+		[timer release];
+	}
+	
 	[super dealloc];
 }
 
@@ -42,7 +46,7 @@
 - (void)stopReceivingLocation
 {
 	// Stop location updates
-	[timer invalidate];
+	//[timer invalidate];	//TODO: Need to check why the stop recieving event is triggered more than once!
 	
 	[locationManager stopUpdatingLocation];	
 }
@@ -55,7 +59,6 @@
 - (void)handleLocationUpdateWithLocation:(CLLocation *)location
 {
 	// Stop current timer
-	[timer invalidate];
 	timer = nil;
 	
 	// Send location update
