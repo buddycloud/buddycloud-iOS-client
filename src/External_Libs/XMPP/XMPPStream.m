@@ -640,7 +640,8 @@ enum XMPPStreamFlags
 		NSXMLElement *features = [rootElement elementForName:@"stream:features"];
 		NSXMLElement *reg = [features elementForName:@"register" xmlns:@"http://jabber.org/features/iq-register"];
 		
-		return (reg != nil);
+		return YES;
+		//(reg != nil); //TODO: this need to be re-enable once user in-band feature commes up in the stream list.
 	}
 	return NO;
 }
