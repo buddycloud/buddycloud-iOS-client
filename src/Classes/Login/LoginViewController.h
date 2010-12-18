@@ -47,6 +47,6 @@
 
 - (void)createNewAccount:(id)sender;
 - (void)forgetPassword:(id)sender;
-
+- (UIViewController *)allowUserToExploreChannels:(NSString *)title withUserIno:(NSDictionary *)userInfo;
 
 @end

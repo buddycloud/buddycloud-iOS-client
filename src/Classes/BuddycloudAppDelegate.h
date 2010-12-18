@@ -61,8 +61,9 @@
 
 - (void)initializeUI;
 - (void)loadAllMappedUrls;
+- (void)autoLogin;
 - (UIViewController *)createNewAccount;
-
+- (void)registerDefaultsFromSettingsBundle;
 
 + (BuddycloudAppDelegate *)sharedAppDelegate;
 

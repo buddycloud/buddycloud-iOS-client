@@ -23,8 +23,7 @@ NSString * const XMPP_BC_IPHONE_RESOURCE = @"iPhone/bcloud";
 NSString * const XMPP_ENGINE_SERVER = @"jabber.buddycloud.com"; 
 NSInteger const XMPP_ENGINE_SERVER_PORT = 5222;
 
-NSString * const XMPP_TEMP_DEFAULT_JID = @"iphone2";
-NSString * const XMPP_TEMP_DEFAULT_PASSWORD = @"iphone";
+NSString * const XMPP_ANONYMOUS_DEFAULT_JID = @"iphone2@anon.buddycloud.com";
 
 NSString * const XMPP_PUBSUB_SERVER = @"pubsub-bridge@broadcaster.buddycloud.com";
 
@@ -71,12 +70,17 @@ NSString * buddycloud = @"buddycloud";
 NSString * channel = @"channel";
 NSString * chooseAWildCard = @"chooseAWildCard";
 NSString * connecting = @"connecting";
+NSString * connectingAsJID = @"connectingAsJID";
+
 NSString * createAccount = @"createAccount";
 NSString * createBuddyCloudId = @"createBuddyCloudId";
 
 
 NSString * following = @"following";
 NSString * forgetPassword = @"forgetPassword";
+
+NSString * jidWithNetwork = @"jidWithNetwork";
+
 
 NSString * loading = @"loading";
 NSString * loginAutomatically = @"loginAutomatically";

@@ -31,6 +31,7 @@ NSString *discoFeatures[] = {
 @synthesize xmppRoster;
 @synthesize password;
 @synthesize isNewUserRegisteration;
+@synthesize authenticateAnonymously;
 @synthesize lastItemIdReceived;
 
 // Basic constructor
@@ -41,7 +42,11 @@ NSString *discoFeatures[] = {
 		[xmppStream addDelegate: self];
 		[xmppStream setHostName: XMPP_ENGINE_SERVER];
 		[xmppStream setHostPort: XMPP_ENGINE_SERVER_PORT];
-		[xmppStream setMyJID: [XMPPJID jidWithUser:XMPP_TEMP_DEFAULT_JID domain:XMPP_BC_DOMAIN resource:XMPP_BC_IPHONE_RESOURCE]];
+		[xmppStream setMyJID: [XMPPJID jidWithUser:XMPP_ANONYMOUS_DEFAULT_JID domain:XMPP_BC_DOMAIN resource:XMPP_BC_IPHONE_RESOURCE]];
+		
+		// You may need to alter these settings depending on the server you're connecting to
+		allowSelfSignedCertificates = YES;
+		allowSSLHostNameMismatch = YES;
 		
 		// Initialize XMPPRoster
 		xmppRoster = [[XMPPRoster alloc] initWithStream: xmppStream];
@@ -103,6 +108,10 @@ NSString *discoFeatures[] = {
 	if ([xmppStream isConnected]) {
 		// Disconnect from server
 		isConnectionCold = YES;
+		
+		//Rest the values.
+		isNewUserRegisteration = NO; 
+		authenticateAnonymously = NO;	
 		
 		[[NSUserDefaults standardUserDefaults] setObject: [NSString stringWithFormat: @"%qi", lastItemIdReceived] forKey: @"lastItemIdReceived"];
 		
@@ -229,9 +238,76 @@ NSString *discoFeatures[] = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPStream Delegates
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings
+{
+	NSLog(@"---------- xmppStream:willSecureWithSettings: ----------");
+	
+	if (allowSelfSignedCertificates)
+	{
+		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
+	}
+	
+	if (allowSSLHostNameMismatch)
+	{
+		[settings setObject:[NSNull null] forKey:(NSString *)kCFStreamSSLPeerName];
+	}
+	else
+	{
+		// Google does things incorrectly (does not conform to RFC).
+		// Because so many people ask questions about this (assume xmpp framework is broken),
+		// I've explicitly added code that shows how other xmpp clients "do the right thing"
+		// when connecting to a google server (gmail, or google apps for domains).
+		
+		NSString *expectedCertName = nil;
+		
+		NSString *serverDomain = xmppStream.hostName;
+		NSString *virtualDomain = [xmppStream.myJID domain];
+		
+		if ([serverDomain isEqualToString:@"talk.google.com"])
+		{
+			if ([virtualDomain isEqualToString:@"gmail.com"])
+			{
+				expectedCertName = virtualDomain;
+			}
+			else
+			{
+				expectedCertName = serverDomain;
+			}
+		}
+		else
+		{
+			expectedCertName = serverDomain;
+		}
+		
+		[settings setObject:expectedCertName forKey:(NSString *)kCFStreamSSLPeerName];
+	}
+}
+
+- (void)xmppStreamDidSecure:(XMPPStream *)sender
+{
+	NSLog(@"---------- xmppStreamDidSecure: ----------");
+}
+
+- (void)xmppStreamDidConnect:(XMPPStream *)sender
+{
+	NSLog(@"---------- xmppStreamDidConnect: ----------");
+	
+	NSError *error = nil;
+	
+	if (authenticateAnonymously && !isNewUserRegisteration) {
+		if (![xmppStream authenticateAnonymously: &error]) {	
+			NSLog(@"Error authenticating: %@", error);
+		}
+	}
+	else if (![xmppStream authenticateWithPassword: password error: &error]) {
+		NSLog(@"Error authenticating: %@", error);
+	}
+}
 
 - (void)xmppStreamDidNotConnect:(XMPPStream *)sender
 {
+	NSLog(@"---------- xmppStreamDidNotConnect: ----------");
+	
 	UIAlertView *alert = [[UIAlertView alloc]
 						  initWithTitle: NSLocalizedString(@"Connection failed", @"")
 						  message: NSLocalizedString(@"The client could not connect to the Buddycloud server", @"")
@@ -242,17 +318,12 @@ NSString *discoFeatures[] = {
 	[alert release];
 }
 
-- (void)xmppStreamDidConnect:(XMPPStream *)sender
-{
-	NSError *error = nil;
-	
-	if (![xmppStream authenticateWithPassword: password error: &error]) {
-		NSLog(@"Error authenticating: %@", error);
-	}	
-}
+
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
+	NSLog(@"---------- didNotAuthenticate: ----------");
+	
 	NSError * err = nil;
 	
 	//NOTE: Check if not authenticate because atteempting to register for new account.
@@ -280,6 +351,8 @@ NSString *discoFeatures[] = {
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {	
+	NSLog(@"---------- xmppStream:didNotAuthenticate: ----------");
+	
 	if (!isNewUserRegisteration) {
 	
 		//User successfully logged-in.
@@ -312,14 +385,15 @@ NSString *discoFeatures[] = {
 		NSLog(@"User Registration process >> user authenticate means already exist this account - conflict state!!");
 		//Reset the state of 'isNewUserRegisteration', as registration process has been done.
 		isNewUserRegisteration = NO;
-		[self disconnect];	//disconnect the last connection for registration process.
-		
+
 		[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_FAILED] object: [NSNumber numberWithInteger:kreg_userNameConflictError]];
 	}
 }
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
 {
+	NSLog(@"---------- xmppStream:didReceiveIQ: ----------");
+	
 	NSString *iqType = [[iq attributeForName: @"type"] stringValue];
 	
 	if ([iqType isEqualToString: @"get"]) {
@@ -348,6 +422,8 @@ NSString *discoFeatures[] = {
 
 - (void)sendPingResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId
 {
+	NSLog(@"---------- sendPingResultTo:withIQId: ----------");
+	
 	NSXMLElement *queryElement = [NSXMLElement elementWithName: @"query" xmlns: @"urn:xmpp:ping"];
 
 	NSXMLElement *iqStanza = [NSXMLElement elementWithName: @"iq"];
@@ -365,6 +441,8 @@ NSString *discoFeatures[] = {
 
 - (void)sendVersionResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId
 {
+	NSLog(@"---------- sendVersionResultTo:withIQId: ----------");
+	
 	// Format current device description
 	UIDevice *deviceInfo = [UIDevice currentDevice];
 	NSMutableString *deviceDescription = [NSMutableString stringWithCapacity: 0];
@@ -397,6 +475,8 @@ NSString *discoFeatures[] = {
 
 - (void)sendFeatureDiscovery:(XMPPIQ *)iq
 {
+	NSLog(@"---------- sendFeatureDiscovery:withIQId: ----------");
+	
 	// Build identity element
 	NSXMLElement *identityElement = [NSXMLElement elementWithName: @"identity"];
 	[identityElement addAttributeWithName: @"category" stringValue: @"client"];
@@ -431,7 +511,7 @@ NSString *discoFeatures[] = {
  * If registration fails for some reason, the xmppStream:didNotRegister: method will be called instead.
  **/
 - (void)xmppStreamDidRegister:(XMPPStream *)sender {
-	NSLog(@">>>> xmppStreamDidRegister");
+	NSLog(@"---------- xmppStreamDidRegister ----------");
 	
 	//Reset the state of 'isNewUserRegisteration', as registration process has been done.
 	isNewUserRegisteration = NO;
@@ -445,7 +525,7 @@ NSString *discoFeatures[] = {
  **/
 - (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)error {
 
-	NSLog(@">>>> didNotRegister : %@", [error stringValue]);	
+	NSLog(@"---------- xmppStream:didNotRegister: ----------");
 
 	//Reset the state of 'isNewUserRegisteration', as registration process has been done.
 	isNewUserRegisteration = NO;
@@ -462,6 +542,8 @@ NSString *discoFeatures[] = {
 
 - (void)xmppRoster:(XMPPRoster *)sender didReceiveRoster:(NSArray *)itemElements isPush:(BOOL)push
 {
+	NSLog(@"---------- xmppRoster:didReceiveRoster: ----------");
+	
 	NSString *ownChannelNode = [NSString stringWithFormat: @"/user/%@/channel", [[xmppStream myJID] bare]];
 	NSMutableDictionary *oldFollowingData = [[NSMutableDictionary alloc] initWithDictionary: followingData];
 	

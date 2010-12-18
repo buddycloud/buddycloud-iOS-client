@@ -53,10 +53,16 @@ static NSString *welcomeViewControllerNib = @"WelcomeViewcontroller";
 - (IBAction)exploreBuddyCloud:(id)sender {
 	
 	@try {
-		XMPPEngine *xmppEngine = (XMPPEngine *)[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
-
-		// Start default anonyomous connection
-		//[xmppEngine connect];
+		
+		XMPPEngine *xmppEngine = [[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
+		if (xmppEngine) {
+			[xmppEngine.xmppStream setHostName:@""];	// Note: The hostname will be resolved through DNS SRV lookup.
+			[xmppEngine.xmppStream setMyJID:[XMPPJID jidWithString:XMPP_ANONYMOUS_DEFAULT_JID resource:XMPP_BC_IPHONE_RESOURCE]];
+			[xmppEngine setAuthenticateAnonymously:YES];
+			
+			//Connet the xmpp enginer anonmously.
+			[xmppEngine connect];
+		}
 		
 		[[TTNavigator navigator] removeAllViewControllers];
 		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kTabBarURLPath]];

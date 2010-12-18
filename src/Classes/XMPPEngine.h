@@ -9,10 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "FollowingDataModel.h"
 #import "PostItem.h"
+#import "RFSRVResolver.h"
 
 @class XMPPStream;
 @class XMPPRoster;
 @class XMPPPubsub;
+
 
 @class XMPPJID;
 @class XMPPIQ;
@@ -30,6 +32,10 @@
 
 	NSString *password;
 	BOOL isNewUserRegisteration;
+	BOOL authenticateAnonymously;
+	
+	BOOL allowSelfSignedCertificates;
+	BOOL allowSSLHostNameMismatch;
 	
 	bool isConnectionCold;
 	bool isPubsubAddedToRoster;
@@ -42,6 +48,7 @@
 @property(nonatomic, retain) XMPPRoster *xmppRoster;
 @property(nonatomic, retain) NSString *password;
 @property(nonatomic) BOOL isNewUserRegisteration;
+@property(nonatomic) BOOL authenticateAnonymously;
 @property(readonly) superlong lastItemIdReceived;
 
 - (void)connect;

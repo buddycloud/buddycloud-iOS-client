@@ -25,7 +25,11 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 		[[TTNavigator navigator].URLMap from:kcreateNewAcctURLPath
 					   toModalViewController:[BuddycloudAppDelegate sharedAppDelegate] selector:@selector(createNewAccount)];
 		
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(loginBtnLabel, @"")
+		[[TTNavigator navigator].URLMap from:kexploreChannelsURLPath
+							toModalViewController:self selector:@selector(allowUserToExploreChannels:withUserIno:)];
+
+		
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(joinBtnLabel, @"")
 																				   style:UIBarButtonItemStyleBordered
 																				  target:self action:@selector(login:)] autorelease]; 
 
@@ -39,6 +43,7 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 
 - (void)dealloc {
 	[[TTNavigator navigator].URLMap removeURL:kcreateNewAcctURLPath];
+	[[TTNavigator navigator].URLMap removeURL:kexploreChannelsURLPath];
 	
 	[super dealloc];
 }
@@ -47,12 +52,36 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 	
 	[super viewDidLoad];
 	
+	NSString *network = @"";
+	
+	switch (networkID) {
+		case kloginMethod_network1:
+			network = [NSString stringWithFormat:NSLocalizedString(jidWithNetwork, @""), klogin_GmailNetwork];
+			break;
+
+		case kloginMethod_network2:
+			network = [NSString stringWithFormat:NSLocalizedString(jidWithNetwork, @""), klogin_GmxNetwork];
+			break;
+
+		case kloginMethod_network3:
+			network = [NSString stringWithFormat:NSLocalizedString(jidWithNetwork, @""), klogin_LiveJournalNetwork];
+			break;
+		
+		case kloginMethod_otherXmppAcct:
+			network = [NSString stringWithFormat:NSLocalizedString(jidWithNetwork, @""), klogin_JabberNetwork];
+			break;
+		
+		default:
+			break;
+	}
+	
 	self.loginTitleLabel.text = NSLocalizedString(loginMsgTitle, @"");
 	self.userNameLabel.text = NSLocalizedString(userName, @"");
 	self.passwordLabel.text = NSLocalizedString(password, @"");
 	self.loginAutomaticallyLabel.text = NSLocalizedString(loginAutomatically, @"");
-
-	self.userNameTxtField.placeholder = NSLocalizedString(userName, @"");
+	
+	self.userNameTxtField.text = network;
+	self.userNameTxtField.placeholder = (network) ? network : NSLocalizedString(userName, @"");
 	self.userNameTxtField.delegate = self;
 	self.passwordTxtField.placeholder = NSLocalizedString(password, @"");
 	self.passwordTxtField.delegate = self;
@@ -97,7 +126,7 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 	TTView *errorView = (TTView *)[self.view viewWithTag:errorMsgView_tag];
 	
 	if (errorView == nil) {
-		errorView = [[[UIView alloc] initWithFrame:CGRectMake(self.passwordLabel.frame.origin.x, self.passwordLabel.frame.origin.y + self.passwordLabel.frame.size.height + 5.0, self.view.width - 20.0, 50.0)] autorelease];
+		errorView = [[[UIView alloc] initWithFrame:CGRectMake(self.loginAutomaticallyLabel.frame.origin.x, self.loginAutomaticallyLabel.frame.origin.y + self.loginAutomaticallyLabel.frame.size.height + 5.0, self.view.width - 40.0, 50.0)] autorelease];
 		[errorView setBackgroundColor:[UIColor clearColor]];
 		[errorView setTag:errorMsgView_tag];
 		
@@ -143,7 +172,7 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 		{
 			[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView showActivityLabelInCenter:TTActivityLabelStyleBlackBezel 
 																			  withTransparentSheet:YES 
-																						  withText:NSLocalizedString(connecting, @"")];
+																						  withText:[NSString stringWithFormat:NSLocalizedString(connectingAsJID, @""), self.userNameTxtField.text]];
 			
 			[[NSNotificationCenter defaultCenter] addObserver: self
 													 selector: @selector(userDidAuthenticate:)
@@ -160,34 +189,39 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 			
 			//Before disconnect, check if it's not the same username through which it's already login.
 			if(range.location != NSNotFound && range.length > 0) {
-				
-				if ([xmppEngine.xmppStream isConnected] && [[xmppEngine.xmppStream.myJID bare] isEqualToString:self.userNameTxtField.text]) {
-					
-					//Stop the activity.
-					[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
-					
-					alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
-															message:[NSString stringWithFormat:NSLocalizedString(userNameLoggedInConflictError, @""), NSLocalizedString(userName, @"")]
-														   delegate:self
-												  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
-												  otherButtonTitles:nil] autorelease];
-					[alertView show];
-					
-					return;
-				}
+//				
+//				if ([[xmppEngine.xmppStream.myJID bare] isEqualToString:self.userNameTxtField.text]) {
+//					
+//					
+//					
+//					//Stop the activity.
+//					[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
+//					
+//					alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
+//															message:[NSString stringWithFormat:NSLocalizedString(userNameLoggedInConflictError, @""), NSLocalizedString(userName, @"")]
+//														   delegate:self
+//												  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
+//												  otherButtonTitles:nil] autorelease];
+//					[alertView show];
+//					
+//					return;
+//				}
 				
 				[self.userNameTxtField resignFirstResponder];
 				[self.passwordTxtField resignFirstResponder];
 				
-				[xmppEngine disconnect];	//disconnect the previous session before in-band registration.
+				//Disconnect the xmpp engine if it's connected.
+				if ([xmppEngine.xmppStream isConnected]) {
+					[xmppEngine disconnect];
+				}
 				
-				[xmppEngine.xmppStream setMyJID:[XMPPJID jidWithString:self.userNameTxtField.text]];
+				//Set the JID and password.
+				[xmppEngine.xmppStream setHostName:@""];	// Note: The hostname will be resolved through DNS SRV lookup.
+				[xmppEngine.xmppStream setMyJID:[XMPPJID jidWithString:self.userNameTxtField.text resource:XMPP_BC_IPHONE_RESOURCE]];
 				xmppEngine.password = self.passwordTxtField.text;
 				
+				//Connect the xmpp engine.
 				[xmppEngine connect];
-				
-				NSLog(@"NEw user login : %@", self.userNameTxtField.text);
-				NSLog(@"Password : %@", self.passwordTxtField.text);
 			}
 			else {
 				//Stop the activity.
@@ -232,10 +266,12 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 - (void)userDidAuthenticate:(NSNotification *)notification {
 	@try {
 		[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
-
-		[[TTNavigator navigator] removeAllViewControllers];
-		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kTabBarURLPath]];
-		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:[NSString stringWithFormat:kTabBarItemURLPath, MenuPageChannel]]];	//land on channel page.
+		
+		XMPPEngine *xmppEngine = [[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
+		if (xmppEngine) {
+			[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:[NSString stringWithFormat:kexploreChannelsWithTitleAndUsernameURLPath,
+																				   NSLocalizedString(buddycloud, @""), [[xmppEngine.xmppStream myJID] full], @""]]];	
+		}
 	}
 	@catch (NSException * e) {
 		NSLog(@"userDidAuthenticate .. %@", [e description]);
@@ -243,51 +279,31 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 }
 
 - (void)userDidNotAuthenticate:(NSNotification *)notification {
-	[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
+
+	UIAlertView *alertView = nil;
+	NSInteger errorCode = kreg_unknwonError;
 	
-	NSNumber *errorCode = kreg_unknwonError;
-	
-	if ([[notification object] class] == [NSNumber class]) {
-		errorCode = [notification object];
+	if ([[notification object] class] == [NSError class]) {
+		NSError *error = (NSError *)[notification object];
+		errorCode = [error code];
 	}
 	else {
-		NSError *error = (NSError *)[notification object];
-		NSLog(@"error : %@", [error description]);
+		errorCode = [[notification object] integerValue];
 	}
 	
+	if (errorCode == kreg_userAuthenticationError) {
+		NSLog(@"Username kreg_userAuthenticationError....");
+		[self showErrorMsg:NSLocalizedString(authenticatonFailedError, @"")];
+		
+		alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(authenticationFailed, @"")
+												message:[NSString stringWithFormat: NSLocalizedString(authenticatonFailedError, @""), self.userNameTxtField.text]
+											   delegate:self 
+									  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
+									  otherButtonTitles:nil] autorelease];
+		[alertView show];
+	}
 	
-	NSLog(@"Errors....%d", errorCode);
-	UIAlertView *alertView = nil;
-	
-	switch ([errorCode intValue]) {
-		case kreg_userAuthenticationError:
-			NSLog(@"Username kreg_userAuthenticationError....");
-			[self showErrorMsg:NSLocalizedString(authenticatonFailedError, @"")];
-			
-			alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(authenticationFailed, @"")
-													message:NSLocalizedString(authenticatonFailedError, @"")
-												   delegate:self 
-										  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
-										  otherButtonTitles:nil] autorelease];
-			[alertView show];
-			break;
-			
-		case kreg_badRequestError:
-			NSLog(@"Username kreg_badRequestError....");
-			break;
-			
-		case kreg_notAllowedError:
-			NSLog(@"Username kreg_notAllowedError....");
-			break;
-			
-		case kreg_infoMissingError:
-			NSLog(@"Username kreg_infoMissingError....");
-			break;
-			
-		default:
-			NSLog(@"unknown error....");
-			break;
-	}	
+	[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
 }
 
 - (void)cancel:(id)sender {
@@ -303,6 +319,16 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 	NSLog(@"Forget password....");
 }
 
+- (UIViewController *)allowUserToExploreChannels:(NSString *)title withUserIno:(NSDictionary *)userInfo {
+	
+	NSLog(@"userinfo : %@", userInfo);
+	
+	UserAccountMsgViewController *acctMsgViewController = [[[UserAccountMsgViewController alloc] initWithTitle:title 
+																								  withUserName:[userInfo valueForKey:@"username"]
+																								  withPassword:[userInfo valueForKey:@"password"]] autorelease];
+	
+	return acctMsgViewController;
+}
 		 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark UITextFieldDelegate Delegates

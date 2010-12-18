@@ -58,16 +58,22 @@ static NSString *userAccountMsgViewControllerNib = @"UserAccountMsgViewControlle
 	XMPPEngine *xmppEngine = (XMPPEngine *)[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
 	
 	@try {
+		
 		//Reconnect with new username.
-		if (xmppEngine) {
-			[xmppEngine.xmppStream setMyJID:[XMPPJID jidWithString:self._username]];
-			[xmppEngine setPassword:self._password];		
-			[xmppEngine connect];
+		if (xmppEngine && ![self._password isEmptyOrWhitespace]) {
 			
-			[[TTNavigator navigator] removeAllViewControllers];
-			[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kTabBarURLPath]];
-			[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:[NSString stringWithFormat:kTabBarItemURLPath, MenuPageChannel]]];	//land on channel page.
+			//Set the JID and password.
+			[xmppEngine.xmppStream setHostName:@""];	// Note: The hostname will be resolved through DNS SRV lookup.
+			[xmppEngine.xmppStream setMyJID:[XMPPJID jidWithString:self._username resource:XMPP_BC_IPHONE_RESOURCE]];
+			xmppEngine.password = self._password;
+			
+			//Connect the xmpp engine.
+			[xmppEngine connect];
 		}
+			
+		[[TTNavigator navigator] removeAllViewControllers];
+		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kTabBarURLPath]];
+		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:[NSString stringWithFormat:kTabBarItemURLPath, MenuPageChannel]]];	//land on channel page.
 	}
 	@catch (NSException * e) {
 		NSLog(@"Connecting exception : %@", [e description]);

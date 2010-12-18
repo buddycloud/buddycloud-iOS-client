@@ -165,7 +165,7 @@
 - (void)isRegistrationServiceEnabled:(XMPPIQ *)iq 
 {
 	NSString *iqType = [[iq attributeForName: @"type"] stringValue];
-	NSXMLElement *queryElement = [iq elementForName: @"query" xmlns: @"jabber:iq:roster"];
+	//NSXMLElement *queryElement = [iq elementForName: @"query" xmlns: @"jabber:iq:roster"];
 	
 	if ([iqType isEqualToString: @"result"]) {
 		

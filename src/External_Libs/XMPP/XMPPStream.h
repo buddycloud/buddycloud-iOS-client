@@ -6,6 +6,7 @@
 #endif
 
 @class AsyncSocket;
+@class RFSRVResolver;
 @class XMPPParser;
 @class XMPPJID;
 @class XMPPIQ;
@@ -13,6 +14,46 @@
 @class XMPPPresence;
 @class XMPPModule;
 @protocol XMPPStreamDelegate;
+
+// Define the various states we'll use to track our progress
+enum {
+	STATE_DISCONNECTED,
+	STATE_RESOLVING_SRV,
+	STATE_CONNECTING,
+	STATE_OPENING,
+	STATE_NEGOTIATING,
+	STATE_STARTTLS,
+	STATE_REGISTERING,
+	STATE_AUTH_1,
+	STATE_AUTH_2,
+	STATE_AUTH_3,
+	STATE_BINDING,
+	STATE_START_SESSION,
+	STATE_CONNECTED,
+};
+
+// Define the debugging state
+#define DEBUG_SEND      NO
+#define DEBUG_RECV_PRE  NO  // Prints data before going to xmpp parser
+#define DEBUG_RECV_POST NO   // Prints data as it comes out of xmpp parser
+
+#define DDLogSend(format, ...)     do{ if(DEBUG_SEND)      NSLog((format), ##__VA_ARGS__); }while(0)
+#define DDLogRecvPre(format, ...)  do{ if(DEBUG_RECV_PRE)  NSLog((format), ##__VA_ARGS__); }while(0)
+#define DDLogRecvPost(format, ...) do{ if(DEBUG_RECV_POST) NSLog((format), ##__VA_ARGS__); }while(0)
+
+// Define the various timeouts (in seconds) for retreiving various parts of the XML stream
+#define TIMEOUT_WRITE         10
+#define TIMEOUT_READ_START    10
+#define TIMEOUT_READ_STREAM   -1
+
+// Define the various tags we'll use to differentiate what it is we're currently reading or writing
+#define TAG_WRITE_START        -100 // Must be outside UInt16 range
+#define TAG_WRITE_STREAM       -101 // Must be outside UInt16 range
+#define TAG_WRITE_SYNCHRONOUS  -102 // Must be outside UInt16 range
+
+#define TAG_READ_START       200
+#define TAG_READ_STREAM      201
+
 
 #if TARGET_OS_IPHONE
   #define DEFAULT_KEEPALIVE_INTERVAL 120.0 // 2 Minutes
@@ -39,6 +80,7 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 	
 	int state;
 	AsyncSocket *asyncSocket;
+	NSMutableData *socketBuffer;
 	
 	UInt64 numberOfBytesSent;
 	UInt64 numberOfBytesReceived;
@@ -53,7 +95,7 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 	NSString *tempPassword;
 	
 	XMPPJID *myJID;
-    XMPPJID *remoteJID;
+	XMPPJID *remoteJID;
 	
 	NSXMLElement *rootElement;
 	
@@ -64,6 +106,12 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 	NSMutableDictionary *autoDelegateDict;
 	
 	id userTag;
+	
+	RFSRVResolver *srvResolver;
+	NSArray *srvResults;
+	NSUInteger srvResultsIndex;
+	
+	NSString *synchronousUUID;
 }
 
 /**
@@ -112,6 +160,11 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
  * Similarly, you connect to google's servers to sign into xmpp.
  * 
  * In the example above, your hostname is "talk.google.com" and your JID is "me@mydomain.com".
+ * 
+ * This hostName property is optional.
+ * If you do not set the hostName, then the framework will follow the xmpp specification using jid's domain.
+ * That is, it first do an SRV lookup (as specified in the xmpp RFC).
+ * If that fails, it will fall back to simply attempting to connect to the jid's domain.
 **/
 @property (nonatomic, readwrite, copy) NSString *hostName;
 
@@ -375,11 +428,15 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
  * if an acceptable authentication protocol is supported.
 **/
 - (BOOL)isAuthenticated;
+- (BOOL)supportsAnonymousAuthentication;
 - (BOOL)supportsPlainAuthentication;
 - (BOOL)supportsDigestMD5Authentication;
 - (BOOL)supportsDeprecatedPlainAuthentication;
 - (BOOL)supportsDeprecatedDigestAuthentication;
 - (BOOL)authenticateWithPassword:(NSString *)password error:(NSError **)errPtr;
+- (BOOL)authenticateAnonymously:(NSError **)errPtr;
+
+- (void)handleAuth1:(NSXMLElement *)response;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Server Info
@@ -433,6 +490,28 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
  * Even if you close the xmpp stream after this point, the OS will still do everything it can to send the data.
 **/
 - (void)sendElement:(NSXMLElement *)element andNotifyMe:(UInt16)tag;
+
+/**
+ * Just like the sendElement: method above,
+ * but this method does not return until after the element has been sent.
+ * 
+ * It is important to understand what this means.
+ * It does NOT mean the server has received the element.
+ * It only means the data has been queued for sending in the underlying OS socket buffer.
+ * 
+ * So at this point the OS will do everything in its capacity to send the data to the server,
+ * which generally means the server will eventually receive the data.
+ * Unless, of course, something horrible happens such as a network failure,
+ * or a system crash, or the server crashes, etc.
+ * 
+ * Even if you close the xmpp stream after this point, the OS will still do everything it can to send the data.
+ * 
+ * This method should be used sparingly.
+ * In other words, it should be used only when absolutely necessary.
+ * For example, when the system is about to go to sleep,
+ * or when your iOS app is about to be backgrounded, and you need to synchronously send an unavailable presence.
+**/
+- (BOOL)synchronouslySendElement:(NSXMLElement *)element;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Utilities
@@ -488,6 +567,31 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 
 @protocol XMPPStreamDelegate
 @optional
+
+/**
+ * This method is called before the stream begins the connection process.
+ *
+ * If developing an iOS app that runs in the background, this would be a good place to indicate
+ * that this is a task that needs to continue running in the background.
+ **/
+- (void)xmppStreamWillConnect:(XMPPStream *)sender;
+
+/**
+ * This method is called before the socket connects with the remote host.
+ * 
+ * If developing an iOS app that runs in the background, this is where you would enable background sockets.
+ * For example:
+ * 
+ * CFReadStreamSetProperty([socket getCFReadStream], kCFStreamNetworkServiceType, kCFStreamNetworkServiceTypeVoIP);
+ * CFWriteStreamSetProperty([socket getCFWriteStream], kCFStreamNetworkServiceType, kCFStreamNetworkServiceTypeVoIP);
+**/
+- (void)xmppStream:(XMPPStream *)sender socketWillConnect:(AsyncSocket *)socket;
+
+/**
+ * This method is called after a TCP connection has been established with the server,
+ * and the opening XML stream negotiation has started.
+**/
+- (void)xmppStreamDidStartNegotiation:(XMPPStream *)sender;
 
 /**
  * This method is called immediately prior to the stream being secured via TLS/SSL.

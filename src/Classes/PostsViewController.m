@@ -74,11 +74,11 @@
 	UIAlertView *alertView = nil;
 	
 	//Check if user trying to add the topic with default BC user, then show an alert to please register urself.
-	NSString *tempDefaultJID = [[XMPPJID jidWithUser:XMPP_TEMP_DEFAULT_JID domain:XMPP_BC_DOMAIN resource:XMPP_BC_IPHONE_RESOURCE] full];
-	NSRange range = [[xmppEngine.xmppStream.myJID full] rangeOfString:tempDefaultJID options:NSLiteralSearch];
-	
 	//Before disconnect, check if it's not the same username through which it's already login.
-	if(range.location != NSNotFound && range.length > 0) {
+	NSLog(@"domain : %@", [[xmppEngine.xmppStream myJID] domain]);
+	
+	if(![[[xmppEngine.xmppStream myJID] domain] isEqualToString:[NSString stringWithFormat:@"%@", klogin_BuddycloudNetwork]])
+	{
 		alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
 												message:NSLocalizedString(registerToAddTopic, @"")
 											   delegate:self
@@ -109,7 +109,7 @@
 	UIAlertView *alertView = nil;
 	
 	//Check if user trying to add the topic with default BC user, then show an alert to please register urself.
-	NSString *tempDefaultJID = [[XMPPJID jidWithUser:XMPP_TEMP_DEFAULT_JID domain:XMPP_BC_DOMAIN resource:XMPP_BC_IPHONE_RESOURCE] full];
+	NSString *tempDefaultJID = [[XMPPJID jidWithUser:XMPP_ANONYMOUS_DEFAULT_JID domain:XMPP_BC_DOMAIN resource:XMPP_BC_IPHONE_RESOURCE] full];
 	NSRange range = [[xmppEngine.xmppStream.myJID full] rangeOfString:tempDefaultJID options:NSLiteralSearch];
 	
 	//Before disconnect, check if it's not the same username through which it's already login.

@@ -20,9 +20,9 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 		self.title = title;
 		
 		[[TTNavigator navigator].URLMap from:kexploreChannelsURLPath
-							toViewController:self selector:@selector(allowUserToExploreChannels:withUserIno:)];
+							toModalViewController:self selector:@selector(allowUserToExploreChannels:withUserIno:)];
 		
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(createBtnLabel, @"") 
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(joinBtnLabel, @"") 
 																				   style:UIBarButtonItemStyleBordered
 																				  target:self action:@selector(join:)] autorelease]; 
 		
@@ -64,7 +64,8 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 	self.userNameLabel.text = [NSString stringWithFormat:NSLocalizedString(chooseAWildCard, @""), NSLocalizedString(userName, @"")];
 	self.newPasswordLabel.text = [NSString stringWithFormat:NSLocalizedString(chooseAWildCard, @""), NSLocalizedString(password, @"")];
 
-	self.userNameTxtField.placeholder = NSLocalizedString(userName, @"");
+	self.userNameTxtField.text =  [NSString stringWithFormat:NSLocalizedString(jidWithNetwork, @""), @"buddycloud.com"];
+	self.userNameTxtField.placeholder =  [NSString stringWithFormat:NSLocalizedString(jidWithNetwork, @""), @"buddycloud.com"];
 	self.userNameTxtField.delegate = self;
 	
 	self.newPasswordTxtField.placeholder = NSLocalizedString(password, @"");
@@ -123,43 +124,42 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 																			  withActivityFrame:CGRectMake(self.view.width/2 - 50.0, self.view.height/2 - (100.0 + 30.0), 100.0, 100.0)]; 
 		
 		//In-band registration.
-		XMPPEngine *xmppEngine = (XMPPEngine *)[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
 		NSRange range = [self.userNameTxtField.text rangeOfString:@"@" options:NSLiteralSearch];
-		NSString *newJIDStr = nil;
+//		NSString *newJIDStr = nil;
 		
-		//Before disconnect, check if it's not the same username through which it's already login.
 		if(range.location != NSNotFound && range.length > 0) {
-			if ([xmppEngine.xmppStream isConnected] && [[xmppEngine.xmppStream.myJID bare] isEqualToString:self.userNameTxtField.text]) {
-				
-				//Stop the activity.
-				[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
-				
-				alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
-														message:[NSString stringWithFormat:NSLocalizedString(userNameLoggedInConflictError, @""), NSLocalizedString(userName, @"")]
-													   delegate:self
-											  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
-											  otherButtonTitles:nil] autorelease];
-				[alertView show];
-				
-				return;
-			}
-			
-			newJIDStr = self.userNameTxtField.text;
+//			if ([xmppEngine.xmppStream isConnected] && [[xmppEngine.xmppStream.myJID bare] isEqualToString:self.userNameTxtField.text]) {
+//				
+//				//Stop the activity.
+//				[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
+//				
+//				alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
+//														message:[NSString stringWithFormat:NSLocalizedString(userNameLoggedInConflictError, @""), NSLocalizedString(userName, @"")]
+//													   delegate:self
+//											  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
+//											  otherButtonTitles:nil] autorelease];
+//				[alertView show];
+//				
+//				return;
+//			}
+//			
+//			newJIDStr = self.userNameTxtField.text;
 		}
  
-		[xmppEngine disconnect];	//disconnect the previous session before in-band registration.
-		
-		xmppEngine.isNewUserRegisteration = YES;
+		XMPPEngine *xmppEngine = (XMPPEngine *)[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
+
+		//Disconnect the xmpp engine if it's connected.
+		if ([xmppEngine.xmppStream isConnected]) {
+			[xmppEngine disconnect];
+		}
+			
+		//Set the JID and password.
+		[xmppEngine.xmppStream setHostName:@""];	// Note: The hostname will be resolved through DNS SRV lookup.
+		[xmppEngine.xmppStream setMyJID:[XMPPJID jidWithString:self.userNameTxtField.text resource:XMPP_BC_IPHONE_RESOURCE]];
 		xmppEngine.password = self.newPasswordTxtField.text;
-		XMPPJID *newJID = (newJIDStr) ? [XMPPJID jidWithString: newJIDStr 
-													  resource: XMPP_BC_IPHONE_RESOURCE] : 
-										[XMPPJID jidWithUser: self.userNameTxtField.text 
-																  domain: XMPP_BC_DOMAIN 
-																resource: XMPP_BC_IPHONE_RESOURCE];
+		xmppEngine.isNewUserRegisteration = YES;
 		
-		[xmppEngine.xmppStream setMyJID:newJID];
-		
-		//NOTE: It will authenticate the user if it's already registered user on BC, otherwise register the new account and authenticate anonoymously.
+		//Connect the xmpp engine.
 		[xmppEngine connect];
 	}
 	else {
@@ -214,42 +214,31 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 }
 
 - (void)registeredWithFailure:(NSNotification *)notification {
-	[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
 	
-	NSNumber *errorCode = [notification object];
-	NSLog(@"Errors....%d", errorCode);
 	UIAlertView *alertView = nil;
+	NSInteger errorCode = kreg_unknwonError;
 	
-	switch ([errorCode intValue]) {
-		case kreg_badRequestError:
-			NSLog(@"Username kreg_badRequestError....");
-			break;
-			
-		case kreg_notAllowedError:
-			NSLog(@"Username kreg_notAllowedError....");
-			break;
-			
-		case kreg_infoMissingError:
-			NSLog(@"Username kreg_infoMissingError....");
-			break;
-			
-		case kreg_userNameConflictError:
-			NSLog(@"Username kreg_userNameConflictError....");
-			[self showErrorMsg:NSLocalizedString(userNameConflictError, @"")];
-
-			alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
-													message:NSLocalizedString(userNameConflictError, @"")
-												   delegate:self 
-										  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
-										  otherButtonTitles:nil] autorelease];
-			[alertView show];
-			
-			break;
-			
-		default:
-			NSLog(@"unknown error....");
-			break;
+	if ([[notification object] class] == [NSError class]) {
+		NSError *error = (NSError *)[notification object];
+		errorCode = [error code];
 	}
+	else {
+		errorCode = [[notification object] integerValue];
+	}
+	
+	
+	if (errorCode == kreg_userNameConflictError) {
+		NSLog(@"Username kreg_userNameConflictError....");
+		[self showErrorMsg:NSLocalizedString(userNameConflictError, @"")];
+		
+		alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
+												message:NSLocalizedString(userNameConflictError, @"")
+											   delegate:self 
+									  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
+									  otherButtonTitles:nil] autorelease];
+	}
+	
+	[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
 }
 
 - (UIViewController *)allowUserToExploreChannels:(NSString *)title withUserIno:(NSDictionary *)userInfo {

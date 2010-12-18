@@ -44,7 +44,7 @@ static NSString *loginServicesViewControllerNib = @"LoginServicesViewController"
 	
 	[self.networkBtn1 setTitle:NSLocalizedString(network1Label, @"") forState:UIControlStateNormal];
 	[self.networkBtn1 setTag:kloginMethod_network1];
-	 
+	
 	[self.networkBtn2 setTitle:NSLocalizedString(network2Label, @"") forState:UIControlStateNormal];
 	[self.networkBtn2 setTag:kloginMethod_network2];
 	

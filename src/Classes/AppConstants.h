@@ -12,6 +12,13 @@
 
 #define errorMsgView_tag	999
 #define errorLabel_tag		998
+		
+#define klogin_GmailNetwork				@"gmail.com"
+#define klogin_LiveJournalNetwork		@"livejournal.com"
+#define klogin_GmxNetwork				@"gmx.com"
+#define klogin_JabberNetwork			@"jabber.com"
+#define klogin_BuddycloudNetwork		@"buddycloud.com"
+#define klogin_AnonBCNetwork			@"anon.buddycloud.com"
 
 typedef enum {
 	kreg_unknwonError				= 0,
@@ -39,8 +46,8 @@ extern NSString * const XMPP_BC_IPHONE_RESOURCE;
 extern NSString	* const XMPP_ENGINE_SERVER;
 extern NSInteger const XMPP_ENGINE_SERVER_PORT;
 
-extern NSString * const XMPP_TEMP_DEFAULT_JID;
-extern NSString * const XMPP_TEMP_DEFAULT_PASSWORD;
+extern NSString * const XMPP_ANONYMOUS_DEFAULT_JID;
+
 
 extern NSString * const XMPP_PUBSUB_SERVER;
 
@@ -86,11 +93,15 @@ extern NSString * buddycloud;
 extern NSString * channel;
 extern NSString * chooseAWildCard;
 extern NSString * connecting;
+extern NSString * connectingAsJID;
+
 extern NSString * createAccount;
 extern NSString * createBuddyCloudId;
 
 extern NSString * following;
 extern NSString * forgetPassword;
+
+extern NSString * jidWithNetwork;
 
 extern NSString * loading;
 extern NSString * loginAutomatically;

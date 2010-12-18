@@ -16,7 +16,7 @@
 	xmlParserCtxt *parserCtxt;
 }
 
-- (id)initWithParserDelegate:(id)delegate;
+- (id)initWithDelegate:(id)delegate;
 
 - (id)delegate;
 - (void)setDelegate:(id)delegate;

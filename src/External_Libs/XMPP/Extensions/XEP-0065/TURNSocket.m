@@ -5,7 +5,7 @@
 #import "DDNumber.h"
 
 // Debug levels: 0-off, 1-error, 2-warn, 3-info, 4-verbose
-#define DEBUG_LEVEL 4
+//#define DEBUG_LEVEL 4
 #include "DDLog.h"
 
 // Define various states

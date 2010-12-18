@@ -646,7 +646,7 @@ static void xmlEndElement(void *ctx, const xmlChar *localname,
 	postEndElement(ctxt);
 }
 
-- (id)initWithParserDelegate:(id)aDelegate
+- (id)initWithDelegate:(id)aDelegate
 {
 	if((self = [super init]))
 	{
