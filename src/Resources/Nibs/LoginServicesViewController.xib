@@ -119,6 +119,10 @@
 									<bytes key="NSRGB">MC4wMjM1Mjk0MTQwOSAwLjIyNzQ1MDk5NjYgMC4yNzQ1MDk4MTc0AA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="249831174"/>
+								<object class="NSCustomResource" key="IBUINormalImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">jabber.png</string>
+								</object>
 								<object class="NSCustomResource" key="IBUINormalBackgroundImage" id="74628405">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">darkgreyBtn.png</string>
@@ -145,6 +149,10 @@
 									<bytes key="NSRGB">MC4wMjM1Mjk0MTQwOSAwLjIyNzQ1MDk5NjYgMC4yNzQ1MDk4MTc0AA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="249831174"/>
+								<object class="NSCustomResource" key="IBUINormalImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">livejournal.png</string>
+								</object>
 								<reference key="IBUINormalBackgroundImage" ref="74628405"/>
 							</object>
 							<object class="IBUIButton" id="297357288">
@@ -168,6 +176,10 @@
 									<bytes key="NSRGB">MC4wMjM1Mjk0MTQwOSAwLjIyNzQ1MDk5NjYgMC4yNzQ1MDk4MTc0AA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="249831174"/>
+								<object class="NSCustomResource" key="IBUINormalImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">gmx.png</string>
+								</object>
 								<reference key="IBUINormalBackgroundImage" ref="74628405"/>
 							</object>
 							<object class="IBUILabel" id="284128914">
@@ -217,6 +229,10 @@
 									<bytes key="NSRGB">MC4wMjM1Mjk0MTQwOSAwLjIyNzQ1MDk5NjYgMC4yNzQ1MDk4MTc0AA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="249831174"/>
+								<object class="NSCustomResource" key="IBUINormalImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">gtalk.png</string>
+								</object>
 								<reference key="IBUINormalBackgroundImage" ref="74628405"/>
 							</object>
 						</object>
@@ -889,13 +905,21 @@
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>bc.png</string>
 				<string>darkgreyBtn.png</string>
+				<string>gmx.png</string>
+				<string>gtalk.png</string>
+				<string>jabber.png</string>
 				<string>lightgreyBtn.png</string>
+				<string>livejournal.png</string>
 			</object>
 			<object class="NSMutableArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>{320, 480}</string>
 				<string>{236, 45}</string>
+				<string>{36, 36}</string>
+				<string>{36, 36}</string>
+				<string>{36, 36}</string>
 				<string>{236, 45}</string>
+				<string>{36, 36}</string>
 			</object>
 		</object>
 		<string key="IBCocoaTouchPluginVersion">123</string>

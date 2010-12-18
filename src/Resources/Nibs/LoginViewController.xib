@@ -114,7 +114,7 @@
 								<float key="IBUIMinimumFontSize">17</float>
 								<object class="IBUITextInputTraits" key="IBUITextInputTraits">
 									<int key="IBUIKeyboardType">7</int>
-									<int key="IBUIReturnKeyType">1</int>
+									<int key="IBUIReturnKeyType">3</int>
 									<bool key="IBUIEnablesReturnKeyAutomatically">YES</bool>
 									<bool key="IBUISecureTextEntry">YES</bool>
 									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>

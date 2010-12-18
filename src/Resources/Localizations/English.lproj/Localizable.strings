@@ -15,11 +15,15 @@
 "channel" = "Channel";
 "chooseAWildCard" = "Choose a %@";
 "connecting" = "Connecting...";
+"connectingAsJID" = "Connecting as\n%@";
+
 "createAccount" = "Create Account";
 "createBuddyCloudId" = "Create Buddycloud ID";
 
 "following" = "Following";
 "forgetPassword" = "Forget your login";
+
+"jidWithNetwork" = "name@%@";
 
 "loading" = "Loading...";
 "loginAutomatically" = "Login automatically";
@@ -79,7 +83,7 @@
 //Error
 "alertPrompt" = "Alert";
 "authenticationFailed" = "Authentication failed";
-"authenticatonFailedError" = "The client could not authenticate with the Buddycloud server.";
+"authenticatonFailedError" = "We're having problem connecting with %@. Please try again after sometime.";
 "noInternetConnError" = "Oops! Seems like your phone is not connected to the Internet. Please check your 3G/Edge/GPRS/WiFi and try again.";
 "userNameConflictError" = "The username you entered has already been registered.";
 "userNameLoggedInConflictError" = "The username you entered has already been logged in.";

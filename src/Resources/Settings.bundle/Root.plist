@@ -18,9 +18,9 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
-			<string>Id</string>
+			<string>Username</string>
 			<key>Key</key>
-			<string>id_setting</string>
+			<string>username_setting</string>
 			<key>IsSecure</key>
 			<false/>
 			<key>KeyboardType</key>
@@ -59,6 +59,20 @@
 			<string>None</string>
 			<key>AutocorrectionType</key>
 			<string>No</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Login automatically</string>
+			<key>Key</key>
+			<string>autoLogin_setting</string>
+			<key>DefaultValue</key>
+			<false/>
+			<key>TrueValue</key>
+			<false/>
+			<key>FalseValue</key>
+			<false/>
 		</dict>
 	</array>
 </dict>

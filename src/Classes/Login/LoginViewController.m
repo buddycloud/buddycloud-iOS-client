@@ -293,7 +293,7 @@ static NSString *loginViewControllerNib = @"LoginViewController";
 	
 	if (errorCode == kreg_userAuthenticationError) {
 		NSLog(@"Username kreg_userAuthenticationError....");
-		[self showErrorMsg:NSLocalizedString(authenticatonFailedError, @"")];
+		[self showErrorMsg:[NSString stringWithFormat: NSLocalizedString(authenticatonFailedError, @""), self.userNameTxtField.text]];
 		
 		alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(authenticationFailed, @"")
 												message:[NSString stringWithFormat: NSLocalizedString(authenticatonFailedError, @""), self.userNameTxtField.text]
