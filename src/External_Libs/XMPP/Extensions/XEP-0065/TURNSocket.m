@@ -5,7 +5,7 @@
 #import "DDNumber.h"
 
 // Debug levels: 0-off, 1-error, 2-warn, 3-info, 4-verbose
-//#define DEBUG_LEVEL 4
+#define DEBUG_LEVEL 4
 #include "DDLog.h"
 
 // Define various states
@@ -901,7 +901,7 @@ static NSMutableDictionary *existingTurnSockets;
 		
 		if(asyncSocket == nil)
 		{
-			asyncSocket = [[AsyncSocket alloc] initWithSocketDelegate:self];
+			asyncSocket = [(AsyncSocket *)[AsyncSocket alloc] initWithDelegate:self];
 		}
 		
 		DDLogVerbose(@"TURNSocket: targetNextConnect: %@(%@:%hu)", [proxyJID full], proxyHost, proxyPort);
@@ -924,7 +924,7 @@ static NSMutableDictionary *existingTurnSockets;
 {
 	NSAssert(asyncSocket == nil, @"Expecting asyncSocket to be nil");
 	
-	asyncSocket = [[AsyncSocket alloc] initWithSocketDelegate:self];
+	asyncSocket = [(AsyncSocket *)[AsyncSocket alloc] initWithDelegate:self];
 	
 	DDLogVerbose(@"TURNSocket: initiatorConnect: %@(%@:%hu)", [proxyJID full], proxyHost, proxyPort);
 	

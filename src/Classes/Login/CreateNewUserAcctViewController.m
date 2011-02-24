@@ -17,10 +17,22 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 
 - (id)initWithTitle:(NSString *)title {
 	if (self = [super initWithNibName:createNewUserAcctViewController bundle: [NSBundle mainBundle]]) {
-		self.title = title;
+		
+		self.navigationItem.title = title;
+		self.navigationBarTintColor = APPSTYLEVAR(navigationBarColor);
+		
+		[[NSNotificationCenter defaultCenter] addObserver: [LoginUtility class]
+												 selector: @selector(registeredWithSuccess:)
+													 name: [Events USER_REGISTRATION_SUCCESS]
+												   object: nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver: [LoginUtility class]
+												 selector: @selector(registeredWithFailure:)
+													 name: [Events USER_REGISTRATION_FAILED]
+												   object: nil];
 		
 		[[TTNavigator navigator].URLMap from:kexploreChannelsURLPath
-							toModalViewController:self selector:@selector(allowUserToExploreChannels:withUserIno:)];
+							toModalViewController:[BuddycloudAppDelegate sharedAppDelegate].atlasUrlHandler selector:@selector(allowUserToExploreChannels:withUserIno:)];
 		
 		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(joinBtnLabel, @"") 
 																				   style:UIBarButtonItemStyleBordered
@@ -29,16 +41,6 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 		self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(cancelBtnLabel, @"") 
 																				  style:UIBarButtonItemStyleBordered
 																				 target:self action:@selector(cancel:)] autorelease];
-
-		[[NSNotificationCenter defaultCenter] addObserver: self
-												 selector: @selector(registeredWithSuccess:)
-													 name: [Events USER_REGISTRATION_SUCCESS]
-												   object: nil];
-
-		[[NSNotificationCenter defaultCenter] addObserver: self
-												 selector: @selector(registeredWithFailure:)
-													 name: [Events USER_REGISTRATION_FAILED]
-												   object: nil];
 	}
 	
 	return self;
@@ -59,6 +61,7 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 	
 	[super viewDidLoad];
 	
+	self.view.backgroundColor = APPSTYLEVAR(appBKgroundColor);
 	self.createTitleLabel.text = NSLocalizedString(createBuddyCloudId, @"");
 	self.registerTitleLabel.text = NSLocalizedString(registerAcctMsg, @"");
 	self.userNameLabel.text = [NSString stringWithFormat:NSLocalizedString(chooseAWildCard, @""), NSLocalizedString(userName, @"")];
@@ -112,84 +115,24 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 
 - (void)join:(id)sender {
 	NSLog(@"join.....");
-	UIAlertView *alertView = nil;
 	[self removeErrorMsg];
 	
-	if ( [[BuddycloudAppDelegate sharedAppDelegate] isConnectionAvailable] && (self.userNameTxtField.text != nil && ![self.userNameTxtField.text isEmptyOrWhitespace]) &&
-		 (self.newPasswordTxtField.text != nil && ![self.newPasswordTxtField.text isEmptyOrWhitespace]) )
+	if ([[BuddycloudAppDelegate sharedAppDelegate] isConnectionAvailable])
 	{
 		[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView showActivityLabelWithStyle:TTActivityLabelStyleBlackBezel 
 																					   withText:NSLocalizedString(loading, @"")
 																		   withTransparentSheet:YES
 																			  withActivityFrame:CGRectMake(self.view.width/2 - 50.0, self.view.height/2 - (100.0 + 30.0), 100.0, 100.0)]; 
-		
-		//In-band registration.
-		NSRange range = [self.userNameTxtField.text rangeOfString:@"@" options:NSLiteralSearch];
-//		NSString *newJIDStr = nil;
-		
-		if(range.location != NSNotFound && range.length > 0) {
-//			if ([xmppEngine.xmppStream isConnected] && [[xmppEngine.xmppStream.myJID bare] isEqualToString:self.userNameTxtField.text]) {
-//				
-//				//Stop the activity.
-//				[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
-//				
-//				alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
-//														message:[NSString stringWithFormat:NSLocalizedString(userNameLoggedInConflictError, @""), NSLocalizedString(userName, @"")]
-//													   delegate:self
-//											  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
-//											  otherButtonTitles:nil] autorelease];
-//				[alertView show];
-//				
-//				return;
-//			}
-//			
-//			newJIDStr = self.userNameTxtField.text;
-		}
- 
-		XMPPEngine *xmppEngine = (XMPPEngine *)[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
-
-		//Disconnect the xmpp engine if it's connected.
-		if ([xmppEngine.xmppStream isConnected]) {
-			[xmppEngine disconnect];
-		}
+		//Register the new user.
+		NSError *error = nil;
+		if (![LoginUtility registerNewUser: &error withUsername: self.userNameTxtField.text withPassword: self.newPasswordTxtField.text]) {
 			
-		//Set the JID and password.
-		[xmppEngine.xmppStream setHostName:@""];	// Note: The hostname will be resolved through DNS SRV lookup.
-		[xmppEngine.xmppStream setMyJID:[XMPPJID jidWithString:self.userNameTxtField.text resource:XMPP_BC_IPHONE_RESOURCE]];
-		xmppEngine.password = self.newPasswordTxtField.text;
-		xmppEngine.isNewUserRegisteration = YES;
-		
-		//Connect the xmpp engine.
-		[xmppEngine connect];
+			//Show the error.
+			[LoginUtility showError: error];
+		}
 	}
 	else {
-		//Stop the activity.
-		[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
-		
-		if ([self.userNameTxtField.text isEmptyOrWhitespace]) {
-			alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
-													message:[NSString stringWithFormat:NSLocalizedString(wilcardCanNotBeEmpty, @""), NSLocalizedString(userName, @"")]
-												   delegate:self
-										  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
-										  otherButtonTitles:nil] autorelease];
-			[alertView show];
-		}
-		else if ([self.newPasswordTxtField.text isEmptyOrWhitespace]) {
-			alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
-													message:[NSString stringWithFormat:NSLocalizedString(wilcardCanNotBeEmpty, @""), NSLocalizedString(password, @"")]
-												   delegate:self
-										  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
-										  otherButtonTitles:nil] autorelease];
-			[alertView show];
-			[alertView show];
-		}
-		else {
-			[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView showActivityTimerLabelInCenter:TTActivityLabelStyleBlackBox withText:NSLocalizedString(noInternetConnError, @"")];
-
-		}
-
-		
-		NSLog(@"Something wrong with credentials...");
+		[CustomAlert showAlertMessageWithTitle:NSLocalizedString(alertPrompt, @"") showPreMsg:NSLocalizedString(noInternetConnError, @"")];
 	}
 }
 
@@ -197,60 +140,7 @@ static NSString *createNewUserAcctViewController = @"CreateNewUserAcctViewContro
 	[[TTNavigator navigator].visibleViewController dismissModalViewControllerAnimated:YES];
 }
 
-- (void)registeredWithSuccess:(NSNotification *)notification {
-	
-	XMPPStream *stream = (XMPPStream *)[notification object];
-	
-	@try {
-		if (stream) {
-			[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
-			[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:[NSString stringWithFormat:kexploreChannelsWithTitleAndUsernameURLPath,
-																				   NSLocalizedString(buddycloud, @""), [stream.myJID full], self.newPasswordTxtField.text]]];	
-		}
-	}
-	@catch (NSException * e) {
-		NSLog(@"registeredWithSuccess .. %@", [e description]);
-	}
-}
 
-- (void)registeredWithFailure:(NSNotification *)notification {
-	
-	UIAlertView *alertView = nil;
-	NSInteger errorCode = kreg_unknwonError;
-	
-	if ([[notification object] class] == [NSError class]) {
-		NSError *error = (NSError *)[notification object];
-		errorCode = [error code];
-	}
-	else {
-		errorCode = [[notification object] integerValue];
-	}
-	
-	
-	if (errorCode == kreg_userNameConflictError) {
-		NSLog(@"Username kreg_userNameConflictError....");
-		[self showErrorMsg:NSLocalizedString(userNameConflictError, @"")];
-		
-		alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
-												message:NSLocalizedString(userNameConflictError, @"")
-											   delegate:self 
-									  cancelButtonTitle:NSLocalizedString(okButtonLabel, @"") 
-									  otherButtonTitles:nil] autorelease];
-	}
-	
-	[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView stopActivity];
-}
-
-- (UIViewController *)allowUserToExploreChannels:(NSString *)title withUserIno:(NSDictionary *)userInfo {
-	
-	NSLog(@"userinfo : %@", userInfo);
-	
-	UserAccountMsgViewController *acctMsgViewController = [[[UserAccountMsgViewController alloc] initWithTitle:title 
-																								  withUserName:[userInfo valueForKey:@"username"]
-																								  withPassword:[userInfo valueForKey:@"password"]] autorelease];
-	
-	return acctMsgViewController;
-}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark UITextFieldDelegate Delegates
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -38,4 +38,13 @@
 // Fires when the user logged in failed.
 + (NSString *) USER_LOGGED_IN_FAILED;
 
+// Fires when the diretcories list updated.
++ (NSString *) DIRECTORY_LIST_UPDATED;
+
+// Fires when the directory items list updated.
++ (NSString *) DIRECTORY_ITEM_LIST_UPDATED;
+
+// Fires when the channel metadata item updated.
++ (NSString *) CHANNEL_METADATA_ITEM_UPDATED;
+
 @end

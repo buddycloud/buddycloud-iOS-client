@@ -39,7 +39,4 @@ typedef enum {
 - (IBAction)openScreen:(id)sender;
 
 - (id)initWithTitle:(NSString *)title;
-
-- (UIViewController *)showNetworkLogin:(NSInteger)networkId;
-
 @end

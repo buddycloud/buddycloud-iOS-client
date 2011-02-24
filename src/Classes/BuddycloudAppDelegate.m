@@ -32,7 +32,7 @@
 @synthesize window;
 @synthesize followingTableView, postsTableView;
 @synthesize followingController, settingsController;
-@synthesize spiralLoadingView;
+@synthesize atlasUrlHandler, spiralLoadingView;
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
@@ -49,17 +49,15 @@
 {
 	// Engines
 	xmppEngine = [[XMPPEngine alloc] init];
-	[xmppEngine setPassword: XMPP_ANONYMOUS_DEFAULT_JID];
-
 	placeEngine = [[PlaceEngine alloc] initWithStream: [xmppEngine xmppStream] toServer: PLACE_ENGINE_SERVER];
 	
-	//Start the reachibility.
+	// Initialize the Atlas Url Handler
+	atlasUrlHandler = [[AtlasURLHandler alloc] init];
+	
+	// Start the reachibility.
 	[self checkF2FReachability];
 	
-	//Auto Login
-	//[self autoLogin];
-	
-	//Initialize the UI Settings.
+	// Initialize the UI Settings.
 	[self initializeUI];
 	
 	return YES;
@@ -76,11 +74,12 @@
 - (void)initializeUI {
 	
 	@try {
-		TTDefaultCSSStyleSheet* styleSheet = [[TTDefaultCSSStyleSheet alloc] init];
-		[styleSheet addStyleSheetFromDisk:TTPathForBundleResource(@"stylesheet.css")];
-		[TTStyleSheet setGlobalStyleSheet:styleSheet];
-		TT_RELEASE_SAFELY(styleSheet);
-		
+		//Initialize the CSS StyleSheet.
+//		TTDefaultCSSStyleSheet* styleSheet = [[TTDefaultCSSStyleSheet alloc] init];
+//		[styleSheet addStyleSheetFromDisk:TTPathForBundleResource(@"stylesheet.css")];
+//		[TTStyleSheet setGlobalStyleSheet:styleSheet];
+
+		[TTStyleSheet setGlobalStyleSheet:[[[BuddyCloudStyleSheet alloc] init] autorelease]];
 		spiralLoadingView = [[SpiralLoadingView alloc] init];
 		
 		//Load all the mapping urls.
@@ -93,6 +92,9 @@
 		
 		// This is the first launch, so we just start with the tab bar
 		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kAppRootURLPath]];
+		
+		//Check auto Login.
+		[LoginUtility performAutoLogin];
 	}
 	@catch (NSException * e) {
 		NSLog(@"Exception : %@", [e description]);
@@ -119,60 +121,9 @@
 	// The tab bar controller is shared, meaning there will only ever be one created.  Loading
 	// This URL will make the existing tab bar controller appear if it was not visible.
 	[map from:kTabBarURLPath toModalViewController:[TabBarController class]];
-	
-	// Check the post against node.
-	[map from:kPostURLPath toViewController:[PostsViewController class]];
 }
 
-/*
-- (void)autoLogin {
-	
-	NSString *userNameValue = [[NSUserDefaults standardUserDefaults] stringForKey:@"username_setting"];
-//	NSString *passwordValue = [[NSUserDefaults standardUserDefaults] stringForKey:@"password_setting"];
-//	NSString *domainValue = [[NSUserDefaults standardUserDefaults] stringForKey:@"host_setting"];
-//	NSString *autoLoginValue = [[NSUserDefaults standardUserDefaults] stringForKey:@"autoLogin_setting"];
 
-    NSLog(@"name before is %@", userNameValue);
-	
-    // Note: this will not work for boolean values as noted by bpapa below.
-    // If you use booleans, you should use objectForKey above and check for null
-    if(!userNameValue) {
-        [self registerDefaultsFromSettingsBundle];
-        userNameValue = [[NSUserDefaults standardUserDefaults] stringForKey:@"username_setting"];
-    }
-    NSLog(@"name after is %@", userNameValue);
-	
-	//[NSUserDefaults standardUserDefaults] 
-	
-//	NSLog(@"Username : %@", userNameValue);
-//	NSLog(@"Password : %@", passwordValue);
-//	NSLog(@"Domain Value : %@", domainValue);
-//	NSLog(@"Login auto : %@", autoLoginValue);
-}
-
-- (void)registerDefaultsFromSettingsBundle {
-    NSString *settingsBundle = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"];
-    if(!settingsBundle) {
-        NSLog(@"Could not find Settings.bundle");
-        return;
-    }
-	
-    NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:[settingsBundle stringByAppendingPathComponent:@"Root.plist"]];
-    NSArray *preferences = [settings objectForKey:@"PreferenceSpecifiers"];
-	
-    NSMutableDictionary *defaultsToRegister = [[NSMutableDictionary alloc] initWithCapacity:[preferences count]];
-    for(NSDictionary *prefSpecification in preferences) {
-        NSString *key = [prefSpecification objectForKey:@"Key"];
-        if(key) {
-            [defaultsToRegister setObject:[prefSpecification objectForKey:@"DefaultValue"] forKey:key];
-        }
-    }
-	
-    [[NSUserDefaults standardUserDefaults] registerDefaults:defaultsToRegister];
-    [defaultsToRegister release];
-}
-
-*/
 
 - (void)dealloc
 {
@@ -183,13 +134,6 @@
 	
 	[super dealloc];
 }
-
-
-- (UIViewController *)createNewAccount {
-	CreateNewUserAcctViewController *createNewUserAcctViewController = [[[CreateNewUserAcctViewController alloc] initWithTitle:NSLocalizedString(createAccount, @"")] autorelease];
-	return createNewUserAcctViewController;
-}
-
 
 /*
  * Shared App Delegate.
@@ -212,6 +156,8 @@
 
 
 #pragma mark - APP WIFI/EDGE/GPRS/XMPP-Stream REACHIBILITY CHECK
+BOOL isInternetConAvailable = NO;
+
 /* 
  * Check Server Reachability.
  */
@@ -233,8 +179,8 @@
 	NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
 	[self updateReachability:curReach];
 	
-	if (!isInternetConAvailable){	
-		[[BuddycloudAppDelegate sharedAppDelegate].spiralLoadingView showActivityTimerLabelInCenter:TTActivityLabelStyleBlackBox withText:NSLocalizedString(noInternetConnError, @"")];
+	if (!isInternetConAvailable){
+		[CustomAlert showAlertMessageWithTitle:NSLocalizedString(alertPrompt, @"") showPreMsg:NSLocalizedString(noInternetConnError, @"")];
 	}
 }
 

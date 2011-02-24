@@ -11,7 +11,11 @@
 #import "PostItem.h"
 #import "RFSRVResolver.h"
 
+#define usernameKey	@"usernameKey"
+#define passwordKey	@"passwordKey"
+
 @class XMPPStream;
+@class XMPPReconnect;
 @class XMPPRoster;
 @class XMPPPubsub;
 
@@ -20,6 +24,8 @@
 @class XMPPIQ;
 @class FollowedItem;
 @class ChannelItem;
+@class DirectoryItem;
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Public XMPPEngine definition
@@ -27,6 +33,7 @@
 
 @interface XMPPEngine : FollowingDataModel {
 	XMPPStream *xmppStream;
+	XMPPReconnect *xmppReconnect;
 	XMPPRoster *xmppRoster;
 	XMPPPubsub *xmppPubsub;
 
@@ -45,6 +52,7 @@
 }
 
 @property(nonatomic, retain) XMPPStream *xmppStream;
+@property(nonatomic, retain) XMPPReconnect *xmppReconnect;
 @property(nonatomic, retain) XMPPRoster *xmppRoster;
 @property(nonatomic, retain) NSString *password;
 @property(nonatomic) BOOL isNewUserRegisteration;
@@ -56,6 +64,10 @@
 
 - (BOOL)postChannelText:(NSString *)text toNode:(NSString *)node;
 - (BOOL)postChannelText:(NSString *)text toNode:(NSString *)node inReplyTo:(long long)entryId;
+
+- (void)getDirectories;
+- (void)getDirectoryItems:(NSString *)sId ;
+- (void)fetechMetadataForNode:(NSString *)node;
 
 @end
 
@@ -71,6 +83,8 @@
 - (void)sendPingResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId;
 - (void)sendVersionResultTo:(XMPPJID *)recipient withIQId:(NSString *)iqId;
 - (void)sendFeatureDiscovery:(XMPPIQ *)iq;
+
+- (void)handleDirectoryItems:(XMPPIQ *)iq;
 
 @end
 

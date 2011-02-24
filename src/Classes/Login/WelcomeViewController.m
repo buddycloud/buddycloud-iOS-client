@@ -18,9 +18,9 @@ static NSString *welcomeViewControllerNib = @"WelcomeViewcontroller";
 - (id)initWithNibName:(NSString *)Name {
 	if (self = [super initWithNibName:welcomeViewControllerNib bundle:[NSBundle mainBundle]]) {
 		self.title = NSLocalizedString(welcome, @"");
+		self.navigationBarTintColor = APPSTYLEVAR(navigationBarColor);
 		
 		[[TTNavigator navigator].URLMap from:kloginServicesWithTitleURLPath toViewController:[LoginServicesViewController class]];
-		[[TTNavigator navigator].URLMap from:kPostWithNodeAndTitleURLPath toViewController:[PostsViewController class]];
 	}
 		
 	return self;
@@ -28,7 +28,6 @@ static NSString *welcomeViewControllerNib = @"WelcomeViewcontroller";
 
 - (void)dealloc {
 	[[TTNavigator navigator].URLMap removeURL:kloginServicesWithTitleURLPath];
-	[[TTNavigator navigator].URLMap removeURL:kPostWithNodeAndTitleURLPath];
 	
 	[super dealloc];
 }
@@ -37,6 +36,7 @@ static NSString *welcomeViewControllerNib = @"WelcomeViewcontroller";
 	
 	[super viewDidLoad];
 	
+	self.view.backgroundColor = APPSTYLEVAR(appBKgroundColor);
 	self.welcomeMsgLabel.text = NSLocalizedString(welcomeMsg, @"");
 	[self.exploreBtn setTitle:NSLocalizedString(exploreBtnLabel, @"") forState:UIControlStateNormal];
 	[self.joinBtn setTitle:NSLocalizedString(joinBtnLabel, @"") forState:UIControlStateNormal];
@@ -53,20 +53,21 @@ static NSString *welcomeViewControllerNib = @"WelcomeViewcontroller";
 - (IBAction)exploreBuddyCloud:(id)sender {
 	
 	@try {
-		
-		XMPPEngine *xmppEngine = [[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
-		if (xmppEngine) {
-			[xmppEngine.xmppStream setHostName:@""];	// Note: The hostname will be resolved through DNS SRV lookup.
-			[xmppEngine.xmppStream setMyJID:[XMPPJID jidWithString:XMPP_ANONYMOUS_DEFAULT_JID resource:XMPP_BC_IPHONE_RESOURCE]];
-			[xmppEngine setAuthenticateAnonymously:YES];
+		if (![[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine].xmppStream isConnected]) {
+			XMPPEngine *xmppEngine = [[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
+			if (xmppEngine) {
+				[xmppEngine.xmppStream setHostName:@""];	// Note: The hostname will be resolved through DNS SRV lookup.
+				[xmppEngine.xmppStream setMyJID:[XMPPJID jidWithString:XMPP_ANONYMOUS_DEFAULT_JID resource:XMPP_BC_IPHONE_RESOURCE]];
+				[xmppEngine setAuthenticateAnonymously:YES];
 			
-			//Connet the xmpp enginer anonmously.
-			[xmppEngine connect];
-		}
+				//Connet the xmpp enginer anonmously.
+				[xmppEngine connect];
+			}
 		
-		[[TTNavigator navigator] removeAllViewControllers];
-		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kTabBarURLPath]];
-		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:[NSString stringWithFormat:kTabBarItemURLPath, MenuPageChannel]]];	//land on channel page.
+			[[TTNavigator navigator] removeAllViewControllers];
+			[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kTabBarURLPath]];
+			[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:[NSString stringWithFormat:kTabBarItemURLPath, MenuPageFollowing]]];	//land on channel page.
+		}
 	}
 	@catch (NSException * e) {
 		NSLog(@"Exception : %@", [e description]);

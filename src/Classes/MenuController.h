@@ -9,20 +9,24 @@
 
 #import <Three20/Three20.h>
 #import "FollowingViewController.h"
+#import "ExploreViewController.h"
 #import "SettingsViewController.h"
 
 typedef enum {
-	MenuPageNone,
-	MenuPageChannel,
-	MenuPagePlaces,
+	MenuPageNone = 0,
+	MenuPageFollowing,
 	MenuPageBrowse,
+	MenuPagePlaces,
 	MenuPageSettings,
 } MenuPage;
 
 @interface MenuController : TTViewController {
+	
 	MenuPage _page;
+	UIViewController *selectedViewController;
 }
 
 @property(nonatomic) MenuPage page;
+@property(nonatomic, retain) UIViewController *selectedViewController;
 
 @end

@@ -124,12 +124,9 @@
 								<string key="IBUIText"/>
 								<int key="IBUIBorderStyle">3</int>
 								<string key="IBUIPlaceholder">username</string>
-								<object class="NSColor" key="IBUITextColor">
-									<int key="NSColorSpace">3</int>
-									<bytes key="NSWhite">MAA</bytes>
-									<object class="NSColorSpace" key="NSCustomColorSpace" id="965985428">
-										<int key="NSID">2</int>
-									</object>
+								<object class="NSColor" key="IBUITextColor" id="655726393">
+									<int key="NSColorSpace">2</int>
+									<bytes key="NSRGB">MC4wNjI3NDUxMDE3NSAwLjIyMzUyOTQyODIgMC4yNzg0MzEzODU4AA</bytes>
 								</object>
 								<reference key="IBUIFont" ref="1054634709"/>
 								<bool key="IBUIAdjustsFontSizeToFit">YES</bool>
@@ -178,11 +175,7 @@
 								<string key="IBUIText"/>
 								<int key="IBUIBorderStyle">3</int>
 								<string key="IBUIPlaceholder">password</string>
-								<object class="NSColor" key="IBUITextColor">
-									<int key="NSColorSpace">3</int>
-									<bytes key="NSWhite">MAA</bytes>
-									<reference key="NSCustomColorSpace" ref="965985428"/>
-								</object>
+								<reference key="IBUITextColor" ref="655726393"/>
 								<reference key="IBUIFont" ref="1054634709"/>
 								<bool key="IBUIAdjustsFontSizeToFit">YES</bool>
 								<float key="IBUIMinimumFontSize">17</float>

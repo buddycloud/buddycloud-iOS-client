@@ -11,4 +11,8 @@
 	#import "extThree20CSSStyle/extThree20CSSStyle.h"
 	#import "XMPP.h"
 	#import "Events.h"
+	#import "CustomAlert.h"
+	#import "Util.h"
+	#import "NSStringAdditions.h"
+
 #endif

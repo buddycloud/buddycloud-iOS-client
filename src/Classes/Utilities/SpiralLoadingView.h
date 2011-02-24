@@ -20,7 +20,6 @@
 }
 
 - (void)showActivityLabelInCenter:(TTActivityLabelStyle)style withText:(NSString *)sMsg;
-- (void)showActivityTimerLabelInCenter:(TTActivityLabelStyle)style withText:(NSString *)sMsg;
 - (void)showActivityLabelInCenter:(TTActivityLabelStyle)style withTransparentSheet:(BOOL)transparentSheet withText:(NSString *)sMsg;
 - (void)showActivityLabelWithStyle:(TTActivityLabelStyle)style withText:(NSString *)sMsg withActivityFrame:(CGRect)activityFrame;
 - (void)showActivityLabelWithStyle:(TTActivityLabelStyle)style withText:(NSString *)sMsg withTransparentSheet:(BOOL)transparentSheet withActivityFrame:(CGRect)activityFrame;

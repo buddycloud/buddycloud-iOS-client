@@ -27,3 +27,21 @@
 - (BOOL)compare:(GeoLocation *)other;
 
 @end
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark GeoLocation Info Item
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@interface GeoLocationCordinateInfo : GeoLocation {
+	
+	long long latitude;
+	long long longitude;
+}
+
+@property(nonatomic) long long latitude;
+@property(nonatomic) long long longitude;
+
+- (id)initWithLatAndLong:(long long)cordLat withLongitude:(long long)cordLong;
+
+@end
+
+

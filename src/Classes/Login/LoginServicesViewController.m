@@ -18,12 +18,13 @@ static NSString *loginServicesViewControllerNib = @"LoginServicesViewController"
 - (id)initWithTitle:(NSString *)title {
 	if (self = [super initWithNibName:loginServicesViewControllerNib bundle: [NSBundle mainBundle]]) {
 		self.title = NSLocalizedString(buddycloud, @"");
+		self.navigationBarTintColor = APPSTYLEVAR(navigationBarColor);
 		
 		[[TTNavigator navigator].URLMap from:kloginURLPath
-					   toModalViewController:self selector:@selector(showNetworkLogin:)];
+					   toModalViewController:[BuddycloudAppDelegate sharedAppDelegate].atlasUrlHandler selector:@selector(showNetworkLogin:)];
 
 		[[TTNavigator navigator].URLMap from:kcreateNewAcctURLPath
-					   toModalViewController:[BuddycloudAppDelegate sharedAppDelegate] selector:@selector(createNewAccount)];
+					   toModalViewController:[BuddycloudAppDelegate sharedAppDelegate].atlasUrlHandler selector:@selector(createNewAccount)];
 	}
 	
 	return self;
@@ -40,6 +41,7 @@ static NSString *loginServicesViewControllerNib = @"LoginServicesViewController"
 	
 	[super viewDidLoad];
 	
+	self.view.backgroundColor = APPSTYLEVAR(appBKgroundColor);
 	self.loginServiceTitleLabel.text = NSLocalizedString(loginServicesListTitle, @"");
 	
 	[self.networkBtn1 setTitle:NSLocalizedString(network1Label, @"") forState:UIControlStateNormal];
@@ -73,12 +75,6 @@ static NSString *loginServicesViewControllerNib = @"LoginServicesViewController"
 		NSLog(@"Open specific network login screen.");
 		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:[NSString stringWithFormat:kloginWithNetworkIDURLPath, clickedBtn.tag]]];
 	}
-}
-
-- (UIViewController *)showNetworkLogin:(NSInteger)networkId {
-	LoginViewController *loginViewController = [[[LoginViewController alloc] initWithTitle:NSLocalizedString(createAccount, @"")
-																			 withNetworkID:networkId] autorelease];
-	return loginViewController;
 }
 
 @end

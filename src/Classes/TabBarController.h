@@ -10,7 +10,7 @@
 #import <Three20/Three20.h>
 #import "MenuController.h"
 
-@interface TabBarController : UITabBarController {
+@interface TabBarController : UITabBarController <UITabBarControllerDelegate> {
 }
 
 @end

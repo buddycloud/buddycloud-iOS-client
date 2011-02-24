@@ -29,6 +29,8 @@
 			<string>None</string>
 			<key>AutocorrectionType</key>
 			<string>No</string>
+			<key>DefaultValue</key>
+			<string></string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -45,20 +47,8 @@
 			<string>None</string>
 			<key>AutocorrectionType</key>
 			<string>No</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>XMPP Server</string>
-			<key>Key</key>
-			<string>host_setting</string>
-			<key>KeyboardType</key>
-			<string>Alphabet</string>
-			<key>AutocapitalizationType</key>
-			<string>None</string>
-			<key>AutocorrectionType</key>
-			<string>No</string>
+			<key>DefaultValue</key>
+			<string></string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -68,11 +58,11 @@
 			<key>Key</key>
 			<string>autoLogin_setting</string>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 			<key>TrueValue</key>
 			<false/>
 			<key>FalseValue</key>
-			<false/>
+			<true/>
 		</dict>
 	</array>
 </dict>

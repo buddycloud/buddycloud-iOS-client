@@ -23,7 +23,7 @@ NSString * const XMPP_BC_IPHONE_RESOURCE = @"iPhone/bcloud";
 NSString * const XMPP_ENGINE_SERVER = @"jabber.buddycloud.com"; 
 NSInteger const XMPP_ENGINE_SERVER_PORT = 5222;
 
-NSString * const XMPP_ANONYMOUS_DEFAULT_JID = @"iphone2@anon.buddycloud.com";
+NSString * const XMPP_ANONYMOUS_DEFAULT_JID = @"@anon.buddycloud.com";
 
 NSString * const XMPP_PUBSUB_SERVER = @"pubsub-bridge@broadcaster.buddycloud.com";
 
@@ -40,18 +40,19 @@ NSString * kTabBarURLPath = @"tt://tabBar";
 NSString * kTabBarItemURLPath = @"tt://menu/%d";
 NSString * kMenuPageURLPath = @"tt://menu/(initWithMenuPage:)";
 
-NSString * kPostURLPath = @"tt://post?_node=(initWithNode:)";
-NSString * kPostWithNodeAndTitleURLPath = @"tt://post?_node=%@&title=%@";
-
 NSString * kloginServicesWithTitleURLPath = @"tt://loginServices/(initWithTitle:)";
 
 NSString * kloginURLPath = @"tt://networkLogin?networkId=(showNetworkLogin:)";
 NSString * kloginWithNetworkIDURLPath = @"tt://networkLogin?networkId=%d";
 
+NSString * kloginPrefilledURLPath = @"tt://networkLoginPrefilled?(showNetworkLoginPrefilled:)";
+NSString * kloginPrefilledWithNetworkIDURLPath = @"tt://networkLoginPrefilled?networkId=%d&username=%@&password=%@&autoLogin=%@";
+
 NSString * kcreateNewAcctURLPath = @"tt://createNewAcct?title=(createNewAccount:)";
 
 NSString * kexploreChannelsURLPath = @"tt://exploreChannels?title=(allowUserToExploreChannels:)";
 NSString * kexploreChannelsWithTitleAndUsernameURLPath = @"tt://exploreChannels?title=%@&username=%@&password=%@";
+
 
 //************************** ATLAS APP URLS END **************************//
 

@@ -49,6 +49,28 @@
 		6C068472127C154E0078530F /* MenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C068471127C154E0078530F /* MenuController.m */; };
 		6C1D4ECE127FE66A00CBFC87 /* bc.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C1D4ECC127FE66A00CBFC87 /* bc.png */; };
 		6C1D4ECF127FE66A00CBFC87 /* darkgreyBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C1D4ECD127FE66A00CBFC87 /* darkgreyBtn.png */; };
+		6C2E7DF0131647F900E55DEA /* LoginUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7DEC131647F900E55DEA /* LoginUtility.m */; };
+		6C2E7DF1131647F900E55DEA /* CustomAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7DEE131647F900E55DEA /* CustomAlert.m */; };
+		6C2E7DF41316484A00E55DEA /* DirectoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7DF21316484A00E55DEA /* DirectoryItem.m */; };
+		6C2E7EA1131648BA00E55DEA /* AtlasURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7E9F131648BA00E55DEA /* AtlasURLHandler.m */; };
+		6C2E7EA4131648FA00E55DEA /* CustomizedTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7EA2131648FA00E55DEA /* CustomizedTableCell.m */; };
+		6C2E7EA91316495D00E55DEA /* shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C2E7EA51316495D00E55DEA /* shadow.png */; };
+		6C2E7EAA1316495D00E55DEA /* separator.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C2E7EA61316495D00E55DEA /* separator.png */; };
+		6C2E7EAB1316495D00E55DEA /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C2E7EA71316495D00E55DEA /* delete.png */; };
+		6C2E7EAC1316495D00E55DEA /* avatarFrame.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C2E7EA81316495D00E55DEA /* avatarFrame.png */; };
+		6C2E7EC0131649BA00E55DEA /* buddycloud colours.clr in Resources */ = {isa = PBXBuildFile; fileRef = 6C2E7EBF131649BA00E55DEA /* buddycloud colours.clr */; };
+		6C2E7EC4131649F400E55DEA /* BuddyCloudStyleSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7EC2131649F400E55DEA /* BuddyCloudStyleSheet.m */; };
+		6C2E7EE313164AB900E55DEA /* ChannelDetailHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7ECF13164AB900E55DEA /* ChannelDetailHeader.m */; };
+		6C2E7EE413164AB900E55DEA /* ChannelDetailInoDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7ED113164AB900E55DEA /* ChannelDetailInoDataSource.m */; };
+		6C2E7EE513164AB900E55DEA /* ChannelDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7ED313164AB900E55DEA /* ChannelDetailViewController.m */; };
+		6C2E7EE613164AB900E55DEA /* ChannelListCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7ED513164AB900E55DEA /* ChannelListCellController.m */; };
+		6C2E7EE713164AB900E55DEA /* ChannelListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7ED713164AB900E55DEA /* ChannelListViewController.m */; };
+		6C2E7EE813164AB900E55DEA /* ChannelTopicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7ED913164AB900E55DEA /* ChannelTopicCell.m */; };
+		6C2E7EEA13164AB900E55DEA /* ChannelWallDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7EDD13164AB900E55DEA /* ChannelWallDataSource.m */; };
+		6C2E7EEB13164AB900E55DEA /* ExploreCellController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7EDF13164AB900E55DEA /* ExploreCellController.m */; };
+		6C2E7EEC13164AB900E55DEA /* ExploreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C2E7EE113164AB900E55DEA /* ExploreViewController.m */; };
+		6C2E80211316673500E55DEA /* ExploreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C2E801F1316673500E55DEA /* ExploreCell.xib */; };
+		6C2E80221316673500E55DEA /* ChannelDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C2E80201316673500E55DEA /* ChannelDetailViewController.xib */; };
 		6C43221C1277FA9A0080B39D /* AppConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C43221B1277FA9A0080B39D /* AppConstants.m */; };
 		6C4323BE127813F60080B39D /* CORBEL.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 6C43239F127813F60080B39D /* CORBEL.TTF */; };
 		6C4323BF127813F60080B39D /* database.sql in Resources */ = {isa = PBXBuildFile; fileRef = 6C4323A1127813F60080B39D /* database.sql */; };
@@ -600,6 +622,43 @@
 		6C1D4ECD127FE66A00CBFC87 /* darkgreyBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = darkgreyBtn.png; sourceTree = "<group>"; };
 		6C271DC512793E03001A6FB7 /* Buddycloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Buddycloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C271E32127947EC001A6FB7 /* Buddycloud-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Buddycloud-Info.plist"; sourceTree = "<group>"; };
+		6C2E7DEC131647F900E55DEA /* LoginUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginUtility.m; sourceTree = "<group>"; };
+		6C2E7DED131647F900E55DEA /* LoginUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginUtility.h; sourceTree = "<group>"; };
+		6C2E7DEE131647F900E55DEA /* CustomAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAlert.m; sourceTree = "<group>"; };
+		6C2E7DEF131647F900E55DEA /* CustomAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAlert.h; sourceTree = "<group>"; };
+		6C2E7DF21316484A00E55DEA /* DirectoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryItem.m; sourceTree = "<group>"; };
+		6C2E7DF31316484A00E55DEA /* DirectoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryItem.h; sourceTree = "<group>"; };
+		6C2E7E9F131648BA00E55DEA /* AtlasURLHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AtlasURLHandler.m; sourceTree = "<group>"; };
+		6C2E7EA0131648BA00E55DEA /* AtlasURLHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasURLHandler.h; sourceTree = "<group>"; };
+		6C2E7EA2131648FA00E55DEA /* CustomizedTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomizedTableCell.m; sourceTree = "<group>"; };
+		6C2E7EA3131648FA00E55DEA /* CustomizedTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomizedTableCell.h; sourceTree = "<group>"; };
+		6C2E7EA51316495D00E55DEA /* shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shadow.png; sourceTree = "<group>"; };
+		6C2E7EA61316495D00E55DEA /* separator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = separator.png; sourceTree = "<group>"; };
+		6C2E7EA71316495D00E55DEA /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete.png; sourceTree = "<group>"; };
+		6C2E7EA81316495D00E55DEA /* avatarFrame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatarFrame.png; sourceTree = "<group>"; };
+		6C2E7EBF131649BA00E55DEA /* buddycloud colours.clr */ = {isa = PBXFileReference; lastKnownFileType = file; path = "buddycloud colours.clr"; sourceTree = "<group>"; };
+		6C2E7EC2131649F400E55DEA /* BuddyCloudStyleSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuddyCloudStyleSheet.m; sourceTree = "<group>"; };
+		6C2E7EC3131649F400E55DEA /* BuddyCloudStyleSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuddyCloudStyleSheet.h; sourceTree = "<group>"; };
+		6C2E7ECE13164AB900E55DEA /* ChannelDetailHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelDetailHeader.h; sourceTree = "<group>"; };
+		6C2E7ECF13164AB900E55DEA /* ChannelDetailHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelDetailHeader.m; sourceTree = "<group>"; };
+		6C2E7ED013164AB900E55DEA /* ChannelDetailInoDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelDetailInoDataSource.h; sourceTree = "<group>"; };
+		6C2E7ED113164AB900E55DEA /* ChannelDetailInoDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelDetailInoDataSource.m; sourceTree = "<group>"; };
+		6C2E7ED213164AB900E55DEA /* ChannelDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelDetailViewController.h; sourceTree = "<group>"; };
+		6C2E7ED313164AB900E55DEA /* ChannelDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelDetailViewController.m; sourceTree = "<group>"; };
+		6C2E7ED413164AB900E55DEA /* ChannelListCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelListCellController.h; sourceTree = "<group>"; };
+		6C2E7ED513164AB900E55DEA /* ChannelListCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelListCellController.m; sourceTree = "<group>"; };
+		6C2E7ED613164AB900E55DEA /* ChannelListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelListViewController.h; sourceTree = "<group>"; };
+		6C2E7ED713164AB900E55DEA /* ChannelListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelListViewController.m; sourceTree = "<group>"; };
+		6C2E7ED813164AB900E55DEA /* ChannelTopicCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelTopicCell.h; sourceTree = "<group>"; };
+		6C2E7ED913164AB900E55DEA /* ChannelTopicCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelTopicCell.m; sourceTree = "<group>"; };
+		6C2E7EDC13164AB900E55DEA /* ChannelWallDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChannelWallDataSource.h; sourceTree = "<group>"; };
+		6C2E7EDD13164AB900E55DEA /* ChannelWallDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChannelWallDataSource.m; sourceTree = "<group>"; };
+		6C2E7EDE13164AB900E55DEA /* ExploreCellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreCellController.h; sourceTree = "<group>"; };
+		6C2E7EDF13164AB900E55DEA /* ExploreCellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreCellController.m; sourceTree = "<group>"; };
+		6C2E7EE013164AB900E55DEA /* ExploreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExploreViewController.h; sourceTree = "<group>"; };
+		6C2E7EE113164AB900E55DEA /* ExploreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreViewController.m; sourceTree = "<group>"; };
+		6C2E801F1316673500E55DEA /* ExploreCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ExploreCell.xib; sourceTree = "<group>"; };
+		6C2E80201316673500E55DEA /* ChannelDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChannelDetailViewController.xib; sourceTree = "<group>"; };
 		6C43221A1277FA9A0080B39D /* AppConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppConstants.h; sourceTree = "<group>"; };
 		6C43221B1277FA9A0080B39D /* AppConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppConstants.m; sourceTree = "<group>"; };
 		6C43239F127813F60080B39D /* CORBEL.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = CORBEL.TTF; sourceTree = "<group>"; };
@@ -641,7 +700,7 @@
 		6C7340D412BCB689009FD633 /* livejournal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = livejournal.png; sourceTree = "<group>"; };
 		6C8CE0C7127E01CA00273690 /* extThree20CSSStyle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = extThree20CSSStyle.xcodeproj; path = three20/src/extThree20CSSStyle/extThree20CSSStyle.xcodeproj; sourceTree = "<group>"; };
 		6C8CE0E3127E01F500273690 /* extThree20CSSStyle.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = extThree20CSSStyle.bundle; path = three20/src/extThree20CSSStyle/Resources/extThree20CSSStyle.bundle; sourceTree = "<group>"; };
-		6C8CE0FA127E029300273690 /* stylesheet.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = stylesheet.css; path = Resources/stylesheet.css; sourceTree = SOURCE_ROOT; };
+		6C8CE0FA127E029300273690 /* stylesheet.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = stylesheet.css; sourceTree = "<group>"; };
 		6C943AAC12B43C0E001ED920 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		6C943AAD12B43C0E001ED920 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		6C943AAF12B43C40001ED920 /* CreateNewUserAcctViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateNewUserAcctViewController.h; sourceTree = "<group>"; };
@@ -846,6 +905,7 @@
 		5736814F116CA80F008DC56F /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				6C2E7ECB13164AB900E55DEA /* Explore Tab */,
 				6C0681C9127BF99A0078530F /* Menu */,
 				6C992E6612B33C1A0033CC66 /* Login */,
 				57368150116CA838008DC56F /* FollowingViewController.h */,
@@ -862,6 +922,8 @@
 				57A183A0119ED30400DFFD42 /* TextFieldAlertView.m */,
 				5791901111A3E6EF0089B853 /* ChannelCellController.h */,
 				5791901211A3E6EF0089B853 /* ChannelCellController.m */,
+				6C2E7EA3131648FA00E55DEA /* CustomizedTableCell.h */,
+				6C2E7EA2131648FA00E55DEA /* CustomizedTableCell.m */,
 				577A13D711AD4E76006B1701 /* PostsViewController.h */,
 				577A13D811AD4E76006B1701 /* PostsViewController.m */,
 				577A141B11AD82F6006B1701 /* PostCellController.h */,
@@ -905,6 +967,8 @@
 		578B8AF9118313D500279015 /* Concepts */ = {
 			isa = PBXGroup;
 			children = (
+				6C2E7DF31316484A00E55DEA /* DirectoryItem.h */,
+				6C2E7DF21316484A00E55DEA /* DirectoryItem.m */,
 				578B8AFA118313F000279015 /* FollowedItem.h */,
 				578B8AFB118313F000279015 /* FollowedItem.m */,
 				578B8AFD118314D400279015 /* UserItem.h */,
@@ -1115,9 +1179,69 @@
 			name = Menu;
 			sourceTree = "<group>";
 		};
+		6C2E7EC1131649D600E55DEA /* CC Style-sheet */ = {
+			isa = PBXGroup;
+			children = (
+				6C8CE0FA127E029300273690 /* stylesheet.css */,
+				6C2E7EC3131649F400E55DEA /* BuddyCloudStyleSheet.h */,
+				6C2E7EC2131649F400E55DEA /* BuddyCloudStyleSheet.m */,
+			);
+			name = "CC Style-sheet";
+			sourceTree = "<group>";
+		};
+		6C2E7ECB13164AB900E55DEA /* Explore Tab */ = {
+			isa = PBXGroup;
+			children = (
+				6C2E7ED413164AB900E55DEA /* ChannelListCellController.h */,
+				6C2E7ED513164AB900E55DEA /* ChannelListCellController.m */,
+				6C2E7ED613164AB900E55DEA /* ChannelListViewController.h */,
+				6C2E7ED713164AB900E55DEA /* ChannelListViewController.m */,
+				6C2E7EF313164D4F00E55DEA /* Channel Detail */,
+				6C2E7EDE13164AB900E55DEA /* ExploreCellController.h */,
+				6C2E7EDF13164AB900E55DEA /* ExploreCellController.m */,
+				6C2E7EE013164AB900E55DEA /* ExploreViewController.h */,
+				6C2E7EE113164AB900E55DEA /* ExploreViewController.m */,
+			);
+			path = "Explore Tab";
+			sourceTree = "<group>";
+		};
+		6C2E7EF313164D4F00E55DEA /* Channel Detail */ = {
+			isa = PBXGroup;
+			children = (
+				6C2E7ED213164AB900E55DEA /* ChannelDetailViewController.h */,
+				6C2E7ED313164AB900E55DEA /* ChannelDetailViewController.m */,
+				6C2E7EF513164D6400E55DEA /* Info */,
+				6C2E7EF413164D5B00E55DEA /* Wall */,
+			);
+			name = "Channel Detail";
+			sourceTree = "<group>";
+		};
+		6C2E7EF413164D5B00E55DEA /* Wall */ = {
+			isa = PBXGroup;
+			children = (
+				6C2E7ED813164AB900E55DEA /* ChannelTopicCell.h */,
+				6C2E7ED913164AB900E55DEA /* ChannelTopicCell.m */,
+				6C2E7EDC13164AB900E55DEA /* ChannelWallDataSource.h */,
+				6C2E7EDD13164AB900E55DEA /* ChannelWallDataSource.m */,
+			);
+			name = Wall;
+			sourceTree = "<group>";
+		};
+		6C2E7EF513164D6400E55DEA /* Info */ = {
+			isa = PBXGroup;
+			children = (
+				6C2E7ECE13164AB900E55DEA /* ChannelDetailHeader.h */,
+				6C2E7ECF13164AB900E55DEA /* ChannelDetailHeader.m */,
+				6C2E7ED013164AB900E55DEA /* ChannelDetailInoDataSource.h */,
+				6C2E7ED113164AB900E55DEA /* ChannelDetailInoDataSource.m */,
+			);
+			name = Info;
+			sourceTree = "<group>";
+		};
 		6C43239E127813F60080B39D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6C2E7EC1131649D600E55DEA /* CC Style-sheet */,
 				6C6ED554127E132F0005AFA1 /* Localizations */,
 				6C4323A0127813F60080B39D /* Database */,
 				6C4323A3127813F60080B39D /* icons */,
@@ -1125,8 +1249,8 @@
 				320B6C86F11D9990244A9730 /* Three20.bundle */,
 				6C4323BD127813F60080B39D /* Settings.bundle */,
 				6C43239F127813F60080B39D /* CORBEL.TTF */,
+				6C2E7EBF131649BA00E55DEA /* buddycloud colours.clr */,
 				6C4323A2127813F60080B39D /* Entitlements.plist */,
-				6C8CE0FA127E029300273690 /* stylesheet.css */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1142,9 +1266,14 @@
 		6C4323A3127813F60080B39D /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				6C4323A7127813F60080B39D /* tabbar */,
 				6C7340CF12BCB689009FD633 /* Networks */,
 				6C943D7212B48FB0001ED920 /* assets */,
 				6C943C4F12B46EF5001ED920 /* simpleBtn.png */,
+				6C2E7EA51316495D00E55DEA /* shadow.png */,
+				6C2E7EA61316495D00E55DEA /* separator.png */,
+				6C2E7EA71316495D00E55DEA /* delete.png */,
+				6C2E7EA81316495D00E55DEA /* avatarFrame.png */,
 				6C943B4512B44EAD001ED920 /* transparent.png */,
 				6C943B3E12B44DE1001ED920 /* lightgreyBtn.png */,
 				6C1D4ECC127FE66A00CBFC87 /* bc.png */,
@@ -1152,7 +1281,6 @@
 				6C4323A4127813F60080B39D /* channel.png */,
 				6C4323A5127813F60080B39D /* contact.png */,
 				6C4323A6127813F60080B39D /* Icon.png */,
-				6C4323A7127813F60080B39D /* tabbar */,
 			);
 			path = icons;
 			sourceTree = "<group>";
@@ -1184,6 +1312,8 @@
 		6C4323B3127813F60080B39D /* Nibs */ = {
 			isa = PBXGroup;
 			children = (
+				6C2E801F1316673500E55DEA /* ExploreCell.xib */,
+				6C2E80201316673500E55DEA /* ChannelDetailViewController.xib */,
 				6C59488D12BA3DC40064D9DB /* LoginViewController.xib */,
 				6C9D5A0312B5D89F00B4AE2B /* UserAccountMsgViewController.xib */,
 				6C943D3012B485C5001ED920 /* CreateNewUserAcctViewController.xib */,
@@ -1330,6 +1460,12 @@
 			children = (
 				6C9D571B12B591DF00B4AE2B /* Util.h */,
 				6C9D571C12B591DF00B4AE2B /* Util.m */,
+				6C2E7DED131647F900E55DEA /* LoginUtility.h */,
+				6C2E7DEC131647F900E55DEA /* LoginUtility.m */,
+				6C2E7DEF131647F900E55DEA /* CustomAlert.h */,
+				6C2E7DEE131647F900E55DEA /* CustomAlert.m */,
+				6C2E7EA0131648BA00E55DEA /* AtlasURLHandler.h */,
+				6C2E7E9F131648BA00E55DEA /* AtlasURLHandler.m */,
 				6C9D572112B591FB00B4AE2B /* SpiralLoadingView.h */,
 				6C9D572212B591FB00B4AE2B /* SpiralLoadingView.m */,
 			);
@@ -1883,6 +2019,13 @@
 				6C7340D712BCB68A009FD633 /* gtalk.png in Resources */,
 				6C7340D812BCB68A009FD633 /* jabber.png in Resources */,
 				6C7340D912BCB68A009FD633 /* livejournal.png in Resources */,
+				6C2E7EA91316495D00E55DEA /* shadow.png in Resources */,
+				6C2E7EAA1316495D00E55DEA /* separator.png in Resources */,
+				6C2E7EAB1316495D00E55DEA /* delete.png in Resources */,
+				6C2E7EAC1316495D00E55DEA /* avatarFrame.png in Resources */,
+				6C2E7EC0131649BA00E55DEA /* buddycloud colours.clr in Resources */,
+				6C2E80211316673500E55DEA /* ExploreCell.xib in Resources */,
+				6C2E80221316673500E55DEA /* ChannelDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1952,6 +2095,21 @@
 				6CFA622612BC3E54004EB216 /* LibIDN.m in Sources */,
 				6CFA622712BC3E54004EB216 /* MulticastDelegate.m in Sources */,
 				6CFA622812BC3E54004EB216 /* RFSRVResolver.m in Sources */,
+				6C2E7DF0131647F900E55DEA /* LoginUtility.m in Sources */,
+				6C2E7DF1131647F900E55DEA /* CustomAlert.m in Sources */,
+				6C2E7DF41316484A00E55DEA /* DirectoryItem.m in Sources */,
+				6C2E7EA1131648BA00E55DEA /* AtlasURLHandler.m in Sources */,
+				6C2E7EA4131648FA00E55DEA /* CustomizedTableCell.m in Sources */,
+				6C2E7EC4131649F400E55DEA /* BuddyCloudStyleSheet.m in Sources */,
+				6C2E7EE313164AB900E55DEA /* ChannelDetailHeader.m in Sources */,
+				6C2E7EE413164AB900E55DEA /* ChannelDetailInoDataSource.m in Sources */,
+				6C2E7EE513164AB900E55DEA /* ChannelDetailViewController.m in Sources */,
+				6C2E7EE613164AB900E55DEA /* ChannelListCellController.m in Sources */,
+				6C2E7EE713164AB900E55DEA /* ChannelListViewController.m in Sources */,
+				6C2E7EE813164AB900E55DEA /* ChannelTopicCell.m in Sources */,
+				6C2E7EEA13164AB900E55DEA /* ChannelWallDataSource.m in Sources */,
+				6C2E7EEB13164AB900E55DEA /* ExploreCellController.m in Sources */,
+				6C2E7EEC13164AB900E55DEA /* ExploreViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

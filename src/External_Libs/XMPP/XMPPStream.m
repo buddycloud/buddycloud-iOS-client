@@ -127,7 +127,7 @@ enum XMPPStreamFlags
 		[self commonInit];
 		
 		// Initialize socket
-		asyncSocket = [[AsyncSocket alloc] initWithSocketDelegate:self];
+		asyncSocket = [(AsyncSocket *)[AsyncSocket alloc] initWithDelegate:self];
 		
 		// Initialize configuration
 		flags = 0;
@@ -277,7 +277,7 @@ enum XMPPStreamFlags
 - (BOOL)connectToHost:(NSString *)host onPort:(UInt16)port error:(NSError **)errPtr
 {
 	state = STATE_CONNECTING;
-	
+
 	BOOL result = [asyncSocket connectToHost:host onPort:port error:errPtr];
 	
 	if (result == NO)
@@ -429,8 +429,8 @@ enum XMPPStreamFlags
 	// Update state
 	state = STATE_CONNECTING;
 	
-	// Initialize socket
-	asyncSocket = [[AsyncSocket alloc] initWithSocketDelegate:self];
+	// Initailize socket
+	asyncSocket = [(AsyncSocket *)[AsyncSocket alloc] initWithDelegate:self];
 	
 	BOOL result = [asyncSocket connectToAddress:remoteAddr error:errPtr];
 	
@@ -522,14 +522,11 @@ enum XMPPStreamFlags
 		socketBuffer = [[NSMutableData alloc] initWithLength:SOCKET_BUFFER_SIZE];
 		
 		// And start reading in the server's XML stream
-		[asyncSocket readDataWithTimeout:TIMEOUT_READ_START tag:TAG_READ_START];
-
-//		// And start reading in the server's XML stream
-//		[asyncSocket readDataWithTimeout:TIMEOUT_READ_START
-//		                          buffer:socketBuffer
-//		                    bufferOffset:0
-//		                       maxLength:[socketBuffer length]
-//		                             tag:TAG_READ_START];
+		[asyncSocket readDataWithTimeout:TIMEOUT_READ_START
+		                          buffer:socketBuffer
+		                    bufferOffset:0
+		                       maxLength:[socketBuffer length]
+		                             tag:TAG_READ_START];
 	}
 	else
 	{
@@ -665,8 +662,9 @@ enum XMPPStreamFlags
 		NSXMLElement *features = [rootElement elementForName:@"stream:features"];
 		NSXMLElement *reg = [features elementForName:@"register" xmlns:@"http://jabber.org/features/iq-register"];
 		
-		return     YES;
-		//(reg != nil); //TODO: this need to be re-enable once user in-band feature commes up in the stream list.
+		//TODO: Un-comment the below line, if buddy cloud server expose in-band registration in the feature list.
+		return YES;
+		// (reg != nil);
 	}
 	return NO;
 }
@@ -1203,8 +1201,13 @@ enum XMPPStreamFlags
 {
 	if (state == STATE_CONNECTED)
 	{
+		NSLog(@"state STATE_CONNECTED");
 		[self sendElement:element withTag:TAG_WRITE_STREAM];
 	}
+	else {
+		NSLog(@"state STATE_NOT_CONNECTED");
+	}
+
 }
 
 /**
@@ -1229,7 +1232,7 @@ enum XMPPStreamFlags
 		NSString *innerRunLoopMode = @"XMPPStreamSynchronousMode";
 		
 		[self retain];
-		//[asyncSocket addRunLoopMode:innerRunLoopMode];
+		[asyncSocket addRunLoopMode:innerRunLoopMode];
 		
 		flags |= kSynchronousSendPending;
 		[self sendElement:element withTag:TAG_WRITE_SYNCHRONOUS];
@@ -1249,7 +1252,7 @@ enum XMPPStreamFlags
 			[innerPool release];
 		}
 		
-		//[asyncSocket removeRunLoopMode:innerRunLoopMode];
+		[asyncSocket removeRunLoopMode:innerRunLoopMode];
 		[self autorelease];
 		
 		BOOL result = noError && (uuid == synchronousUUID);
@@ -1834,9 +1837,6 @@ enum XMPPStreamFlags
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark RFSRVResolver Delegate
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)tryNextSrvResult
@@ -1846,13 +1846,12 @@ enum XMPPStreamFlags
 	
 	while (srvResultsIndex < [srvResults count])
 	{
-			
-		RFSRVRecord *srvRecord = [srvResults objectAtIndex:0];
+		RFSRVRecord *srvRecord = [srvResults objectAtIndex:srvResultsIndex];
 		NSString *srvHost = srvRecord.target;
 		UInt16 srvPort    = srvRecord.port;
-	
+		
 		success = [self connectToHost:srvHost onPort:srvPort error:&connectError];
-	
+		
 		if (success)
 		{
 			break;
@@ -1872,6 +1871,7 @@ enum XMPPStreamFlags
 		// to determine the IP address, using the "xmpp-client" port 5222, registered with the IANA."
 		// 
 		// In other words, just try connecting to the domain specified in the JID.
+		
 		success = [self connectToHost:[myJID domain] onPort:5222 error:&connectError];
 	}
 	
@@ -1886,7 +1886,6 @@ enum XMPPStreamFlags
 
 - (void)srvResolverDidResoveSRV:(RFSRVResolver *)sender
 {
-	NSLog(@".......srvResolverDidResoveSRV.....");
 	srvResults = [[sender results] copy];
 	srvResultsIndex = 0;
 	
@@ -1895,8 +1894,6 @@ enum XMPPStreamFlags
 
 - (void)srvResolver:(RFSRVResolver *)sender didNotResolveSRVWithError:(NSError *)srvError
 {
-	NSLog(@".......srvResolver:didNotResolveSRVWithError.....");
-
 	[self tryNextSrvResult];
 }
 
@@ -1946,15 +1943,11 @@ enum XMPPStreamFlags
 	}
 	
 	// And start reading in the server's XML stream
-	[asyncSocket readDataWithTimeout:TIMEOUT_READ_START tag:TAG_READ_START];
-
-	
-	// And start reading in the server's XML stream
-//	[asyncSocket readDataWithTimeout:TIMEOUT_READ_START
-//	                          buffer:socketBuffer
-//	                    bufferOffset:0
-//	                       maxLength:[socketBuffer length]
-//	                             tag:TAG_READ_START];
+	[asyncSocket readDataWithTimeout:TIMEOUT_READ_START
+	                          buffer:socketBuffer
+	                    bufferOffset:0
+	                       maxLength:[socketBuffer length]
+	                             tag:TAG_READ_START];
 }
 
 - (void)onSocketDidSecure:(AsyncSocket *)sock
@@ -1987,26 +1980,19 @@ enum XMPPStreamFlags
 	{
 		if(state == STATE_OPENING)
 		{
-			// And start reading in the server's XML stream
-			[asyncSocket readDataWithTimeout:TIMEOUT_READ_START tag:TAG_READ_START];
-
-//			[asyncSocket readDataWithTimeout:TIMEOUT_READ_START
-//			                          buffer:socketBuffer
-//			                    bufferOffset:0
-//			                       maxLength:[socketBuffer length]
-//			                             tag:TAG_READ_START];
+			[asyncSocket readDataWithTimeout:TIMEOUT_READ_START
+			                          buffer:socketBuffer
+			                    bufferOffset:0
+			                       maxLength:[socketBuffer length]
+			                             tag:TAG_READ_START];
 		}
 		else
 		{
-			// And start reading in the server's XML stream
-			[asyncSocket readDataWithTimeout:TIMEOUT_READ_START tag:TAG_READ_START];
-
-			
-//			[asyncSocket readDataWithTimeout:TIMEOUT_READ_STREAM
-//			                          buffer:socketBuffer
-//			                    bufferOffset:0
-//			                       maxLength:[socketBuffer length]
-//			                             tag:TAG_READ_STREAM];
+			[asyncSocket readDataWithTimeout:TIMEOUT_READ_STREAM
+			                          buffer:socketBuffer
+			                    bufferOffset:0
+			                       maxLength:[socketBuffer length]
+			                             tag:TAG_READ_STREAM];
 		}
 	}
 }

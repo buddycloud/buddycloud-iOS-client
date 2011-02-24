@@ -73,11 +73,10 @@
 {
 	UIAlertView *alertView = nil;
 	
-	//Check if user trying to add the topic with default BC user, then show an alert to please register urself.
-	//Before disconnect, check if it's not the same username through which it's already login.
-	NSLog(@"domain : %@", [[xmppEngine.xmppStream myJID] domain]);
+	//Check if user trying to add the topic with anonymous user, then show an alert to please register urself.
+	XMPPEngine *_xmppEngine = (XMPPEngine *)[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
 	
-	if(![[[xmppEngine.xmppStream myJID] domain] isEqualToString:[NSString stringWithFormat:@"%@", klogin_BuddycloudNetwork]])
+	if([[[_xmppEngine.xmppStream myJID] domain] rangeOfString: XMPP_ANONYMOUS_DEFAULT_JID].location != NSNotFound)
 	{
 		alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
 												message:NSLocalizedString(registerToAddTopic, @"")
@@ -90,7 +89,6 @@
 	}
 		
 	selectedEntryId = 0;
-	
 	TextFieldAlertView *followView = [[TextFieldAlertView alloc] initWithTitle: NSLocalizedString(@"New topic", @"")  
 																	   message: NSLocalizedString(@"Your awesome topic post text", @"") 
 																	  delegate: self 
@@ -108,12 +106,11 @@
 {
 	UIAlertView *alertView = nil;
 	
-	//Check if user trying to add the topic with default BC user, then show an alert to please register urself.
-	NSString *tempDefaultJID = [[XMPPJID jidWithUser:XMPP_ANONYMOUS_DEFAULT_JID domain:XMPP_BC_DOMAIN resource:XMPP_BC_IPHONE_RESOURCE] full];
-	NSRange range = [[xmppEngine.xmppStream.myJID full] rangeOfString:tempDefaultJID options:NSLiteralSearch];
+	//Check if user trying to add the topic with anonymous user, then show an alert to please register urself.
+	XMPPEngine *_xmppEngine = (XMPPEngine *)[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
 	
-	//Before disconnect, check if it's not the same username through which it's already login.
-	if(range.location != NSNotFound && range.length > 0) {
+	if([[[_xmppEngine.xmppStream myJID] domain] rangeOfString: XMPP_ANONYMOUS_DEFAULT_JID].location != NSNotFound)
+	{
 		alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
 												message:NSLocalizedString(registerToPostNewComment, @"")
 											   delegate:self

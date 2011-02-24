@@ -18,6 +18,7 @@
 #import "ChannelItem.h"
 #import "Geolocation.h"
 #import "PostItem.h"
+#import "DirectoryItem.h"
 #import "Events.h"
 
 NSString *discoFeatures[] = {
@@ -28,6 +29,7 @@ NSString *discoFeatures[] = {
 
 @implementation XMPPEngine
 @synthesize xmppStream;
+@synthesize xmppReconnect;
 @synthesize xmppRoster;
 @synthesize password;
 @synthesize isNewUserRegisteration;
@@ -39,10 +41,14 @@ NSString *discoFeatures[] = {
 	if (self = [super init]) {;
 		// Initialize the XMPPStream
 		xmppStream = [[XMPPStream alloc] init];	
+		xmppReconnect = [[XMPPReconnect alloc] init];
+		
 		[xmppStream addDelegate: self];
 		[xmppStream setHostName: XMPP_ENGINE_SERVER];
 		[xmppStream setHostPort: XMPP_ENGINE_SERVER_PORT];
 		[xmppStream setMyJID: [XMPPJID jidWithUser:XMPP_ANONYMOUS_DEFAULT_JID domain:XMPP_BC_DOMAIN resource:XMPP_BC_IPHONE_RESOURCE]];
+		[xmppReconnect setAutoReconnect:YES];
+		//[xmppReconnect setShouldReconnect:YES];
 		
 		// You may need to alter these settings depending on the server you're connecting to
 		allowSelfSignedCertificates = YES;
@@ -71,10 +77,12 @@ NSString *discoFeatures[] = {
 
 - (void) dealloc {
 	[xmppStream removeDelegate: self];
+	[xmppReconnect removeDelegate: self];
 	[xmppRoster removeDelegate: self];
 	[xmppPubsub removeDelegate: self];
 	
 	[xmppStream release];
+	[xmppReconnect release];
 	[xmppRoster release];	
 	[xmppPubsub release];
 	
@@ -83,7 +91,7 @@ NSString *discoFeatures[] = {
 
 - (void)connect
 {	
-	if (![xmppStream isConnected]) {
+	if (![xmppStream isConnected] && [[BuddycloudAppDelegate sharedAppDelegate] isConnectionAvailable]) {
 		isConnectionCold = YES;
 		
 		// Load XMPPEngine settings
@@ -97,9 +105,16 @@ NSString *discoFeatures[] = {
 		if (![xmppStream connect: &error]) {
 			NSLog(@"ERR [XMPPEngine connect] %@", error);
 
-			//Server is down.
+			NSString *errMsg = [NSString stringWithFormat:NSLocalizedString(authenticatonFailedError, @""), [[xmppStream myJID] bare]];
+			NSDictionary *info = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:[[xmppStream myJID] bare], password, errMsg, nil]  
+															 forKeys: [NSArray arrayWithObjects:usernameKey, passwordKey, NSLocalizedDescriptionKey, nil]];
+
+			error = [NSError errorWithDomain:XMPPStreamErrorDomain code:kreg_userAuthenticationError userInfo:info];
 			[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_LOGGED_IN_FAILED] object: error];
 		}
+	}
+	else {
+		[CustomAlert showAlertMessageWithTitle:NSLocalizedString(alertPrompt, @"") showPreMsg:NSLocalizedString(noInternetConnError, @"")];
 	}
 }
 
@@ -225,7 +240,7 @@ NSString *discoFeatures[] = {
 		}
 	}
 	else {
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"Invalid ID", @"")
+		CustomAlert *alert = [[CustomAlert alloc] initWithTitle: NSLocalizedString(@"Invalid ID", @"")
 							  message: NSLocalizedString(@"Please enter a valid Jabber or #Channel ID", @"")
 							  delegate: self
 							  cancelButtonTitle: NSLocalizedString(@"Ok", @"")
@@ -234,6 +249,106 @@ NSString *discoFeatures[] = {
 		[alert release];
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Directory & Directory Items
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)getDirectories {
+	@try {
+		[self performSelector: @selector(getDirectoryItems:) withObject: nil];
+	}
+	@catch (NSException * e) {
+		NSLog(@"Exception %@", [e description]);
+	}
+}
+
+- (void)getDirectoryItems:(NSString *)sId 
+{
+	NSLog(@"--------------- getDirectoryEntries -------------");
+	
+	// Build directory item element
+	NSXMLElement *directoryItemElement = [NSXMLElement elementWithName: @"items"];
+	[directoryItemElement addAttributeWithName: @"var" stringValue: @"directory"];
+	
+	if (sId != nil) {
+		[directoryItemElement addAttributeWithName: @"id" stringValue: sId];
+	}
+	
+	// Build query result element
+	NSXMLElement *queryElement = [NSXMLElement elementWithName: @"query" xmlns: @"http://buddycloud.com/protocol/channels"];
+	[queryElement addChild: directoryItemElement];
+
+	// Build version IQ result
+	NSXMLElement *iqStanza = [NSXMLElement elementWithName: @"iq"];
+	[iqStanza addAttributeWithName: @"id" stringValue: @"channels1"];
+	[iqStanza addAttributeWithName: @"to" stringValue: @"maitred.buddycloud.com"];
+	[iqStanza addAttributeWithName: @"type" stringValue: @"get"];
+	[iqStanza addChild: queryElement];
+	
+	[xmppStream sendElement: iqStanza];
+}
+
+- (void)handleDirectoryItems:(XMPPIQ *)iq
+{
+	NSLog(@"--------------- handleDirectoryItems -------------");
+	NSXMLElement *itemsElement = [[iq elementForName: @"query"] elementForName: @"items"];
+	NSString *itemId = [[itemsElement attributeForName: @"id"] stringValue];
+	NSMutableArray *itemsArray = [[NSMutableArray alloc] initWithCapacity: [[itemsElement elementsForName: @"item"] count]];
+
+	if (!itemId) {
+		//Directory List.
+		for (NSXMLElement *item in [itemsElement elementsForName: @"item"]) {
+			
+			//NSLog(@"id : %@, title : %@", [[item elementForName: @"id"] stringValue], [[item elementForName: @"title"] stringValue]);
+			
+			DirectoryItem *directoryItem = [[DirectoryItem alloc] init];
+			[directoryItem setDirectoryId: [[item elementForName: @"id"] stringValue]];
+			[directoryItem setTitle: [[item elementForName: @"title"] stringValue]];
+			[directoryItem setDescription: @"browse for interesting channels"];
+			
+			[itemsArray addObject:directoryItem];
+			[directoryItem release];
+		}
+
+		// Notify observers
+		[[NSNotificationCenter defaultCenter] postNotificationName: [Events DIRECTORY_LIST_UPDATED] object: [itemsArray retain]];
+	}
+	else {
+		//Directory Items.
+		NSMutableDictionary *directoryItem = [NSMutableDictionary dictionary];
+		
+		for (NSXMLElement *item in [itemsElement elementsForName: @"item"]) {
+			ChannelItem *channelItem = [[ChannelItem alloc] init];
+			[channelItem setIdent: [[item elementForName: @"id"] stringValue]];
+			[channelItem setTitle: [[item elementForName: @"title"] stringValue]];
+			[channelItem setDescription: [[item elementForName: @"description"] stringValue]];
+			[channelItem setRank: [[[item elementForName: @"rank"] stringValue] intValue]];
+			[channelItem setAffiliation: [ChannelItem affiliationFromString: @"none"]];
+			[channelItem setSubscription: [ChannelItem subscriptionFromString: @"none"]];
+			
+			[itemsArray addObject:channelItem];
+		}
+		
+		[directoryItem setObject:itemsArray forKey: itemId];
+		
+		// Notify observers
+		[[NSNotificationCenter defaultCenter] postNotificationName: [Events DIRECTORY_ITEM_LIST_UPDATED] object: [directoryItem retain]];
+		[directoryItem release];
+	}
+	
+	//Release the items.
+	[itemsArray release];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Channel Metadata
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)fetechMetadataForNode:(NSString *)node {
+	
+	[xmppPubsub fetchMetadataForNode: node];
+	[xmppPubsub fetchAffiliationsForNode: node];
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPStream Delegates
@@ -308,7 +423,7 @@ NSString *discoFeatures[] = {
 {
 	NSLog(@"---------- xmppStreamDidNotConnect: ----------");
 	
-	UIAlertView *alert = [[UIAlertView alloc]
+	CustomAlert *alert = [[CustomAlert alloc]
 						  initWithTitle: NSLocalizedString(@"Connection failed", @"")
 						  message: NSLocalizedString(@"The client could not connect to the Buddycloud server", @"")
 						  delegate: self
@@ -322,41 +437,55 @@ NSString *discoFeatures[] = {
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
-	NSLog(@"---------- didNotAuthenticate: ----------");
+	NSLog(@"---------- xmppStream:didNotAuthenticate: ----------");
 	
 	NSError * err = nil;
 	
-	//NOTE: Check if not authenticate because atteempting to register for new account.
-	if(isNewUserRegisteration) {
-		if (![[self xmppStream] registerWithPassword:password error:&err]) {
-			
-			//Reset the state of 'isNewUserRegisteration', as registration process has been done.
-			isNewUserRegisteration = NO;
-			[self disconnect];	//disconnect the last connection for registration process.
-			
-			NSLog(@"Error registering: %@", err);
-			NSXMLElement *errorElement = [error elementForName: @"error"];
-			NSInteger errorCode = ([[errorElement attributeForName: @"code"] stringValue]) ? [[[errorElement attributeForName: @"code"] stringValue] integerValue] : kreg_unknwonError;
-			
-			NSLog(@">>>> didNotRegister : %@", [error stringValue]);	
-			[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_FAILED] object: [NSNumber numberWithInteger:errorCode]];
-		}
-	}
-	else {
+	//First check if it's not anonymous-bind user.
+	if ([[[xmppStream myJID] bare] rangeOfString: XMPP_ANONYMOUS_DEFAULT_JID].location == NSNotFound) {
 
-		//User not able to logged-in coz of some error.
-		[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_LOGGED_IN_FAILED] object: [NSNumber numberWithInteger:kreg_userAuthenticationError]];
+		//NOTE: Check if not authenticate because attempting to register for new account.
+		if(isNewUserRegisteration) {
+			if (![[self xmppStream] registerWithPassword:password error:&err]) {
+				
+				//Reset the state of 'isNewUserRegisteration'.
+				isNewUserRegisteration = NO;
+				[self disconnect];	//disconnect the last connection for registration process.
+				
+				NSXMLElement *errorElement = [error elementForName: @"error"];
+				NSInteger errorCode = ([[errorElement attributeForName: @"code"] stringValue]) ? [[[errorElement attributeForName: @"code"] stringValue] integerValue] : kreg_unknwonError;
+				
+				NSString *errMsg = [NSString stringWithFormat: @"Registration Error = %d", errorCode];
+				NSDictionary *info = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:[[xmppStream myJID] bare], password, errMsg, nil]  
+																 forKeys: [NSArray arrayWithObjects:usernameKey, passwordKey, NSLocalizedDescriptionKey, nil]];
+				
+				err = [NSError errorWithDomain:XMPPStreamErrorDomain code:errorCode userInfo:info];
+				[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_FAILED] object: err];
+			}
+		}
+		else {
+			NSString *errMsg = [NSString stringWithFormat:NSLocalizedString(authenticatonFailedError, @""), [[xmppStream myJID] bare]];
+			NSDictionary *info = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:[[xmppStream myJID] bare], password, errMsg, nil]  
+															 forKeys: [NSArray arrayWithObjects:usernameKey, passwordKey, NSLocalizedDescriptionKey, nil]];
+
+			err = [NSError errorWithDomain:XMPPStreamErrorDomain code:kreg_userAuthenticationError userInfo:info];
+			
+			//User not able to logged-in coz of some error.
+			[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_LOGGED_IN_FAILED] object: err];
+		}
 	}
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {	
-	NSLog(@"---------- xmppStream:didNotAuthenticate: ----------");
+	NSLog(@"---------- xmppStream:xmppStreamDidAuthenticate: ----------");
 	
 	if (!isNewUserRegisteration) {
 	
-		//User successfully logged-in.
-		[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_LOGGED_IN_SUCCESS] object: sender];
+		//User successfully logged-in. Check if it's not anonymous-bind user.
+		if ([[[xmppStream myJID] bare] rangeOfString: XMPP_ANONYMOUS_DEFAULT_JID].location == NSNotFound) {
+			[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_LOGGED_IN_SUCCESS] object: sender];
+		}
 		
 		// Fetch roster
 		[xmppRoster fetchRoster];
@@ -385,10 +514,20 @@ NSString *discoFeatures[] = {
 		NSLog(@"User Registration process >> user authenticate means already exist this account - conflict state!!");
 		//Reset the state of 'isNewUserRegisteration', as registration process has been done.
 		isNewUserRegisteration = NO;
-
-		[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_FAILED] object: [NSNumber numberWithInteger:kreg_userNameConflictError]];
+		
+		NSString *errMsg = NSLocalizedString(userNameConflictError, @"");
+		NSDictionary *info = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:[[xmppStream myJID] bare], password, errMsg, nil]  
+														 forKeys: [NSArray arrayWithObjects:usernameKey, passwordKey, NSLocalizedDescriptionKey, nil]];
+		
+		NSError *err = [NSError errorWithDomain:XMPPStreamErrorDomain code:kreg_userNameConflictError userInfo:info];
+		[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_FAILED] object: err];
 	}
 }
+
+- (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error {
+	NSLog(@"---------- xmppStream:didReceiveError: ---------- : %@", [error description]);
+}
+
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
 {
@@ -415,6 +554,15 @@ NSString *discoFeatures[] = {
 			
 			return YES;
 		}
+	}
+	else if ([iqType isEqualToString: @"result"]) {
+		if ([iq elementForName: @"query" xmlns: @"http://buddycloud.com/protocol/channels"]) {
+			//handle directcory items.
+			[self handleDirectoryItems: iq];
+			
+			return YES;
+		}
+		
 	}
 	
 	return NO;
@@ -514,8 +662,11 @@ NSString *discoFeatures[] = {
 	NSLog(@"---------- xmppStreamDidRegister ----------");
 	
 	//Reset the state of 'isNewUserRegisteration', as registration process has been done.
-	isNewUserRegisteration = NO;
-	[self disconnect];	//disconnect the last connection for registration process.
+	if (isNewUserRegisteration) {
+		isNewUserRegisteration = NO;
+		[self disconnect];	//disconnect the last connection for registration process.
+	}
+	
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_SUCCESS] object: sender];
 }
@@ -528,12 +679,20 @@ NSString *discoFeatures[] = {
 	NSLog(@"---------- xmppStream:didNotRegister: ----------");
 
 	//Reset the state of 'isNewUserRegisteration', as registration process has been done.
-	isNewUserRegisteration = NO;
-	[self disconnect];	//disconnect the last connection for registration process.
+	if (isNewUserRegisteration) {
+		isNewUserRegisteration = NO;
+		[self disconnect];	//disconnect the last connection for registration process.
+	}
 	
 	NSXMLElement *errorElement = [error elementForName: @"error"];
 	NSInteger errorCode = ([[errorElement attributeForName: @"code"] stringValue]) ? [[[errorElement attributeForName: @"code"] stringValue] integerValue] : kreg_unknwonError;
-	[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_FAILED] object: [NSNumber numberWithInteger:errorCode]];
+	
+	NSString *errMsg = [NSString stringWithFormat: @"Registration Error = %d", errorCode];
+	NSDictionary *info = [NSDictionary dictionaryWithObjects: [NSArray arrayWithObjects:[[xmppStream myJID] bare], password, errMsg, nil]  
+													 forKeys: [NSArray arrayWithObjects:usernameKey, passwordKey, NSLocalizedDescriptionKey, nil]];
+	
+	NSError *err = [NSError errorWithDomain:XMPPStreamErrorDomain code:errorCode userInfo:info];
+	[[NSNotificationCenter defaultCenter] postNotificationName:[Events USER_REGISTRATION_FAILED] object: err];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -773,21 +932,33 @@ NSString *discoFeatures[] = {
 
 - (void)xmppPubsub:(XMPPPubsub *)sender didReceiveMetadata:(NSDictionary *)metadata forNode:(NSString *)node
 {
-	// Handle metadata for a pubsub node
+	//NSLog(@"Dict : %@ and Node: %@", metadata, node);
 	FollowedItem *item = [followingData objectForKey: node];
+	BOOL isFollowedItem = (item != nil && [item isKindOfClass: [ChannelItem class]]);	
 	
-	if (item && [item isKindOfClass: [ChannelItem class]]) {
-		// Is a topic channel
-		ChannelItem *channelItem = (ChannelItem *)item;
-		
-		[channelItem setLastUpdated: [NSDate date]];
-		[channelItem setTitle: [metadata objectForKey: @"pubsub#title"]];
-		[channelItem setDescription: [metadata objectForKey: @"pubsub#description"]];
-		[channelItem setRank: [[metadata objectForKey: @"x-buddycloud#rank"] intValue]];
-		
-		// Notify observers
+	//Handle meta data.
+	ChannelItem *channelItem = (isFollowedItem) ? (ChannelItem *)item : [[ChannelItem alloc] init];
+	[channelItem setLastUpdated: [NSDate date]];
+	[channelItem setTitle: [metadata objectForKey: @"pubsub#title"]];
+	[channelItem setDescription: [metadata objectForKey: @"pubsub#description"]];
+	[channelItem setRank: [[metadata objectForKey: @"x-buddycloud#rank"] intValue]];
+	
+	//Add further Info.
+	ChannelDetailItem *channelDetailItem = [[[ChannelDetailItem alloc] initWithChannelItem: channelItem] autorelease];
+	[channelDetailItem setOwner: [metadata objectForKey: @"pubsub#owner"]];
+	[channelDetailItem setPopularity: [[metadata objectForKey: @"pubsub#popularity"] intValue]];
+	[channelDetailItem setSubscribers: [[metadata objectForKey: @"pubsub#num_subscribers"] intValue]];
+	[channelDetailItem.geoCordinateInfo setLatitude: [[metadata objectForKey: @"x-buddycloud#geoloc-lat"] longLongValue]];
+	[channelDetailItem.geoCordinateInfo setLongitude: [[metadata objectForKey: @"x-buddycloud#geoloc-lon"] longLongValue]];
+	[channelDetailItem.geoCordinateInfo setText: [metadata objectForKey: @"x-buddycloud#geoloc-text"]];
+	 
+	if (isFollowedItem) {
+		// Is a topic channel - Notify observer.
 		[[NSNotificationCenter defaultCenter] postNotificationName: [Events FOLLOWINGLIST_UPDATED] object: nil];
 	}
+	 
+	 //Notify observers for channel metadata.
+	 [[NSNotificationCenter defaultCenter] postNotificationName: [Events CHANNEL_METADATA_ITEM_UPDATED] object: [channelDetailItem retain]]; 
 }
 
 - (void)xmppPubsub:(XMPPPubsub *)sender didReceiveChangedSubscription:(NSString *)subscription forNode:(NSString *)node
@@ -881,17 +1052,21 @@ NSString *discoFeatures[] = {
 
 - (void)xmppPubsub:(XMPPPubsub *)sender didReceiveAffiliations:(NSArray *)affiliations forNode:(NSString *)node
 {
+	//NSLog(@"For node = %@ and affiliation count = %d", node, [affiliations count]);
+	
+	// Init & parse jid's from affiliation list
+	NSMutableDictionary *affiliatedJids = [[NSMutableDictionary alloc] initWithCapacity: [affiliations count]];
+	
+	for (NSXMLElement *element in affiliations) {
+		//NSLog(@"Jid = %@ and Affiliation = %@", [[element attributeForName: @"jid"] stringValue], [[element attributeForName: @"affiliation"] stringValue]);
+		[affiliatedJids setObject: [[element attributeForName: @"affiliation"] stringValue] forKey: [[element attributeForName: @"jid"] stringValue]];
+	}
+	
 	// Handle affiliations of users channel
 	NSString *ownChannelNode = [NSString stringWithFormat: @"/user/%@/channel", [[xmppStream myJID] bare]];
 	
 	if ([node isEqualToString: ownChannelNode]) {
-		// Init & parse jid's from affiliation list
-		NSMutableDictionary *affiliatedJids = [[NSMutableDictionary alloc] initWithCapacity: [affiliations count]];
-		
-		for (NSXMLElement *element in affiliations) {
-			[affiliatedJids setObject: [[element attributeForName: @"affiliation"] stringValue] forKey: [[element attributeForName: @"jid"] stringValue]];
-		}
-		
+
 		// Iterate roster items for affiliated users
 		for (id itemKey in followingData) {
 			FollowedItem *item = [followingData objectForKey: itemKey];
@@ -912,6 +1087,12 @@ NSString *discoFeatures[] = {
 		
 		// TODO: If whitelist config, remove remaining affiliators from own node
 	}
+	else {
+		//Notify observers for channel metadata - affilation request.
+		[[NSNotificationCenter defaultCenter] postNotificationName: [Events CHANNEL_METADATA_ITEM_UPDATED] object: [affiliatedJids retain]]; 	
+	}
+	
+	[affiliatedJids release];
 }
 
 - (void)xmppPubsub:(XMPPPubsub *)sender didReceiveItem:(NSXMLElement *)item forNode:(NSString *)node
@@ -935,8 +1116,9 @@ NSString *discoFeatures[] = {
 		
 		if (publishedElement = [item elementForName: @"entry" xmlns: @"http://www.w3.org/2005/Atom"]) {
 			// Published item is channel entry
-			PostItem *post = [[[PostItem alloc] initWithChannelNode: node] autorelease];
-			[post setContent: [[publishedElement elementForName: @"content"] stringValue]];
+			NSString *content = ([[publishedElement elementForName: @"content"] stringValue]) ? [[publishedElement elementForName: @"content"] stringValue] : @"";
+			PostItem *post = [[[PostItem alloc] initWithChannelNode: node] autorelease];			
+			[post setContent: content];
 						
 			if ([[post content] length] > 0) {
 				// Only continue if the entry has some content
@@ -950,12 +1132,9 @@ NSString *discoFeatures[] = {
 					[post setAuthorAffiliation: [ChannelItem affiliationFromString: [[authorElement elementForName: @"affiliation" xmlns: @"http://buddycloud.com/atom-elements-0"] stringValue]]];
 				}
 				
-				if (geolocElement) {
-					// Set geoloc data
-					[post setLocation: [[geolocElement elementForName: @"text"] stringValue]];
-				}
-			
-				[post setPostTimeFromString: [[publishedElement elementForName: @"updated"] stringValue]];
+				// Set geoloc data
+				[post setLocation: (geolocElement) ? [[geolocElement elementForName: @"text"] stringValue] : @""];
+				[post setPostTimeFromString: (publishedElement) ? [[publishedElement elementForName: @"updated"] stringValue] : @""];
 				
 				// Set entry/comment data
 				long long entryId = [[[item attributeForName: @"id"] stringValue] longLongValue];

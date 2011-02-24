@@ -17,8 +17,7 @@
 #import "PostsViewController.h"
 
 @implementation FollowingViewController
-@synthesize orderedKeys;
-@synthesize followerCell, channelCell;
+@synthesize orderedKeys, followerCell, channelCell;
 
 - (id)initWithStyle:(UITableViewStyle)style andDataModel:(FollowingDataModel *)dataModel {
     if(self = [super initWithStyle:style]) {
@@ -26,9 +25,7 @@
 		followingList = [dataModel retain];
 		[self setOrderedKeys: [followingList orderKeysByUpdated]];
 		
-		[[TTNavigator navigator].URLMap from:kcreateNewAcctURLPath
-					   toModalViewController:[BuddycloudAppDelegate sharedAppDelegate] selector:@selector(createNewAccount)];
-		
+		NSLog(@"Order keys : %@", orderedKeys);
 		[[NSNotificationCenter defaultCenter] addObserver: self
 												 selector: @selector(onFollowingListUpdated)
 													 name: [Events FOLLOWINGLIST_UPDATED]
@@ -42,6 +39,9 @@
 {	
 	[super viewDidLoad];
 
+	self.view.backgroundColor = APPSTYLEVAR(appBKgroundColor);
+	self.tableView = [[[UITableView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.width, self.view.bottom - TABLE_DISPLAY_HEIGHT)] autorelease];
+	self.tableView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -62,15 +62,14 @@
 
 - (void)onAddButton
 {
-	UIAlertView *alertView = nil;
+	CustomAlert *alertView = nil;
 	
-	//Check if user trying to add the topic with default BC user, then show an alert to please register urself.
+	//Check if user trying to add the topic with anonymous user, then show an alert to please register urself.
 	XMPPEngine *xmppEngine = (XMPPEngine *)[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
 	
-	//Before disconnect, check if it's not the same username through which it's already login.
-	if(![[[xmppEngine.xmppStream myJID] domain] isEqualToString:[NSString stringWithFormat:@"%@", klogin_BuddycloudNetwork]])
+	if([[[xmppEngine.xmppStream myJID] domain] rangeOfString: XMPP_ANONYMOUS_DEFAULT_JID].location != NSNotFound)
 	{
-		alertView = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
+		alertView = [[[CustomAlert alloc] initWithTitle:NSLocalizedString(alertPrompt, @"")
 												message:NSLocalizedString(registerToFollowNewChannel, @"")
 											   delegate:self
 									  cancelButtonTitle:NSLocalizedString(cancelBtnLabel, @"")
@@ -200,14 +199,6 @@
 			[controller release];			
 		}
 	}		
-	
-    // Dequeue or create a new cell
-	//    static NSString *CellIdentifier = @"Cell";
-	//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-	//    if (cell == nil) {		
-	//		NSLog(@"Cell %@", cell); 
-	//        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-	//    }
 
 	return cell;
 }
@@ -219,11 +210,12 @@
 	ChannelItem *channel = [followingList getChannelItemForFollowedItem: item];
 	
 	if (channel) {
-		//NSLog(@"Channel : %@ and title = %@", [channel ident], [item title]);
-		NSLog(@"URL : %@",[NSString stringWithFormat:kPostWithNodeAndTitleURLPath, [channel ident], [item title]] );
+		NSLog(@"Channel : %@ and title = %@", [channel ident], [channel title]);
+		PostsViewController *postViewController = [[[PostsViewController alloc] initWithNode: [channel ident] 
+																					andTitle: [channel title]] autorelease];
 		
-		[[TTNavigator navigator] openURLAction:[[TTURLAction actionWithURLPath:[NSString stringWithFormat:kPostWithNodeAndTitleURLPath, [channel ident], [item title]]] 
-								 applyAnimated:YES]];
+		[[TTNavigator navigator].topViewController.navigationController pushViewController:postViewController 
+																				  animated:YES];
 	}
 	else {
 		[tableView deselectRowAtIndexPath: indexPath animated: YES];

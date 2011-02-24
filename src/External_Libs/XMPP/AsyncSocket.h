@@ -45,19 +45,19 @@ typedef enum AsyncSocketError AsyncSocketError;
  * 
  * If you call the disconnect method, and the socket wasn't already disconnected,
  * this delegate method will be called before the disconnect method returns.
-**/
+ **/
 - (void)onSocketDidDisconnect:(AsyncSocket *)sock;
 
 /**
  * Called when a socket accepts a connection.  Another socket is spawned to handle it. The new socket will have
  * the same delegate and will call "onSocket:didConnectToHost:port:".
-**/
+ **/
 - (void)onSocket:(AsyncSocket *)sock didAcceptNewSocket:(AsyncSocket *)newSocket;
 
 /**
  * Called when a new socket is spawned to handle a connection.  This method should return the run-loop of the
  * thread on which the new socket and its delegate should operate. If omitted, [NSRunLoop currentRunLoop] is used.
-**/
+ **/
 - (NSRunLoop *)onSocket:(AsyncSocket *)sock wantsRunLoopForNewSocket:(AsyncSocket *)newSocket;
 
 /**
@@ -70,37 +70,37 @@ typedef enum AsyncSocketError AsyncSocketError;
  * If the connectToAddress:error: method was called, the delegate will be able to access and configure the
  * CFSocket and CFSocketNativeHandle (BSD socket) as desired prior to connection. You will be able to access and
  * configure the CFReadStream and CFWriteStream in the onSocket:didConnectToHost:port: method.
-**/
+ **/
 - (BOOL)onSocketWillConnect:(AsyncSocket *)sock;
 
 /**
  * Called when a socket connects and is ready for reading and writing.
  * The host parameter will be an IP address, not a DNS name.
-**/
+ **/
 - (void)onSocket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port;
 
 /**
  * Called when a socket has completed reading the requested data into memory.
  * Not called if there is an error.
-**/
+ **/
 - (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag;
 
 /**
  * Called when a socket has read in data, but has not yet completed the read.
  * This would occur if using readToData: or readToLength: methods.
  * It may be used to for things such as updating progress bars.
-**/
+ **/
 - (void)onSocket:(AsyncSocket *)sock didReadPartialDataOfLength:(CFIndex)partialLength tag:(long)tag;
 
 /**
  * Called when a socket has completed writing the requested data. Not called if there is an error.
-**/
+ **/
 - (void)onSocket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag;
 
 /**
  * Called when a socket has written some data, but has not yet completed the entire write.
  * It may be used to for things such as updating progress bars.
-**/
+ **/
 - (void)onSocket:(AsyncSocket *)sock didWritePartialDataOfLength:(CFIndex)partialLength tag:(long)tag;
 
 /**
@@ -113,7 +113,7 @@ typedef enum AsyncSocketError AsyncSocketError;
  * The length parameter is the number of bytes that have been read so far for the read operation.
  * 
  * Note that this method may be called multiple times for a single read if you return positive numbers.
-**/
+ **/
 - (NSTimeInterval)onSocket:(AsyncSocket *)sock
   shouldTimeoutReadWithTag:(long)tag
 				   elapsed:(NSTimeInterval)elapsed
@@ -129,7 +129,7 @@ typedef enum AsyncSocketError AsyncSocketError;
  * The length parameter is the number of bytes that have been written so far for the write operation.
  * 
  * Note that this method may be called multiple times for a single write if you return positive numbers.
-**/
+ **/
 - (NSTimeInterval)onSocket:(AsyncSocket *)sock
  shouldTimeoutWriteWithTag:(long)tag
 				   elapsed:(NSTimeInterval)elapsed
@@ -141,7 +141,7 @@ typedef enum AsyncSocketError AsyncSocketError;
  * 
  * If a SSL/TLS negotiation fails (invalid certificate, etc) then the socket will immediately close,
  * and the onSocket:willDisconnectWithError: delegate method will be called with the specific SSL error code.
-**/
+ **/
 - (void)onSocketDidSecure:(AsyncSocket *)sock;
 
 @end
@@ -152,11 +152,15 @@ typedef enum AsyncSocketError AsyncSocketError;
 
 @interface AsyncSocket : NSObject
 {
+	CFSocketNativeHandle theNativeSocket4;
+	CFSocketNativeHandle theNativeSocket6;
+	
 	CFSocketRef theSocket4;            // IPv4 accept or connect socket
 	CFSocketRef theSocket6;            // IPv6 accept or connect socket
+	
 	CFReadStreamRef theReadStream;
 	CFWriteStreamRef theWriteStream;
-
+	
 	CFRunLoopSourceRef theSource4;     // For theSocket4
 	CFRunLoopSourceRef theSource6;     // For theSocket6
 	CFRunLoopRef theRunLoop;
@@ -164,7 +168,7 @@ typedef enum AsyncSocketError AsyncSocketError;
 	NSArray *theRunLoopModes;
 	
 	NSTimer *theConnectTimer;
-
+	
 	NSMutableArray *theReadQueue;
 	AsyncReadPacket *theCurrentRead;
 	NSTimer *theReadTimer;
@@ -173,7 +177,7 @@ typedef enum AsyncSocketError AsyncSocketError;
 	NSMutableArray *theWriteQueue;
 	AsyncWritePacket *theCurrentWrite;
 	NSTimer *theWriteTimer;
-
+	
 	id theDelegate;
 	UInt16 theFlags;
 	
@@ -181,8 +185,8 @@ typedef enum AsyncSocketError AsyncSocketError;
 }
 
 - (id)init;
-- (id)initWithSocketDelegate:(id)delegate;
-- (id)initWithSocketDelegate:(id)delegate userData:(long)userData;
+- (id)initWithDelegate:(id)delegate;
+- (id)initWithDelegate:(id)delegate userData:(long)userData;
 
 /* String representation is long but has no "\n". */
 - (NSString *)description;
@@ -190,7 +194,7 @@ typedef enum AsyncSocketError AsyncSocketError;
 /**
  * Use "canSafelySetDelegate" to see if there is any pending business (reads and writes) with the current delegate
  * before changing it.  It is, of course, safe to change the delegate before connecting or accepting connections.
-**/
+ **/
 - (id)delegate;
 - (BOOL)canSafelySetDelegate;
 - (void)setDelegate:(id)delegate;
@@ -230,7 +234,7 @@ typedef enum AsyncSocketError AsyncSocketError;
  * Tells the socket to begin listening and accepting connections on the given port.
  * When a connection comes in, the AsyncSocket instance will call the various delegate methods (see above).
  * The socket will listen on all available interfaces (e.g. wifi, ethernet, etc)
-**/
+ **/
 - (BOOL)acceptOnPort:(UInt16)port error:(NSError **)errPtr;
 
 /**
@@ -242,19 +246,19 @@ typedef enum AsyncSocketError AsyncSocketError;
  * the socket only accept connections from the local machine.
  * 
  * To accept connections on any interface pass nil, or simply use the acceptOnPort:error: method.
-**/
+ **/
 - (BOOL)acceptOnInterface:(NSString *)interface port:(UInt16)port error:(NSError **)errPtr;
 
 /**
  * Connects to the given host and port.
  * The host may be a domain name (e.g. "deusty.com") or an IP address string (e.g. "192.168.0.2")
-**/
+ **/
 - (BOOL)connectToHost:(NSString *)hostname onPort:(UInt16)port error:(NSError **)errPtr;
 
 /**
  * This method is the same as connectToHost:onPort:error: with an additional timeout option.
  * To not time out use a negative time interval, or simply use the connectToHost:onPort:error: method.
-**/
+ **/
 - (BOOL)connectToHost:(NSString *)hostname
 			   onPort:(UInt16)port
 		  withTimeout:(NSTimeInterval)timeout
@@ -267,13 +271,13 @@ typedef enum AsyncSocketError AsyncSocketError;
  * If you have an existing struct sockaddr you can convert it to a NSData object like so:
  * struct sockaddr sa  -> NSData *dsa = [NSData dataWithBytes:&remoteAddr length:remoteAddr.sa_len];
  * struct sockaddr *sa -> NSData *dsa = [NSData dataWithBytes:remoteAddr length:remoteAddr->sa_len];
-**/
+ **/
 - (BOOL)connectToAddress:(NSData *)remoteAddr error:(NSError **)errPtr;
 
 /**
  * This method is the same as connectToAddress:error: with an additional timeout option.
  * To not time out use a negative time interval, or simply use the connectToAddress:error: method.
-**/
+ **/
 - (BOOL)connectToAddress:(NSData *)remoteAddr withTimeout:(NSTimeInterval)timeout error:(NSError **)errPtr;
 
 /**
@@ -285,27 +289,27 @@ typedef enum AsyncSocketError AsyncSocketError;
  * [asyncSocket setDelegate:nil];
  * [asyncSocket disconnect];
  * [asyncSocket release];
-**/
+ **/
 - (void)disconnect;
 
 /**
  * Disconnects after all pending reads have completed.
  * After calling this, the read and write methods will do nothing.
  * The socket will disconnect even if there are still pending writes.
-**/
+ **/
 - (void)disconnectAfterReading;
 
 /**
  * Disconnects after all pending writes have completed.
  * After calling this, the read and write methods will do nothing.
  * The socket will disconnect even if there are still pending reads.
-**/
+ **/
 - (void)disconnectAfterWriting;
 
 /**
  * Disconnects after all pending reads and writes have completed.
  * After calling this, the read and write methods will do nothing.
-**/
+ **/
 - (void)disconnectAfterReadingAndWriting;
 
 /* Returns YES if the socket and streams are open, connected, and ready for reading and writing. */
@@ -314,7 +318,7 @@ typedef enum AsyncSocketError AsyncSocketError;
 /**
  * Returns the local or remote host and port to which this socket is connected, or nil and 0 if not connected.
  * The host will be an IP address.
-**/
+ **/
 - (NSString *)connectedHost;
 - (UInt16)connectedPort;
 
@@ -326,18 +330,21 @@ typedef enum AsyncSocketError AsyncSocketError;
  * specified as a sockaddr structure wrapped in a NSData object.
  * 
  * See also the connectedHost, connectedPort, localHost and localPort methods.
-**/
+ **/
 - (NSData *)connectedAddress;
 - (NSData *)localAddress;
 
 /**
  * Returns whether the socket is IPv4 or IPv6.
  * An accepting socket may be both.
-**/
+ **/
 - (BOOL)isIPv4;
 - (BOOL)isIPv6;
 
-// The readData and writeData methods won't block.
+// The readData and writeData methods won't block (they are asynchronous).
+// 
+// When a read is complete the onSocket:didReadData:withTag: delegate method is called.
+// When a write is complete the onSocket:didWriteDataWithTag: delegate method is called.
 // 
 // You may optionally set a timeout for any read/write operation. (To not timeout, use a negative time interval.)
 // If a read/write opertion times out, the corresponding "onSocket:shouldTimeout..." delegate method
@@ -345,62 +352,191 @@ typedef enum AsyncSocketError AsyncSocketError;
 // Upon a timeout, the "onSocket:willDisconnectWithError:" method is called, followed by "onSocketDidDisconnect".
 // 
 // The tag is for your convenience.
-// You can use it as an array index, step number, state id, pointer, etc., just like the socket's user data.
-
-/**
- * This will read a certain number of bytes into memory, and call the delegate method when those bytes have been read.
- * 
- * If the length is 0, this method does nothing and the delegate is not called.
- * If the timeout value is negative, the read operation will not use a timeout.
-**/
-- (void)readDataToLength:(CFIndex)length withTimeout:(NSTimeInterval)timeout tag:(long)tag;
-
-/**
- * This reads bytes until (and including) the passed "data" parameter, which acts as a separator.
- * The bytes and the separator are returned by the delegate method.
- * 
- * If you pass nil or zero-length data as the "data" parameter,
- * the method will do nothing, and the delegate will not be called.
- * If the timeout value is negative, the read operation will not use a timeout.
- * 
- * To read a line from the socket, use the line separator (e.g. CRLF for HTTP, see below) as the "data" parameter.
- * Note that this method is not character-set aware, so if a separator can occur naturally as part of the encoding for
- * a character, the read will prematurely end.
-**/
-- (void)readDataToData:(NSData *)data withTimeout:(NSTimeInterval)timeout tag:(long)tag;
-
-/**
- * Same as readDataToData:withTimeout:tag, with the additional restriction that the amount of data read
- * may not surpass the given maxLength (specified in bytes).
- * 
- * If you pass a maxLength parameter that is less than the length of the data parameter,
- * the method will do nothing, and the delegate will not be called.
- * 
- * If the max length is surpassed, it is treated the same as a timeout - the socket is closed.
- * 
- * Pass -1 as maxLength if no length restriction is desired, or simply use the readDataToData:withTimeout:tag method.
-**/
-- (void)readDataToData:(NSData *)data withTimeout:(NSTimeInterval)timeout maxLength:(CFIndex)length tag:(long)tag;
+// You can use it as an array index, step number, state id, pointer, etc.
 
 /**
  * Reads the first available bytes that become available on the socket.
  * 
  * If the timeout value is negative, the read operation will not use a timeout.
-**/
+ **/
 - (void)readDataWithTimeout:(NSTimeInterval)timeout tag:(long)tag;
+
+/**
+ * Reads the first available bytes that become available on the socket.
+ * The bytes will be appended to the given byte buffer starting at the given offset.
+ * The given buffer will automatically be increased in size if needed.
+ * 
+ * If the timeout value is negative, the read operation will not use a timeout.
+ * If the buffer if nil, the socket will create a buffer for you.
+ * 
+ * If the bufferOffset is greater than the length of the given buffer,
+ * the method will do nothing, and the delegate will not be called.
+ * 
+ * If you pass a buffer, you must not alter it in any way while AsyncSocket is using it.
+ * After completion, the data returned in onSocket:didReadData:withTag: will be a subset of the given buffer.
+ * That is, it will reference the bytes that were appended to the given buffer.
+ **/
+- (void)readDataWithTimeout:(NSTimeInterval)timeout
+					 buffer:(NSMutableData *)buffer
+			   bufferOffset:(NSUInteger)offset
+						tag:(long)tag;
+
+/**
+ * Reads the first available bytes that become available on the socket.
+ * The bytes will be appended to the given byte buffer starting at the given offset.
+ * The given buffer will automatically be increased in size if needed.
+ * A maximum of length bytes will be read.
+ * 
+ * If the timeout value is negative, the read operation will not use a timeout.
+ * If the buffer if nil, a buffer will automatically be created for you.
+ * If maxLength is negative, no length restriction is enforced.
+ * 
+ * If the bufferOffset is greater than the length of the given buffer,
+ * the method will do nothing, and the delegate will not be called.
+ * 
+ * If you pass a buffer, you must not alter it in any way while AsyncSocket is using it.
+ * After completion, the data returned in onSocket:didReadData:withTag: will be a subset of the given buffer.
+ * That is, it will reference the bytes that were appended to the given buffer.
+ **/
+- (void)readDataWithTimeout:(NSTimeInterval)timeout
+                     buffer:(NSMutableData *)buffer
+               bufferOffset:(NSUInteger)offset
+                  maxLength:(CFIndex)length
+                        tag:(long)tag;
+
+/**
+ * Reads the given number of bytes.
+ * 
+ * If the timeout value is negative, the read operation will not use a timeout.
+ * 
+ * If the length is 0, this method does nothing and the delegate is not called.
+ **/
+- (void)readDataToLength:(CFIndex)length withTimeout:(NSTimeInterval)timeout tag:(long)tag;
+
+/**
+ * Reads the given number of bytes.
+ * The bytes will be appended to the given byte buffer starting at the given offset.
+ * The given buffer will automatically be increased in size if needed.
+ * 
+ * If the timeout value is negative, the read operation will not use a timeout.
+ * If the buffer if nil, a buffer will automatically be created for you.
+ * 
+ * If the length is 0, this method does nothing and the delegate is not called.
+ * If the bufferOffset is greater than the length of the given buffer,
+ * the method will do nothing, and the delegate will not be called.
+ * 
+ * If you pass a buffer, you must not alter it in any way while AsyncSocket is using it.
+ * After completion, the data returned in onSocket:didReadData:withTag: will be a subset of the given buffer.
+ * That is, it will reference the bytes that were appended to the given buffer.
+ **/
+- (void)readDataToLength:(CFIndex)length
+             withTimeout:(NSTimeInterval)timeout
+                  buffer:(NSMutableData *)buffer
+            bufferOffset:(NSUInteger)offset
+                     tag:(long)tag;
+
+/**
+ * Reads bytes until (and including) the passed "data" parameter, which acts as a separator.
+ * 
+ * If the timeout value is negative, the read operation will not use a timeout.
+ * 
+ * If you pass nil or zero-length data as the "data" parameter,
+ * the method will do nothing, and the delegate will not be called.
+ * 
+ * To read a line from the socket, use the line separator (e.g. CRLF for HTTP, see below) as the "data" parameter.
+ * Note that this method is not character-set aware, so if a separator can occur naturally as part of the encoding for
+ * a character, the read will prematurely end.
+ **/
+- (void)readDataToData:(NSData *)data withTimeout:(NSTimeInterval)timeout tag:(long)tag;
+
+/**
+ * Reads bytes until (and including) the passed "data" parameter, which acts as a separator.
+ * The bytes will be appended to the given byte buffer starting at the given offset.
+ * The given buffer will automatically be increased in size if needed.
+ * 
+ * If the timeout value is negative, the read operation will not use a timeout.
+ * If the buffer if nil, a buffer will automatically be created for you.
+ * 
+ * If the bufferOffset is greater than the length of the given buffer,
+ * the method will do nothing, and the delegate will not be called.
+ * 
+ * If you pass a buffer, you must not alter it in any way while AsyncSocket is using it.
+ * After completion, the data returned in onSocket:didReadData:withTag: will be a subset of the given buffer.
+ * That is, it will reference the bytes that were appended to the given buffer.
+ * 
+ * To read a line from the socket, use the line separator (e.g. CRLF for HTTP, see below) as the "data" parameter.
+ * Note that this method is not character-set aware, so if a separator can occur naturally as part of the encoding for
+ * a character, the read will prematurely end.
+ **/
+- (void)readDataToData:(NSData *)data
+           withTimeout:(NSTimeInterval)timeout
+                buffer:(NSMutableData *)buffer
+          bufferOffset:(NSUInteger)offset
+                   tag:(long)tag;
+
+/**
+ * Reads bytes until (and including) the passed "data" parameter, which acts as a separator.
+ * 
+ * If the timeout value is negative, the read operation will not use a timeout.
+ * If maxLength is negative, no length restriction is enforced.
+ * 
+ * If the max length is surpassed, it is treated the same as a timeout - the socket is closed.
+ * 
+ * If you pass nil or zero-length data as the "data" parameter,
+ * the method will do nothing, and the delegate will not be called.
+ * If you pass a maxLength parameter that is less than the length of the data parameter,
+ * the method will do nothing, and the delegate will not be called.
+ * 
+ * To read a line from the socket, use the line separator (e.g. CRLF for HTTP, see below) as the "data" parameter.
+ * Note that this method is not character-set aware, so if a separator can occur naturally as part of the encoding for
+ * a character, the read will prematurely end.
+ **/
+- (void)readDataToData:(NSData *)data withTimeout:(NSTimeInterval)timeout maxLength:(CFIndex)length tag:(long)tag;
+
+/**
+ * Reads bytes until (and including) the passed "data" parameter, which acts as a separator.
+ * The bytes will be appended to the given byte buffer starting at the given offset.
+ * The given buffer will automatically be increased in size if needed.
+ * A maximum of length bytes will be read.
+ * 
+ * If the timeout value is negative, the read operation will not use a timeout.
+ * If the buffer if nil, a buffer will automatically be created for you.
+ * If maxLength is negative, no length restriction is enforced.
+ * 
+ * If the max length is surpassed, it is treated the same as a timeout - the socket is closed.
+ * 
+ * If you pass a maxLength parameter that is less than the length of the data parameter,
+ * the method will do nothing, and the delegate will not be called.
+ * If the bufferOffset is greater than the length of the given buffer,
+ * the method will do nothing, and the delegate will not be called.
+ * 
+ * If you pass a buffer, you must not alter it in any way while AsyncSocket is using it.
+ * After completion, the data returned in onSocket:didReadData:withTag: will be a subset of the given buffer.
+ * That is, it will reference the bytes that were appended to the given buffer.
+ * 
+ * To read a line from the socket, use the line separator (e.g. CRLF for HTTP, see below) as the "data" parameter.
+ * Note that this method is not character-set aware, so if a separator can occur naturally as part of the encoding for
+ * a character, the read will prematurely end.
+ **/
+- (void)readDataToData:(NSData *)data
+           withTimeout:(NSTimeInterval)timeout
+                buffer:(NSMutableData *)buffer
+          bufferOffset:(NSUInteger)offset
+             maxLength:(CFIndex)length
+                   tag:(long)tag;
 
 /**
  * Writes data to the socket, and calls the delegate when finished.
  * 
  * If you pass in nil or zero-length data, this method does nothing and the delegate will not be called.
  * If the timeout value is negative, the write operation will not use a timeout.
-**/
+ **/
 - (void)writeData:(NSData *)data withTimeout:(NSTimeInterval)timeout tag:(long)tag;
 
 /**
  * Returns progress of current read or write, from 0.0 to 1.0, or NaN if no read/write (use isnan() to check).
  * "tag", "done" and "total" will be filled in if they aren't NULL.
-**/
+ **/
 - (float)progressOfReadReturningTag:(long *)tag bytesDone:(CFIndex *)done total:(CFIndex *)total;
 - (float)progressOfWriteReturningTag:(long *)tag bytesDone:(CFIndex *)done total:(CFIndex *)total;
 
@@ -442,7 +578,7 @@ typedef enum AsyncSocketError AsyncSocketError;
  * if it will be "domain.com" or "www.domain.com"), then you can use the default settings to validate the
  * certificate, and then use the X509Certificate class to verify the issuer after the socket has been secured.
  * The X509Certificate class is part of the CocoaAsyncSocket open source project.
-**/
+ **/
 - (void)startTLS:(NSDictionary *)tlsSettings;
 
 /**
@@ -457,7 +593,7 @@ typedef enum AsyncSocketError AsyncSocketError;
  * 
  * This method exists in case pre-buffering needs to be disabled by default for some unforeseen reason.
  * In that case, this method exists to allow one to easily enable pre-buffering when ready.
-**/
+ **/
 - (void)enablePreBuffering;
 
 /**
@@ -474,7 +610,7 @@ typedef enum AsyncSocketError AsyncSocketError;
  * 
  * Note: After calling this method, all further method calls to this object should be done from the given runloop.
  * Also, all delegate calls will be sent on the given runloop.
-**/
+ **/
 - (BOOL)moveToRunLoop:(NSRunLoop *)runLoop;
 
 /**
@@ -487,19 +623,21 @@ typedef enum AsyncSocketError AsyncSocketError;
  * Accepted sockets will automatically inherit the same run loop modes as the listening socket.
  * 
  * Note: NSRunLoopCommonModes is defined in 10.5. For previous versions one can use kCFRunLoopCommonModes.
-**/
+ **/
 - (BOOL)setRunLoopModes:(NSArray *)runLoopModes;
+- (BOOL)addRunLoopMode:(NSString *)runLoopMode;
+- (BOOL)removeRunLoopMode:(NSString *)runLoopMode;
 
 /**
  * Returns the current run loop modes the AsyncSocket instance is operating in.
  * The default set of run loop modes is NSDefaultRunLoopMode.
-**/
+ **/
 - (NSArray *)runLoopModes;
 
 /**
  * In the event of an error, this method may be called during onSocket:willDisconnectWithError: to read
  * any data that's left on the socket.
-**/
+ **/
 - (NSData *)unreadData;
 
 /* A few common line separators, for use with the readDataToData:... methods. */

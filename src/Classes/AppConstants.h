@@ -10,6 +10,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define TABLE_DISPLAY_HEIGHT	150
+
 #define errorMsgView_tag	999
 #define errorLabel_tag		998
 		
@@ -64,18 +66,19 @@ extern NSString * kTabBarURLPath;
 extern NSString * kTabBarItemURLPath;
 extern NSString * kMenuPageURLPath;
 
-extern NSString * kPostURLPath;
-extern NSString * kPostWithNodeAndTitleURLPath;
-
 extern NSString * kloginServicesWithTitleURLPath;
 
 extern NSString * kloginURLPath;
 extern NSString * kloginWithNetworkIDURLPath;
 
+extern NSString * kloginPrefilledURLPath; 
+extern NSString * kloginPrefilledWithNetworkIDURLPath;
+
 extern NSString * kcreateNewAcctURLPath;
 
 extern NSString * kexploreChannelsURLPath;
 extern NSString * kexploreChannelsWithTitleAndUsernameURLPath; 
+
 //************************** ATLAS APP URLS END **************************//
 
 

@@ -23,7 +23,7 @@
 "following" = "Following";
 "forgetPassword" = "Forget your login";
 
-"jidWithNetwork" = "name@%@";
+"jidWithNetwork" = "username@%@";
 
 "loading" = "Loading...";
 "loginAutomatically" = "Login automatically";
@@ -41,7 +41,7 @@
 
 "registerAcctMsg" = "Register an account on Buddycloud to get started";
 "registrationSuccess" = "Your are all done.";
-"registrationSuccessDesc" = "<p>your username and channel name is \n<span class='tipText'><b>%@</b></span></p>";
+"registrationSuccessDesc" = "<p>Your username and channel name is<span class='tipText'>\n<b>%@</b></span></p>";
 
 "settings" = "Settings";
 

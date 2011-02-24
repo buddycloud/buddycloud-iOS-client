@@ -1,0 +1,65 @@
+//
+//  CustomizedTableCell.h
+//  Buddycloud
+//
+//  Created by Deminem on 1/6/11.
+//  Copyright 2011 buddycloud. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@protocol CustomizedTableCellDelegate <NSObject>
+@optional
+- (void)onButtonClick:(id)sender;
+
+@end
+
+@interface CustomizedTableCell : UITableViewCell {
+
+	id <CustomizedTableCellDelegate> delegate;
+}
+
+@property (nonatomic, retain) id <CustomizedTableCellDelegate> delegate;
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark UITableViewCell - text on left.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@interface CustomTableCellWithLeftTxt : CustomizedTableCell {
+	
+
+}
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark ToggleButtonTableCell - ToggleButton on left side.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+@interface ToggleButtonTableCell : CustomizedTableCell {
+		
+	UISwitch *toggleBtn;
+}
+
+@property (nonatomic, retain) UISwitch *toggleBtn;
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark ButtonTableCell - Button on left side.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+typedef enum {
+	BTN_ACTION_NONE = 0,
+	BTN_ACTION_ADD,
+	BTN_ACTION_DELETE,
+	BTN_ACTION_MODIFY,
+} ButtonAction;
+
+@interface ButtonTableCell : CustomizedTableCell  {
+	
+	UIButton *leftButton;
+}
+
+@property (nonatomic, retain) UIButton *leftButton;
+
+@end

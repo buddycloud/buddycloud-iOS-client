@@ -37,7 +37,6 @@
 
 - (void)join:(id)sender;
 - (void)cancel:(id)sender;
-- (UIViewController *)allowUserToExploreChannels:(NSString *)title withUserIno:(NSDictionary *)userInfo;
 
 - (void)showErrorMsg:(NSString *)sMsg; 
 - (void)removeErrorMsg;

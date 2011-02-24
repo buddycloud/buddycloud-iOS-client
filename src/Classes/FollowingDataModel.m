@@ -22,7 +22,6 @@ static sqlite3_stmt *selectTopicPostStatement = nil;
 {
 	if(self = [super initWithDatabaseName: @"following.sql"]) {
 		followingData = [[NSMutableDictionary alloc] initWithCapacity: 1];
-		
 		multicastDelegate = [[MulticastDelegate alloc] init];
 	}
 	

@@ -21,6 +21,9 @@
 + (UIFont*) fontContent;
 + (UIFont*) fontLocationTime;
 
++ (UIColor*) appBKGroundBeigeColor;
++ (UIColor*) appBKGroundLightGreyColor;
+
 + (NSURL*) generateURL:(NSString*)baseURL params:(NSDictionary*)params;
 + (NSMutableDictionary*) getQueryPramsDict:(NSString*)urlQueryString;
 

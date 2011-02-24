@@ -17,18 +17,18 @@ static NSString *userAccountMsgViewControllerNib = @"UserAccountMsgViewControlle
 
 - (id)initWithTitle:(NSString *)title withUserName:(NSString *)username withPassword:(NSString *)password {
 	if (self = [super initWithNibName:userAccountMsgViewControllerNib bundle: [NSBundle mainBundle]]) {
-		self.title = title;
+		self.navigationItem.title = title;
+		self.navigationBarTintColor = APPSTYLEVAR(navigationBarColor);
 		self._username = username;
 		self._password = password;
 
-		[[TTNavigator navigator].URLMap from:kPostWithNodeAndTitleURLPath toViewController:[PostsViewController class]];
+
 	}
 	
 	return self;
 }	
 
 - (void)dealloc {
-	[[TTNavigator navigator].URLMap removeURL:kPostWithNodeAndTitleURLPath];
 	
 	[super dealloc];
 }
@@ -37,10 +37,11 @@ static NSString *userAccountMsgViewControllerNib = @"UserAccountMsgViewControlle
 	
 	[super viewDidLoad];
 	
+	self.view.backgroundColor = APPSTYLEVAR(appBKgroundColor);
 	self.successMsgLabel.text = NSLocalizedString(registrationSuccess, @"");
 	
 	NSString *userNameDesc = [NSString stringWithFormat:NSLocalizedString(registrationSuccessDesc, ""), self._username];	
-	TTStyledTextLabel *userNameTipTxtLabel = [[[TTStyledTextLabel alloc] initWithFrame:CGRectMake(self.view.frame.origin.x + 10.0, self.view.height/2 - 100.0, self.view.width, 100.0)] autorelease];
+	TTStyledTextLabel *userNameTipTxtLabel = [[[TTStyledTextLabel alloc] initWithFrame:CGRectMake(self.view.frame.origin.x + 10.0, self.view.height/2 - 100.0, self.view.width - 15.0, 100.0)] autorelease];
 	[userNameTipTxtLabel setBackgroundColor:[UIColor clearColor]];
 	[userNameTipTxtLabel setTextColor:RGBCOLOR(6, 58, 70)];
 	[userNameTipTxtLabel setHighlightedTextColor:RGBCOLOR(6, 58, 70)];
@@ -60,7 +61,7 @@ static NSString *userAccountMsgViewControllerNib = @"UserAccountMsgViewControlle
 	@try {
 		
 		//Reconnect with new username.
-		if (xmppEngine && ![self._password isEmptyOrWhitespace]) {
+		if (xmppEngine && ![xmppEngine.xmppStream isConnected]) {
 			
 			//Set the JID and password.
 			[xmppEngine.xmppStream setHostName:@""];	// Note: The hostname will be resolved through DNS SRV lookup.
@@ -73,7 +74,7 @@ static NSString *userAccountMsgViewControllerNib = @"UserAccountMsgViewControlle
 			
 		[[TTNavigator navigator] removeAllViewControllers];
 		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kTabBarURLPath]];
-		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:[NSString stringWithFormat:kTabBarItemURLPath, MenuPageChannel]]];	//land on channel page.
+		[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:[NSString stringWithFormat:kTabBarItemURLPath, MenuPageBrowse]]];	//land on channel page.
 	}
 	@catch (NSException * e) {
 		NSLog(@"Connecting exception : %@", [e description]);
@@ -82,7 +83,6 @@ static NSString *userAccountMsgViewControllerNib = @"UserAccountMsgViewControlle
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return NO;
-	//TTIsSupportedOrientation(interfaceOrientation);
 }
 
 

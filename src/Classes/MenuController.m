@@ -11,15 +11,15 @@
 
 @implementation MenuController
 
-@synthesize page = _page;
+@synthesize page = _page, selectedViewController;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // private
 
 - (NSString*)nameForMenuPage:(MenuPage)page {
 	switch (page) {
-		case MenuPageChannel:
-			return NSLocalizedString(channel, @"");
+		case MenuPageFollowing:
+			return NSLocalizedString(following, @"");
 		case MenuPagePlaces:
 			return NSLocalizedString(places, @"");
 		case MenuPageBrowse:
@@ -34,7 +34,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
-
 - (id)initWithMenuPage:(MenuPage)page {
 	if (self = [super init]) {
 		self.page = page;
@@ -45,6 +44,7 @@
 - (id)init {
 	if (self = [super init]) {
 		_page = MenuPageNone;
+		selectedViewController = nil;
 	}
 	return self;
 }
@@ -58,10 +58,11 @@
 	_page = page;
 	
 	self.title = [self nameForMenuPage:page];
-
+	self.navigationBarTintColor = APPSTYLEVAR(navigationBarColor);
+	
 	//Channel Page
-	if (_page == MenuPageChannel) {
-		self.tabBarItem = [[[UITabBarItem alloc] initWithTitle:[self nameForMenuPage:page] image:[UIImage imageNamed:@"tabbar-gs-following.png"] tag:MenuPageChannel] autorelease];
+	if (_page == MenuPageFollowing) {
+		self.tabBarItem = [[[UITabBarItem alloc] initWithTitle:[self nameForMenuPage:page] image:[UIImage imageNamed:@"tabbar-gs-following.png"] tag:MenuPageFollowing] autorelease];
 		FollowingViewController *pageViewController = [[FollowingViewController alloc] initWithStyle: UITableViewStylePlain
 																						andDataModel: (FollowingDataModel *)[[BuddycloudAppDelegate sharedAppDelegate] xmppEngine]];	
 		
@@ -71,6 +72,7 @@
 		pageViewController.view.frame = TTScreenBounds();
  		[self.view addSubview:pageViewController.tableView];
 		
+		selectedViewController = pageViewController;
 		self.navigationItem.title = NSLocalizedString(following, @"");
 		self.navigationItem.rightBarButtonItem = addButton;
 	} 
@@ -85,6 +87,12 @@
 	else if (_page == MenuPageBrowse) {
 		self.tabBarItem = [[[UITabBarItem alloc] initWithTitle:[self nameForMenuPage:page] image:[UIImage imageNamed:@"tabbar-gs-browse.png"] tag:MenuPageBrowse] autorelease];
 		
+		ExploreViewController *pageViewController = [[ExploreViewController alloc] initWithStyle: UITableViewStylePlain];	
+		pageViewController.view.frame = TTScreenBounds();
+ 		[self.view addSubview:pageViewController.tableView];
+		
+		selectedViewController = pageViewController;
+		self.navigationItem.title = NSLocalizedString(exploreBtnLabel, @"");
 	}
 
 	//Settings Page
@@ -94,7 +102,10 @@
 		SettingsViewController *pageViewController = [[SettingsViewController alloc] initWithStyle:UITableViewStyleGrouped];
 		pageViewController.view.frame = TTScreenBounds();
  		[self.view addSubview:pageViewController.tableView];
+		
+		selectedViewController = pageViewController;
 	}
 }
+
 
 @end

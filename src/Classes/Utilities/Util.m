@@ -81,7 +81,23 @@
 	static UIFont *ret;
 	if (ret == nil) {
 		[Util loadFonts];
-		ret = [UIFont fontWithName: @"Corbel" size:10.0f];
+		ret = [UIFont fontWithName: @"Corbel" size:12.0f];
+	}
+	return ret;
+}
+
++ (UIColor*) appBKGroundBeigeColor {
+	static UIColor *ret;
+	if (ret == nil) {
+		ret = [UIColor colorWithRed:243.0 green:241.0 blue:229.0 alpha:0];
+	}
+	return ret;
+}
+
++ (UIColor*) appBKGroundLightGreyColor {
+	static UIColor *ret;
+	if (ret == nil) {
+		ret = [UIColor colorWithRed:206.0 green:216.0 blue:218.0 alpha:0];
 	}
 	return ret;
 }

@@ -12,7 +12,8 @@
 
 @interface LoginViewController :  TTViewController <UITextFieldDelegate> {
 	
-	NSInteger networkID; 
+	NSInteger networkID;
+	NSDictionary *_prefilledInfoDict;
 	
 	UILabel *loginTitleLabel;
 	UILabel *userNameLabel;
@@ -27,6 +28,7 @@
 }
 
 @property (nonatomic) NSInteger networkID; 
+@property (nonatomic, retain) NSDictionary *_prefilledInfoDict;
 @property (nonatomic, retain) IBOutlet UILabel *loginTitleLabel; 
 @property (nonatomic, retain) IBOutlet UILabel *userNameLabel; 
 @property (nonatomic, retain) IBOutlet UILabel *passwordLabel; 
@@ -38,6 +40,7 @@
 
 @property (nonatomic, retain) IBOutlet UIToolbar *loginToolBar; 
 
+- (id)initWithTitle:(NSString *)title withUserInfoDict:(NSDictionary *)userInfo;
 - (id)initWithTitle:(NSString *)title withNetworkID:(NSInteger)networkId;
 
 - (void)login:(id)sender;
@@ -47,6 +50,5 @@
 
 - (void)createNewAccount:(id)sender;
 - (void)forgetPassword:(id)sender;
-- (UIViewController *)allowUserToExploreChannels:(NSString *)title withUserIno:(NSDictionary *)userInfo;
 
 @end

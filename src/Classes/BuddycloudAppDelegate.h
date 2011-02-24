@@ -31,6 +31,9 @@
 #import "LoginViewController.h"
 #import "CreateNewUserAcctViewController.h"
 #import "Reachability.h"
+#import "BuddyCloudStyleSheet.h"
+#import "LoginUtility.h"
+#import "AtlasURLHandler.h"
 
 @class XMPPEngine;
 @class PlaceEngine;
@@ -45,10 +48,11 @@
 	UITableView *postsTableView;
 	
 	Reachability *internetReach;
-	BOOL isInternetConAvailable;
 	
 	XMPPEngine *xmppEngine;
 	PlaceEngine *placeEngine;
+	
+	AtlasURLHandler *atlasUrlHandler;
 	SpiralLoadingView *spiralLoadingView;
 }
 
@@ -57,13 +61,11 @@
 @property(nonatomic, retain) IBOutlet UITableView *postsTableView;
 @property(nonatomic, retain) SettingsViewController *settingsController;
 @property(nonatomic, retain) FollowingViewController *followingController;
+@property(nonatomic, retain) AtlasURLHandler *atlasUrlHandler;
 @property(nonatomic, retain) SpiralLoadingView *spiralLoadingView;
 
 - (void)initializeUI;
 - (void)loadAllMappedUrls;
-- (void)autoLogin;
-- (UIViewController *)createNewAccount;
-- (void)registerDefaultsFromSettingsBundle;
 
 + (BuddycloudAppDelegate *)sharedAppDelegate;
 
