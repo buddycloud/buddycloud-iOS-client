@@ -73,8 +73,8 @@
  		[self.view addSubview:pageViewController.tableView];
 		
 		selectedViewController = pageViewController;
-		self.navigationItem.title = NSLocalizedString(following, @"");
 		self.navigationItem.rightBarButtonItem = addButton;
+		self.navigationItem.title = NSLocalizedString(following, @"");
 	} 
 	
 	//Places Page
@@ -93,6 +93,15 @@
 		
 		selectedViewController = pageViewController;
 		self.navigationItem.title = NSLocalizedString(exploreBtnLabel, @"");
+		
+		XMPPEngine *xmppEngine = [[BuddycloudAppDelegate sharedAppDelegate] xmppEngine];
+		if (xmppEngine && !xmppEngine.authenticateAnonymously) {
+			UIBarButtonItem *logoutButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(logoutLabel, @"") 
+																			 style:UIBarButtonItemStyleBordered 
+																			target:pageViewController action:@selector(onLogoutButton)];
+			
+			self.navigationItem.rightBarButtonItem = logoutButton;
+		}
 	}
 
 	//Settings Page

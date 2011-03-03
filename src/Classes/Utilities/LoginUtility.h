@@ -35,6 +35,7 @@ typedef enum {
 
 + (BOOL)performAutoLogin;
 + (void)saveUserDefaultsToSettingBundle:(NSDictionary *)userDefaults;
++ (void)resetLoginSettings;
 
 + (void)showError:(NSError *)error;
 

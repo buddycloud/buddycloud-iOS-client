@@ -29,6 +29,7 @@
 "loginAutomatically" = "Login automatically";
 "loginMsgTitle" = "Join buddycloud using an existing account.";
 "loginServicesListTitle" = "No need to create a new account, just log-in using any number of existing accounts.\nHow do you want to register?";
+"logoutLabel" = "Logout";
 
 "network1Label" = "Gmail / Gtalk";
 "network2Label" = "gmx.de";

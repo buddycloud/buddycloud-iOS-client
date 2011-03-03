@@ -39,6 +39,7 @@
 
 @interface DatabaseAccess (PrivateAPI)
 
++ (void)removeDatabase;
 - (NSString *)dbFilePathFromName:(NSString *)fileName;
 - (BOOL)checkAndCreateDatabase:(NSString *)databasePath;
 

@@ -117,6 +117,29 @@ static sqlite3_stmt *updateVersionStatement = nil;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Private DatabaseAccess methods
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
++ (void)removeDatabase {
+
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDir = [paths objectAtIndex: 0];
+	NSFileManager *localFileManager=[[NSFileManager alloc] init];
+	NSDirectoryEnumerator *dirEnum = [localFileManager enumeratorAtPath:documentsDir];
+	
+	NSString *file;
+	
+	while (file = [dirEnum nextObject]) {
+		if ([[file pathExtension] isEqualToString: @"sql"]) {
+			
+			//remove all the sql files.
+			NSError *error = nil;
+			if (![localFileManager removeItemAtPath:[documentsDir stringByAppendingPathComponent:file] error:&error])
+				NSLog(@"Error in deleting the SQL file [%@] = %@", file, error);
+
+		}
+	}
+	
+	[localFileManager release];
+}
+
 
 - (NSString *)dbFilePathFromName:(NSString *)fileName
 {

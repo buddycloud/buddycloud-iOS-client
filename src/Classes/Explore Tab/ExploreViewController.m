@@ -74,6 +74,21 @@
 	}
 }
 
+/*
+ *	On logout action.
+ */
+- (void)onLogoutButton
+{
+	//Clear the cache.
+	[DatabaseAccess removeDatabase];
+	
+	//Reset the login settings.
+	[LoginUtility resetLoginSettings];
+	
+	[[TTNavigator navigator] removeAllViewControllers];
+	[[TTNavigator navigator] openURLAction:[TTURLAction actionWithURLPath:kAppRootURLPath]];
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark UITableView Methods

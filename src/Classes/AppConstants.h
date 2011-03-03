@@ -110,6 +110,7 @@ extern NSString * loading;
 extern NSString * loginAutomatically;
 extern NSString * loginMsgTitle;
 extern NSString * loginServicesListTitle;
+extern NSString * logoutLabel;
 
 extern NSString * network1Label;
 extern NSString * network2Label;

@@ -120,6 +120,17 @@ static BOOL _autoLogin = NO;
 	}
 }
 
++ (void)resetLoginSettings {
+	
+	[LoginUtility registerDefaultsFromSettingsBundle];
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+	[defaults removeObjectForKey:username_setting];
+	[defaults removeObjectForKey:password_setting];
+	[defaults removeObjectForKey:autoLogin_setting];
+	[defaults synchronize];
+}
+
 + (void)showError:(NSError *)error {
 	
 	CustomAlert *alertView = nil;

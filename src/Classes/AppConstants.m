@@ -87,6 +87,7 @@ NSString * loading = @"loading";
 NSString * loginAutomatically = @"loginAutomatically";
 NSString * loginMsgTitle = @"loginMsgTitle";
 NSString * loginServicesListTitle = @"loginServicesListTitle";
+NSString * logoutLabel = @"logoutLabel";
 
 NSString * network1Label = @"network1Label";
 NSString * network2Label = @"network2Label";
