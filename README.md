@@ -203,5 +203,7 @@ Federated Social Networking Experience
 -   About buddycloud
 -   Help Channel (help@buddycloud.com)
 
+# License 
 
+Apache 2.0
 
